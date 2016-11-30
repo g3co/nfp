@@ -1,0 +1,9 @@
+{
+  "name": "Mecano",
+  "version": "0.0.1",
+  "description": "Web sites constructor",
+  "main": "index.js",
+  "repository": "https://github.com/rshtg/mecano.git",
+  "author": "RGabaydullov rsht123g@gmail.com",
+  "license": "No"
+}
