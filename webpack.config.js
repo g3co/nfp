@@ -1,17 +1,18 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     devtool: 'source-map',
     devServer: {
+        inline: true,
+        hot: true,
         contentBase: './dev',
     },
     //target: 'node',
     debug: true,
     watch: true,
-    //context: './dev',
     entry: [
         'babel-polyfill',
         'webpack-dev-server/client?http://localhost:8080',
@@ -20,12 +21,17 @@ module.exports = {
         './dev/src/app.jsx'
     ],
     output: {
-        path: '/dist',
-        filename: 'bundle.js'
+        path: path.join('./dev'),
+        filename: '[name].js',
+        library: '[name]',
+        publicPath: '/src/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new ExtractTextPlugin('/assets/styles/common.css')
+        new ExtractTextPlugin(
+            './assets/styles/common.css', {
+                allChunks: true
+            })
     ],
     module: {
         loaders: [
@@ -34,7 +40,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
-                    presets: ['es2015', 'react']
+                    presets: ['es2015', 'react', 'react-hmre']
                 }
             },
             {
@@ -43,7 +49,12 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-                loader: 'url?limit=30000&name=/assets/fonts/[name]-[hash].[ext]'
+                loader: 'file',
+                query: {
+                    limit: 30000,
+                    name: '[name].[ext]',
+                    publicPath: '../fonts/'
+                }
             }
         ]
     }

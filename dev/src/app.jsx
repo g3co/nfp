@@ -1,14 +1,13 @@
-import '../assets/styles/index.less';
 import React from '../../node_modules/react/lib/React.js';
 import ReactDOM from '../../node_modules/react-dom/lib/ReactDOM.js';
 
 const App = React.createClass({
     render() {
-        return `<div>Hello, worlds!</div>`
+        return <div>Hello, world!</div>
     }
 });
 
 ReactDOM.render(
-    `<App/>`,
+    <App/>,
     document.getElementById('root')
 );
