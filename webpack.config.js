@@ -4,24 +4,22 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-    devtool: 'source-map',
     devServer: {
         inline: true,
         hot: true,
-        contentBase: './dev',
+        contentBase: './dev'
     },
     //target: 'node',
     debug: true,
     watch: true,
     entry: [
-        'babel-polyfill',
         'webpack-dev-server/client?http://localhost:8080',
         //'webpack/hot/only-dev-server',
         './dev/assets/styles/index.less',
         './dev/src/app.jsx'
     ],
     output: {
-        path: path.join('./dev'),
+        path: '/',
         filename: '[name].js',
         library: '[name]',
         publicPath: '/src/'
@@ -38,10 +36,7 @@ module.exports = {
             {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
-                loader: 'babel',
-                query: {
-                    presets: ['es2015', 'react', 'react-hmre']
-                }
+                loader: 'babel'
             },
             {
                 test: /\.less$/,
@@ -52,8 +47,7 @@ module.exports = {
                 loader: 'file',
                 query: {
                     limit: 30000,
-                    name: '[name].[ext]',
-                    publicPath: '../fonts/'
+                    name: '[name].[ext]'
                 }
             }
         ]
