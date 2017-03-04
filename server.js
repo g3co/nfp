@@ -15,7 +15,7 @@ var server = new WebpackDevServer(webpack(config), {
 });
 
 
-server
+/*server
     .listen(8080, 'localhost', function (err, result) {
         if(err) {
             return console.log(err);
@@ -31,3 +31,6 @@ server.middleware
 
 console.log(server.app.on);
 process.exit(1);
+
+
+/!*"start": "node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --inline --hot"*!/*/

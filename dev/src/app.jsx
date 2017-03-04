@@ -3,22 +3,54 @@ import ReactDOM from '../../node_modules/react-dom/lib/ReactDOM.js';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEvent from 'react-tap-event-plugin';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
-export default class PopoverExampleSimple extends React.Component {
+import {
+    amberA700, cyan700,
+    pinkA200,
+    grey100, grey300, grey400, grey500, grey900,
+    white, darkBlack, fullBlack,
+} from 'material-ui/styles/colors';
+import {fade} from 'material-ui/utils/colorManipulator';
+import spacing from 'material-ui/styles/spacing';
+
+const muiTheme = getMuiTheme({
+    spacing: spacing,
+    fontFamily: 'Roboto, sans-serif',
+    palette: {
+        primary1Color: fade(grey900, 0.75),
+        primary2Color: cyan700,
+        primary3Color: grey400,
+        accent1Color: pinkA200,
+        accent2Color: grey100,
+        accent3Color: grey500,
+        textColor: darkBlack,
+        alternateTextColor: white,
+        canvasColor: white,
+        borderColor: grey300,
+        disabledColor: fade(darkBlack, 0.3),
+        pickerHeaderColor: amberA700,
+        clockCircleColor: fade(darkBlack, 0.07),
+        shadowColor: fullBlack,
+    },
+});
+
+const GETFIGHT = (
+    <div className="gf-logo">
+        get<span>fight</span>
+    </div>
+);
+
+class Template extends React.Component {
 
     constructor(props) {
         super(props);
-
-        Object.assign(props, {
-            prikol: []
-        });
-
-        console.log(props);
 
         this.state = {
             open: false,
@@ -33,10 +65,6 @@ export default class PopoverExampleSimple extends React.Component {
             open: true,
             anchorEl: event.currentTarget,
         });
-
-        if(this.props.prikol) {
-            console.log('Vot eto prikol! %o', this.props.prikol);
-        }
     };
 
     handleRequestClose() {
@@ -47,7 +75,8 @@ export default class PopoverExampleSimple extends React.Component {
 
     render() {
         return (
-            <div prikol={[1,2]}>
+            <div>
+                <AppBar className="gf-appbar" title={GETFIGHT}/>
                 <RaisedButton
                     onTouchTap={this.handleTouchTap.bind(this)}
                     label="Click me"
@@ -76,8 +105,8 @@ injectTapEvent();
 const App = React.createClass({
     render() {
         return (
-            <MuiThemeProvider>
-                <PopoverExampleSimple/>
+            <MuiThemeProvider muiTheme={muiTheme}>
+                <Template/>
             </MuiThemeProvider>
         )
     }
@@ -118,7 +147,7 @@ let Item = React.createClass({
 });
 
 ReactDOM.render(
-    <Appy data={[1,2,3]}/>,
+    <App/>,
     document.getElementById('root')
 );
 

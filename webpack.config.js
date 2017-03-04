@@ -10,6 +10,7 @@ module.exports = {
         contentBase: './dev'
     },
     //target: 'node',
+    devtool: 'source-map',
     debug: true,
     watch: true,
     entry: [
@@ -19,17 +20,14 @@ module.exports = {
         './dev/src/app.jsx'
     ],
     output: {
-        path: '/',
+        path: path.join(__dirname, '/dev'),
         filename: '[name].js',
         library: '[name]',
-        publicPath: '/src/'
+        publicPath: 'src'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new ExtractTextPlugin(
-            './assets/styles/common.css', {
-                allChunks: true
-            })
+        new ExtractTextPlugin('./assets/styles/common.css')
     ],
     module: {
         loaders: [
