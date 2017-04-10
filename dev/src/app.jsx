@@ -6,10 +6,12 @@ import injectTapEvent from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
+import IconMenu from 'material-ui/IconMenu';
+import FontIcon from 'material-ui/FontIcon';
 
 import {
     amberA700, cyan700,
@@ -19,6 +21,10 @@ import {
 } from 'material-ui/styles/colors';
 import {fade} from 'material-ui/utils/colorManipulator';
 import spacing from 'material-ui/styles/spacing';
+
+import i18n from './translations.jsx';
+
+const translations = i18n('ru');
 
 const muiTheme = getMuiTheme({
     spacing: spacing,
@@ -41,10 +47,157 @@ const muiTheme = getMuiTheme({
     },
 });
 
-const GETFIGHT = (
-    <div className="gf-logo">
-        get<span>fight</span>
-    </div>
+const LoginButton = (props) => (
+    <button
+        {...props}
+        className="gf-action__login"
+        type="button"
+    >
+        <FontIcon
+            className="material-icons"
+            color="#fff"
+            style={{
+                fontSize: '2em'
+            }}
+        >person</FontIcon>
+        <span>{translations.LABELS.LOG_IN}</span>
+    </button>
+);
+
+const LoggedButton = (props) => (
+    <IconMenu
+        {...props}
+        iconButtonElement={
+            <FontIcon>person</FontIcon>
+        }
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+    >
+        <MenuItem primaryText="Refresh" />
+        <MenuItem primaryText="Help" />
+        <MenuItem primaryText="Sign out" />
+    </IconMenu>
+);
+
+class GetFight extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            active: false
+        }
+    }
+
+    handleDropdown(event) {
+        event.preventDefault();
+
+        this.setState({
+            active: !this.state.active
+        });
+
+        return false
+    }
+
+    render() {
+        return (
+            <div
+                className="gf-logo"
+            >
+                <div id="progress"><dt></dt><dd></dd></div>
+                <span>getfight</span>
+                <ul
+                    className={'gf-menu' +(this.state.active ? ' active': '')}
+                    onClick={this.handleDropdown.bind(this)}
+                    role="navigation"
+                >
+                    {translations.HEADER.map((item, i) =>
+                        <li>
+                            <a role="link" href={item.route} tabIndex={i}>
+                                {item.label}
+                            </a>
+                        </li>
+                    )}
+                </ul>
+            </div>
+        )
+    }
+};
+
+class ActionBar extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showFilterWindow: false
+        }
+    }
+
+    searchFilter(event) {
+
+        let
+            button = event.target,
+            showFilterWindow = !this.state.showFilterWindow
+        ;
+
+        this.setState({
+            showFilterWindow
+        });
+    }
+
+    render() {
+        return (
+            <div className="gf-actionbar">
+                <section className="gf-toolbar">
+                    <header className="gf-toolbar__header">
+                        <span className="material-icons left-act">search</span>
+                        <input
+                            type="text"
+                            placeholder={translations.LABELS.SEARCH_PLACEHOLDER}
+                        />
+                        <span
+                            className="material-icons right-act"
+                            onClick={this.searchFilter.bind(this)}
+                        >settings</span>
+                    </header>
+                    <section className="gf-toolbar__toggle">
+                        <div>
+                            <input id="search-by-fighter" name="search_by" type="radio"/>
+                            <label htmlFor="search-by-fighter">
+                                <span className="material-icons">person_outline</span>
+                                <span>{translations.LABELS.SEARCH_BY_FIGHTER}</span>
+                            </label>
+                        </div>
+                        <div>
+                            <input id="search-by-gym" name="search_by" type="radio"/>
+                            <label htmlFor="search-by-gym">
+                                <span className="material-icons">pin_drop</span>
+                                <span>{translations.LABELS.SEARCH_BY_GYM}</span>
+                            </label>
+                        </div>
+                    </section>
+                    <section className="gf-toolbar__list">
+                        <ul>
+                            <li>
+                                <div className="list__preview">
+                                    <img/>
+                                </div>
+                                <div className="list__description">
+                                    <p>Description</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                </section>
+            </div>
+        )
+    }
+
+};
+
+const Navigation = () => (
+    <div id="gf-navigation" className="gf-navigation"></div>
 );
 
 class Template extends React.Component {
@@ -54,6 +207,7 @@ class Template extends React.Component {
 
         this.state = {
             open: false,
+            logged: false
         };
     }
 
@@ -73,13 +227,34 @@ class Template extends React.Component {
         });
     };
 
+    toggleClassName(e, _className) {
+        let
+            el = e.target,
+            className = el.className
+        ;
+
+        if(!!className && !!~className.indexOf(_className)) {
+            el.className = className.replace(_className, '')
+        } else {
+            el.className += ' '+ _className
+        }
+    }
+
     render() {
         return (
             <div>
-                <AppBar className="gf-appbar" title={GETFIGHT}/>
-                <RaisedButton
-                    onTouchTap={this.handleTouchTap.bind(this)}
-                    label="Click me"
+                <AppBar
+                    className="gf-appbar"
+                    style={{
+                        padding: '0 16px'
+                    }}
+                    title={<GetFight/>}
+                    iconElementRight={this.state.logged ? <LoggedButton /> : <LoginButton />}
+                    showMenuIconButton={false}
+                    onLeftIconButtonTouchTap={this.handleTouchTap.bind(this)}
+                    titleStyle={{
+                        fontSize: 'inherit'
+                    }}
                 />
                 <Popover
                     open={this.state.open}
@@ -95,8 +270,269 @@ class Template extends React.Component {
                         <MenuItem primaryText="Sign out" />
                     </Menu>
                 </Popover>
+                <ActionBar/>
+                <Navigation/>
             </div>
         );
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+
+            initMap();
+
+            if('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    //initMap(position);
+
+                    google.maps.event.addDomListener(window, 'load', initMap);
+                });
+            } else {
+                alert('To continue, please, get access to your geo location.')
+            }
+
+            function initMap(position) {
+
+                var coords = !!position ? position.coords : {latitude: -28.024, longitude: 140.887};
+
+                var locations = [
+                    {lat: -31.563910, lng: 147.154312},
+                    {lat: -33.718234, lng: 150.363181},
+                    {lat: -33.727111, lng: 150.371124},
+                    {lat: -33.848588, lng: 151.209834},
+                    {lat: -33.851702, lng: 151.216968},
+                    {lat: -34.671264, lng: 150.863657},
+                    {lat: -35.304724, lng: 148.662905},
+                    {lat: -36.817685, lng: 175.699196},
+                    {lat: -36.828611, lng: 175.790222},
+                    {lat: -37.750000, lng: 145.116667},
+                    {lat: -37.759859, lng: 145.128708},
+                    {lat: -37.765015, lng: 145.133858},
+                    {lat: -37.770104, lng: 145.143299},
+                    {lat: -37.773700, lng: 145.145187},
+                    {lat: -37.774785, lng: 145.137978},
+                    {lat: -37.819616, lng: 144.968119},
+                    {lat: -38.330766, lng: 144.695692},
+                    {lat: -39.927193, lng: 175.053218},
+                    {lat: -41.330162, lng: 174.865694},
+                    {lat: -42.734358, lng: 147.439506},
+                    {lat: -42.734358, lng: 147.501315},
+                    {lat: -42.735258, lng: 147.438000},
+                    {lat: -43.999792, lng: 170.463352}
+                ];
+
+                var grayscaleMap = new google.maps.StyledMapType(
+                    [
+                        {
+                            "featureType": "all",
+                            "elementType": "labels.text.fill",
+                            "stylers": [
+                                {
+                                    "saturation": 72
+                                },
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 80
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "all",
+                            "elementType": "labels.text.stroke",
+                            "stylers": [
+                                {
+                                    "visibility": "on"
+                                },
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 16
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "all",
+                            "elementType": "labels.icon",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "administrative",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 20
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "administrative",
+                            "elementType": "geometry.stroke",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 17
+                                },
+                                {
+                                    "weight": 1.2
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "landscape",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 20
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "poi",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 21
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.highway",
+                            "elementType": "geometry.fill",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 17
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.highway",
+                            "elementType": "geometry.stroke",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 29
+                                },
+                                {
+                                    "weight": 0.2
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.arterial",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 18
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "road.local",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 16
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "transit",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 19
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "water",
+                            "elementType": "geometry",
+                            "stylers": [
+                                {
+                                    "color": "#000000"
+                                },
+                                {
+                                    "lightness": 17
+                                }
+                            ]
+                        }
+                    ],
+                    {
+                        name: 'grayscale Map'
+                    }
+                );
+
+                var map = new google.maps.Map(document.getElementById('gf-navigation'), {
+                    zoom: 14,
+                    center: {
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    },
+                    mapTypeControlOptions: {
+                        mapTypeIds: [
+                            'roadmap',
+                            'satellite',
+                            'hybrid',
+                            'terrain',
+                            'grayscaleMap'
+                        ]
+                    }
+                });
+
+                map.mapTypes.set('grayscaleMap', grayscaleMap);
+                map.setMapTypeId('grayscaleMap');
+
+                // Create an array of alphabetical characters used to label the markers.
+                var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+                // Add some markers to the map.
+                // Note: The code uses the JavaScript Array.prototype.map() method to
+                // create an array of markers based on a given "locations" array.
+                // The map() method here has nothing to do with the Google Maps API.
+                var markers = locations.map(function(location, i) {
+                    return new google.maps.Marker({
+                        position: location,
+                        label: labels[i % labels.length]
+                    });
+                });
+
+                // Add a marker clusterer to manage the markers.
+                var markerCluster = new MarkerClusterer(map, markers,
+                    {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+            }
+        }, 1000);
     }
 }
 
@@ -152,5 +588,6 @@ ReactDOM.render(
 );
 
 /*
-
+ Привет,
+ Мы с одного этажа, но не было возможности пообщаться в непринужденной обстановке, поэтому решил написать тут.
  */

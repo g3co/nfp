@@ -1,0 +1,25 @@
+
+//mobile first!
+.Media-Phone(@rules) {
+
+  @media (min-width: 320px) and (max-width: 414px) {
+    @rules();
+  }
+
+}
+
+.Media-Tablet(@rules) {
+
+  @media (min-width: 415px) and (max-width: 1023px) {
+    @rules();
+  }
+
+}
+
+.Media-Desktop(@rules) {
+
+  @media (min-width: 1024px) {
+    @rules();
+  }
+
+}

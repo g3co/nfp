@@ -1,0 +1,26 @@
+{
+  "HEADER": [
+    {
+      "label": "События",
+      "route": "#events"
+    },
+    {
+      "label": "Навигация",
+      "route": "#sitemap"
+    },
+    {
+      "label": "Рейтинги",
+      "route": "#ratings"
+    },
+    {
+      "label": "Сотрудничество",
+      "route": "#collaborate"
+    }
+  ],
+  "LABELS": {
+    "LOG_IN": "Войти",
+    "SEARCH_BY_FIGHTER": "Боец",
+    "SEARCH_BY_GYM": "Клуб",
+    "SEARCH_PLACEHOLDER": "Что Ищете?"
+  }
+}

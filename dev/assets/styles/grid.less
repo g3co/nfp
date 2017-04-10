@@ -1,25 +1,448 @@
 @import './variables';
+@import './_mixins';
+@import './_animations';
+
 
 body, html {
   margin: 0;
   padding: 0;
+  font-size: 62.5%;
+}
+
+span {
+  display: inline-block;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.gf-root {
+  font-size: 1.4rem;
 }
 
 .gf-appbar {
-  background: -moz-linear-gradient(top,  hsla(0,0%,0%,1) 0%, hsla(0,0%,100%,0) 100%);
-  background: -webkit-linear-gradient(top,  hsla(0,0%,0%,1) 0%,hsla(0,0%,100%,0) 100%);
-  background: linear-gradient(to bottom,  hsla(0,0%,0%,1) 0%,hsla(0,0%,100%,0) 100%);
+
+  position: relative;
+  background: svg-gradient(to bottom, @color-black, @tp-literal);
+
+  & > div {
+    margin: 0;
+    height: inherit;
+  }
 
   .gf-logo {
-    font-family: 'Raleway', sans-serif;
-    text-transform: uppercase;
+    margin: 0 auto;
+    height: inherit;
+    line-height: inherit;
+    font-size: 1em;
+    max-width: 1024px;
+    display: block;
+
+    & > span {
+      font-family: @font-logo;
+      font-size: 2.35em;
+      text-transform: uppercase;
+    }
+
+    ul.gf-menu {
+
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: inline-block;
+      vertical-align: top;
+
+      &:before {
+        content: 'keyboard_arrow_down';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin: 0 0 0 -7px;
+        font-family: @font-micons;
+        font-size: 2em;
+        vertical-align: middle;
+        line-height: inherit;
+        opacity: .6;
+        cursor: pointer;
+        -moz-animation: pulsate 1.5s ease-out 0s infinite;
+        -webkit-animation: pulsate 1.5s ease-out 0s infinite;
+        animation: pulsate 1.5s ease-out 0s infinite;
+        -webkit-transition-property: transform;
+        -moz-transition-property: transform;
+        -ms-transition-property: transform;
+        -o-transition-property: transform;
+        transition-property: transform;
+        -webkit-transition-duration: .5s;
+        -moz-transition-duration: .5s;
+        -ms-transition-duration: .5s;
+        -o-transition-duration: .5s;
+        transition-duration: .5s;
+      }
+
+      li {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        width: 120px;
+        text-align: center;
+        display: none;
+
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        &.active:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 3px;
+          width: 100%;
+          background: @color-white;
+        }
+      }
+
+      &.active {
+
+        &:before {
+          -webkit-animation: none;
+          -o-animation: none;
+          animation: none;
+          -webkit-transform: rotate(180deg);
+          -moz-transform: rotate(180deg);
+          -ms-transform: rotate(180deg);
+          -o-transform: rotate(180deg);
+          transform: rotate(180deg);
+        }
+
+        li {
+          width: inherit;
+          background: fade(@color-black, 55%);
+          display: block;
+        }
+
+      }
+
+      //@media Desktop
+      .Media-Desktop({
+        position: relative;
+        top: 0;
+        left: auto;
+        right: auto;
+        margin: 0 0 0 15%;
+
+        &:before {
+          display: none;
+        }
+
+        li {
+          display: inline-block;
+        }
+
+        &.active {
+          li {
+            width: 120px;
+            background: transparent;
+            display: inline-block;
+          }
+        }
+      })
+    }
+  }
+
+  .gf-action__login {
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin: -15px 0 0;
+    padding: 0 16px;
+    background: transparent;
+    border: 0 transparent solid;
+    font-family: @font-main;
+    font-size: 1em;
+    color: @color-white;
 
     span {
-      color: @red;
+      vertical-align: middle;
+    }
+
+    .material-icons + span {
+      display: none;
+    }
+
+    //@media Desktop
+    .Media-Desktop({
+      .material-icons + span {
+        display: inline-block;
+      }
+    })
+  }
+
+  #progress {
+    position: fixed;
+    top: 0;
+    left: -6px;
+    width: 0;
+    height: 3px;
+    background: @color-red;
+    border-radius: 1px;
+    -moz-transition: width 500ms ease-out,opacity 500ms linear;
+    -webkit-transition: width 500ms ease-out,opacity 500ms linear;
+    transition: width 500ms ease-out,opacity 500ms linear;
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: width,opacity;
+
+    &.done {
+      opacity: 0;
+    }
+
+    .ab-progress(@width, @right, @rect) {
+      position: absolute;
+      top: 0;
+      height: 3px;
+      box-shadow: @color-red 1px 0 6px 1px;
+      border-radius: 100%;
+      width: @width;
+      right: @right;
+      opacity: .6;
+      clip: @rect;
+      -moz-animation: pulse 2s ease-out 0s infinite;
+      -webkit-animation: pulse 2s ease-out 0s infinite;
+      animation: pulse 2s ease-out 0s infinite;
+    }
+
+    dt {
+      .ab-progress(20px, 0, rect(-6px,22px,14px,10px));
+    }
+    dd {
+      .ab-progress(180px, -80px, rect(-6px,90px,14px,-6px));
     }
   }
 }
 
-.muidocs-icon-navigation-expand-more {
-  content: 'expand_more';
+.gf-actionbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  display: block;
+  z-index: 99;
+
+  .gf-toolbar {
+    position: absolute;
+    margin: 64px 0 0;
+    width: 100%;
+    -webkit-box-shadow: fade(@color-black, 20%) 0px 8px 16px 2px, fade(@color-black, 20%) 0px 3px 3px;
+    -moz-box-shadow: fade(@color-black, 20%) 0px 8px 16px 2px, fade(@color-black, 20%) 0px 3px 3px;
+    box-shadow: fade(@color-black, 20%) 0px 8px 16px 2px, fade(@color-black, 20%) 0px 3px 3px;
+
+    .gf-toolbar__header {
+      position: relative;
+      height: 52px;
+      background: fade(@color-dark-gray, 75%);
+      font-size: 1em;
+      color: @color-white;
+      display: block;
+
+      span {
+        position: absolute;
+        top: 0;
+        height: 52px;
+        width: 52px;
+        line-height: 52px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 2em;
+        display: inline-block;
+        cursor: default;
+        opacity: .9;
+
+        &.left-act {
+          left: 0;
+        }
+        &.right-act {
+          right: 0;
+        }
+
+        &:hover {
+          cursor: pointer;
+          opacity: 1;
+        }
+      }
+
+      input {
+        margin: 0 52px;
+        height: 52px;
+        width: calc(~"100% - 104px");
+        background: transparent;
+        border: 4px transparent solid;
+        border-left-width: 0;
+        border-right-width: 0;
+        font-size: 1.3em;
+        color: inherit;
+        display: inline-block;
+        opacity: .8;
+
+        -webkit-transition-property: border, opacity;
+        -moz-transition-property: border, opacity;
+        -ms-transition-property: border, opacity;
+        -o-transition-property: border, opacity;
+        transition-property: border, opacity;
+        -webkit-transition-duration: .5s;
+        -moz-transition-duration: .5s;
+        -ms-transition-duration: .5s;
+        -o-transition-duration: .5s;
+        transition-duration: .5s;
+
+        &:focus {
+          border-bottom-color: currentColor;
+          opacity: 1;
+        }
+      }
+    }
+
+    .gf-toolbar__toggle {
+      height: 52px;
+      font-family: inherit;
+      font-size: 1.3em;
+      display: block;
+
+      div {
+        height: inherit;
+        width: 50%;
+        display: inline-block;
+
+        input[type=radio] {
+          margin: 0;
+          padding: 0;
+          height: 0;
+          width: 0;
+          display: none;
+
+          &:checked {
+
+            & + label {
+              border-bottom-color: currentColor;
+              color: @color-red;
+              opacity: 1;
+            }
+
+          }
+        }
+
+        label {
+          padding: 0 1em;
+          height: inherit;
+          width: 100%;
+          line-height: 40px;
+          vertical-align: top;
+          background: @color-white;
+          border: 4px transparent solid;
+          border-left-width: 0;
+          border-right-width: 0;
+          border-bottom-color: fade(@color-dark-gray, 75%);
+          font-family: @font-main;
+          color: fade(@color-dark-gray, 75%);
+          display: inline-block;
+          cursor: pointer;
+          opacity: .5;
+
+          span {
+            vertical-align: middle;
+            display: inline;
+
+            &.material-icons {
+              margin: 0 8px 0 0;
+            }
+          }
+        }
+      }
+    }
+
+    .gf-toolbar__list {
+
+      height: auto;
+
+      @preview-side: 64px;
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        background: @color-white;
+
+        li {
+          height: auto;
+          min-height: 52px;
+          font-family: @font-main;
+          font-size: 1.2em;
+
+          div {
+            padding: 16px 0;
+            vertical-align: top;
+            display: inline-block;
+
+            &.list__preview {
+              width: @preview-side + @preview-side/2;//64 + 32 = 96
+
+              img {
+                margin: 0 auto;
+                height: @preview-side;
+                width: @preview-side;
+                border: 2px fade(@color-gray, 30%) solid;
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius: 50%;
+                display: block;
+              }
+            }
+            &.list__description {
+              width: calc(~"100% - 96px");
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+  .Media-Desktop({
+
+    .gf-toolbar {
+      margin: 100px 0 0;
+      width: 40%;
+      max-width: 400px;
+    }
+
+  })
+}
+
+.gf-navigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  display: block;
 }
