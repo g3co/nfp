@@ -146,7 +146,8 @@ class ActionBar extends React.Component {
         this.state = {
             showFilterWindow: false,
             editBoxState: false,
-            selectedWeight: 4
+            selectedWeight: 4,
+            selectedHeight: 170
         }
     }
 
@@ -186,7 +187,20 @@ class ActionBar extends React.Component {
         })
     }
 
-    changeHeight() {
+    changeHeight(event, value) {
+
+        console.log('Event: %o, Value: %o', event, value);
+
+        let
+            selectedHeight = value
+            ;
+
+        this.setState({
+            selectedHeight
+        })
+    }
+
+    height2Feet() {
 
     }
 
@@ -196,7 +210,9 @@ class ActionBar extends React.Component {
             sliderStyle = {
                 height: 160,
                 margin: 0
-            };
+            },
+            minHeight = 145,
+            maxHeight = 220;
 
         return (
             <aside className={gfClassName("actionbar")}>
@@ -265,17 +281,20 @@ class ActionBar extends React.Component {
                                 className="conditional--slider"
                                 sliderStyle={sliderStyle}
                                 axis="y-reverse"
-                                defaultValue={this.state.selectedWeight}
+                                value={this.state.selectedWeight}
                                 step={1}
                                 min={0}
                                 max={8}
                                 onChange={this.changeWeight.bind(this)}
                             />
-                            <ul className="cond-weight__weightList">
+                            <ul
+                                className="cond-weight__weightList"
+                            >
                                 {translations.LABELS.CONDITIONS.WEIGHT_LIST.map((item, i) =>
                                     <li
                                         className={i == this.state.selectedWeight ? "active" : ""}
                                         key={i}
+                                        onClick={this.changeWeight.bind(this, null, i)}
                                     >
                                         {item}
                                     </li>
@@ -288,11 +307,38 @@ class ActionBar extends React.Component {
                                 className="conditional--slider"
                                 sliderStyle={sliderStyle}
                                 axis="y"
-                                defaultValue={170}
+                                value={this.state.selectedHeight}
                                 step={1}
-                                min={145}
-                                max={220}
+                                min={minHeight}
+                                max={maxHeight}
+                                onChange={this.changeHeight.bind(this)}
                             />
+                            <div
+                                className="cond-height__heightOption"
+                            >
+                                <span className="heightOption--max">
+                                    <u>{maxHeight}</u>
+                                    <b>{this.height2Feet(maxHeight)}</b>
+                                </span>
+                                <div className="heightOption--current">
+                                    <input
+                                        className="height--centi"
+                                        type="text"
+                                        value={this.state.selectedHeight}
+                                        onChange={this.changeHeight.bind(this)}
+                                    />
+                                    <input
+                                        className="height--feet"
+                                        type="text"
+                                        value={this.height2Feet(this.state.selectedHeight)}
+                                        onChange={this.changeHeight.bind(this)}
+                                    />
+                                </div>
+                                <span className="heightOption--min">
+                                    <u>{minHeight}</u>
+                                    <b>{this.height2Feet(minHeight)}</b>
+                                </span>
+                            </div>
                         </div>
                     </section>
                 </aside>

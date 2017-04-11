@@ -536,11 +536,22 @@ span {
             position: relative;
             margin: 0;
             height: 20px;// 160/8
+            line-height: 20px;
+            vertical-align: middle;
             color: fade(@color-dark-gray, 75%);
             display: block;
 
             &.active {
               color: @color-red;
+
+              &:hover {
+                color: @color-red;
+              }
+            }
+
+            &:hover {
+              color: @color-dark-gray;
+              cursor: pointer;
             }
 
             &:before {
