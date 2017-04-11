@@ -12,6 +12,8 @@ import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
 import FontIcon from 'material-ui/FontIcon';
+import Slider from 'material-ui/Slider';
+
 
 import {
     amberA700, cyan700,
@@ -24,7 +26,16 @@ import spacing from 'material-ui/styles/spacing';
 
 import i18n from './translations.jsx';
 
+let
+    brandColor1 = '#e43d35',
+    brandColor2 = '#333333'
+;
+
 const translations = i18n('ru');
+
+const gfClassName = function prefix(className) {
+    return 'gf-'+ className
+};
 
 const muiTheme = getMuiTheme({
     spacing: spacing,
@@ -45,12 +56,15 @@ const muiTheme = getMuiTheme({
         clockCircleColor: fade(darkBlack, 0.07),
         shadowColor: fullBlack,
     },
+    slider: {
+        selectionColor: brandColor1
+    }
 });
 
 const LoginButton = (props) => (
     <button
         {...props}
-        className="gf-action__login"
+        className={gfClassName("action__login")}
         type="button"
     >
         <FontIcon
@@ -102,18 +116,18 @@ class GetFight extends React.Component {
     render() {
         return (
             <div
-                className="gf-logo"
+                className={gfClassName("logo")}
             >
                 <div id="progress"><dt></dt><dd></dd></div>
                 <span>getfight</span>
                 <ul
-                    className={'gf-menu' +(this.state.active ? ' active': '')}
+                    className={gfClassName("menu"+ (this.state.active ? " active": ""))}
                     onClick={this.handleDropdown.bind(this)}
                     role="navigation"
                 >
                     {translations.HEADER.map((item, i) =>
                         <li>
-                            <a role="link" href={item.route} tabIndex={i}>
+                            <a role="link" href={item.route} tabIndex={i} key={i}>
                                 {item.label}
                             </a>
                         </li>
@@ -130,7 +144,9 @@ class ActionBar extends React.Component {
         super(props);
 
         this.state = {
-            showFilterWindow: false
+            showFilterWindow: false,
+            editBoxState: false,
+            selectedWeight: 4
         }
     }
 
@@ -138,19 +154,54 @@ class ActionBar extends React.Component {
 
         let
             button = event.target,
-            showFilterWindow = !this.state.showFilterWindow
+            showFilterWindow = !this.state.showFilterWindow,
+            editBoxState = true
         ;
 
         this.setState({
-            showFilterWindow
+            showFilterWindow,
+            editBoxState
         });
     }
 
+    hideEditBox(event) {
+
+        let
+            editBoxState = false
+            ;
+
+        this.setState({
+            editBoxState
+        });
+    }
+
+    changeWeight(event, value) {
+
+        let
+            selectedWeight = value
+        ;
+
+        this.setState({
+            selectedWeight
+        })
+    }
+
+    changeHeight() {
+
+    }
+
     render() {
+
+        let
+            sliderStyle = {
+                height: 160,
+                margin: 0
+            };
+
         return (
-            <div className="gf-actionbar">
-                <section className="gf-toolbar">
-                    <header className="gf-toolbar__header">
+            <aside className={gfClassName("actionbar")}>
+                <aside className={gfClassName("toolbar")}>
+                    <header className={gfClassName("toolbar__header")}>
                         <span className="material-icons left-act">search</span>
                         <input
                             type="text"
@@ -161,7 +212,7 @@ class ActionBar extends React.Component {
                             onClick={this.searchFilter.bind(this)}
                         >settings</span>
                     </header>
-                    <section className="gf-toolbar__toggle">
+                    <section className={gfClassName("toolbar__toggle")}>
                         <div>
                             <input id="search-by-fighter" name="search_by" type="radio"/>
                             <label htmlFor="search-by-fighter">
@@ -177,27 +228,82 @@ class ActionBar extends React.Component {
                             </label>
                         </div>
                     </section>
-                    <section className="gf-toolbar__list">
+                    <section className={gfClassName("toolbar__list")}>
                         <ul>
                             <li>
                                 <div className="list__preview">
-                                    <img/>
+                                    <img src="https://pbs.twimg.com/profile_images/770451855369465856/gxxut0bM.jpg" />
                                 </div>
                                 <div className="list__description">
-                                    <p>Description</p>
+                                    <mark className="description__fullname">
+                                        Firstname Lastname
+                                    </mark>
+                                    <div className="description__state">
+                                        WW-LL-DD<div className="state-pfp"></div>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
                     </section>
-                </section>
-            </div>
+                </aside>
+                <aside className={gfClassName("editbox"+ (this.state.editBoxState ? " active" : ""))}>
+                    <header className={gfClassName("editbox__header")}>
+                        <span
+                            className="material-icons left-act"
+                            onClick={this.hideEditBox.bind(this)}
+                        >settings</span>
+                        <h2>{translations.LABELS.EDITBOX_HEADER}</h2>
+                        <span
+                            className="material-icons right-act"
+                            onClick={this.hideEditBox.bind(this)}
+                        >close</span>
+                    </header>
+                    <section className={gfClassName("editbox__conditions")}>
+                        <div className="conditions__weight">
+                            <h3>{translations.LABELS.CONDITIONS.WEIGHT}</h3>
+                            <Slider
+                                className="conditional--slider"
+                                sliderStyle={sliderStyle}
+                                axis="y-reverse"
+                                defaultValue={this.state.selectedWeight}
+                                step={1}
+                                min={0}
+                                max={8}
+                                onChange={this.changeWeight.bind(this)}
+                            />
+                            <ul className="cond-weight__weightList">
+                                {translations.LABELS.CONDITIONS.WEIGHT_LIST.map((item, i) =>
+                                    <li
+                                        className={i == this.state.selectedWeight ? "active" : ""}
+                                        key={i}
+                                    >
+                                        {item}
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
+                        <div className="conditions__height">
+                            <h3>{translations.LABELS.CONDITIONS.HEIGHT}</h3>
+                            <Slider
+                                className="conditional--slider"
+                                sliderStyle={sliderStyle}
+                                axis="y"
+                                defaultValue={170}
+                                step={1}
+                                min={145}
+                                max={220}
+                            />
+                        </div>
+                    </section>
+                </aside>
+            </aside>
         )
     }
 
 };
 
 const Navigation = () => (
-    <div id="gf-navigation" className="gf-navigation"></div>
+    <div id={gfClassName("navigation")} className={gfClassName("navigation")}></div>
 );
 
 class Template extends React.Component {
@@ -244,11 +350,11 @@ class Template extends React.Component {
         return (
             <div>
                 <AppBar
-                    className="gf-appbar"
+                    className={gfClassName("appbar")}
                     style={{
                         padding: '0 16px'
                     }}
-                    title={<GetFight/>}
+                    title={<GetFight />}
                     iconElementRight={this.state.logged ? <LoggedButton /> : <LoginButton />}
                     showMenuIconButton={false}
                     onLeftIconButtonTouchTap={this.handleTouchTap.bind(this)}
@@ -270,8 +376,8 @@ class Template extends React.Component {
                         <MenuItem primaryText="Sign out" />
                     </Menu>
                 </Popover>
-                <ActionBar/>
-                <Navigation/>
+                <ActionBar />
+                <Navigation />
             </div>
         );
     }
@@ -283,9 +389,9 @@ class Template extends React.Component {
 
             if('geolocation' in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    //initMap(position);
+                    initMap(position);
 
-                    google.maps.event.addDomListener(window, 'load', initMap);
+                    //google.maps.event.addDomListener(window, 'load', initMap);
                 });
             } else {
                 alert('To continue, please, get access to your geo location.')
@@ -500,14 +606,10 @@ class Template extends React.Component {
                         lat: coords.latitude,
                         lng: coords.longitude
                     },
+                    zoomControl: false,
+                    streetViewControl: false,
                     mapTypeControlOptions: {
-                        mapTypeIds: [
-                            'roadmap',
-                            'satellite',
-                            'hybrid',
-                            'terrain',
-                            'grayscaleMap'
-                        ]
+                        mapTypeIds: []
                     }
                 });
 
@@ -542,7 +644,7 @@ const App = React.createClass({
     render() {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
-                <Template/>
+                <Template />
             </MuiThemeProvider>
         )
     }
@@ -557,7 +659,7 @@ const Appy = React.createClass({
 
         arry = !!data && data.length
             ? data.map((v, i) => {
-                return <Item key={i} index={i} val={v}/>;
+                return <Item key={i} index={i} val={v} />;
             })
             : <div>nothing</div>;
 
