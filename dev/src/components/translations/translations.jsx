@@ -6,10 +6,6 @@ const Translations = {
     en
 };
 
-function i18n (lang) {
+export default function i18n (lang) {
     return Translations[lang]
-};
-
-module.exports = i18n;
-
-export default i18n;
+}

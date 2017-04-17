@@ -1,0 +1,6 @@
+{
+  "name": "GetFight",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./GetFight.jsx"
+}
