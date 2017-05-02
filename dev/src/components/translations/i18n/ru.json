@@ -23,6 +23,7 @@
     "SEARCH_BY_GYM": "Клуб",
     "SEARCH_PLACEHOLDER": "Что Ищете?",
     "EDITBOX_HEADER": "Параметры",
+    "EDITBOX_ACCEPT": "Найти",
     "CONDITIONS": {
       "WEIGHT": "Вес",
       "HEIGHT": "Рост",
@@ -36,7 +37,21 @@
         "Полутяжелый",
         "Тяжелый",
         "Супертяжелый"
-      ]
+      ],
+      "HEIGHT_UNIT": "см"
+    },
+    "MARTIALS": "Виды спорта",
+    "MARTIALS_PROMPT": "Выберите интересующие",
+    "MARTIAL_ARTS": {
+      "ArmyDogFight": "АРБ",
+      "BrazilianJiuJitsu": "БЖЖ",
+      "CombatSambo": "Боевое Самбо",
+      "Boxing": "Бокс",
+      "Wrestling": "Вольная борьба",
+      "Grappling": "Грэпплинг",
+      "KickBoxing": "Кик Боксинг",
+      "MMA": "ММА",
+      "MuayThai": "Муай Тай"
     }
   }
 }

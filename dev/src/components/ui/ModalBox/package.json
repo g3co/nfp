@@ -1,0 +1,6 @@
+{
+  "name": "ModalBox",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ModalBox.jsx"
+}

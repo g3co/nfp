@@ -27,7 +27,7 @@ const muiTheme = getMuiTheme({
     fontFamily: 'Roboto, sans-serif',
     palette: {
         primary1Color: fade(grey900, 0.75),
-        primary2Color: cyan700,
+        primary2Color: brandColor1,
         primary3Color: grey400,
         accent1Color: pinkA200,
         accent2Color: grey100,
@@ -43,6 +43,12 @@ const muiTheme = getMuiTheme({
     },
     slider: {
         selectionColor: brandColor1
+    },
+    checkbox: {
+        checkedColor: brandColor1
+    },
+    radiobutton: {
+        checkedColor: brandColor1
     }
 });
 

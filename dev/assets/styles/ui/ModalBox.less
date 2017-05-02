@@ -1,0 +1,67 @@
+.gf-modalbox {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  background: fade(@color-white, 25%);
+  display: none;
+  opacity: 0;
+  z-index: 9900;
+
+  &.active {
+    opacity: 1;
+    -webkit-transition: opacity .25s;
+    -moz-transition: opacity .25s;
+    -ms-transition: opacity .25s;
+    -o-transition: opacity .25s;
+    transition: opacity .25s;
+  }
+
+  &.in {
+    display: block;
+  }
+
+  &.as-popup {
+    background-color: transparent;
+  }
+
+  .modalbox__container {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    padding: 0;
+    height: auto;
+    max-height: calc(~"100% - 4em");
+    width: calc(~"100% - 4em");
+    max-width: 640px;
+    background: fade(@color-black, 50%);
+    border: 0 transparent solid;
+    -webkit-transform: translate3d(0, -50%, 0);
+    -moz-transform: translate3d(0, -50%, 0);
+    -ms-transform: translate3d(0, -50%, 0);
+    -o-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
+
+    .box-body {
+      width: 100%;
+      background: @color-white;
+    }
+  }
+
+  //@media Desktop
+  .Media-Desktop({
+    .modalbox__container {
+      padding: 1em;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+    }
+  })
+
+}

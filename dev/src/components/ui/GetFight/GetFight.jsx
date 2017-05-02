@@ -29,20 +29,19 @@ export default class GetFight extends React.Component {
     }
 
     render() {
-        console.log('gfClassName: %o', gfClassName);
         return (
             <div
                 className={gfClassName("logo")}
             >
                 <div id="progress"><dt></dt><dd></dd></div>
-                <span>getfight</span>
+                <span>nfp</span>
                 <ul
                     className={gfClassName("menu"+ (this.state.active ? " active": ""))}
                     onClick={this.handleDropdown.bind(this)}
                     role="navigation"
                 >
                     {translations.HEADER.map((item, i) =>
-                        <li>
+                        <li key={i}>
                             <a role="link" href={item.route} tabIndex={i} key={i}>
                                 {item.label}
                             </a>

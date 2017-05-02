@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import ReactDOM, { findDOMNode } from 'react-dom';
 
 import AppBar from 'material-ui/AppBar';
 import Popover from 'material-ui/Popover';
@@ -9,19 +10,18 @@ import IconMenu from 'material-ui/IconMenu';
 import FontIcon from 'material-ui/FontIcon';
 import Slider from 'material-ui/Slider';
 
-import * as helper from '../helper';
-
-const {
+import {
     i18n,
     ui,
     colors,
     gfClassName
-} = helper;
+} from '../helper';
 
 const {
     ActionBar,
     GetFight,
-    Navigation
+    Navigation,
+    ModalBox
 } = ui;
 
 const translations = i18n('ru');
@@ -30,6 +30,8 @@ export default class Template extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.modalShow = this.modalShow.bind(this);
 
         this.state = {
             open: false,
@@ -65,6 +67,11 @@ export default class Template extends React.Component {
         }
     }
 
+    modalShow() {
+        document.getElementById(gfClassName("modalbox"))
+            .dispatchEvent(new CustomEvent('show'));
+    }
+
     render() {
 
         const LoginButton = (props) => (
@@ -72,6 +79,7 @@ export default class Template extends React.Component {
                 {...props}
                 className={gfClassName("action__login")}
                 type="button"
+                onClick={this.modalShow}
             >
                 <FontIcon
                     className="material-icons"
@@ -104,6 +112,7 @@ export default class Template extends React.Component {
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{
+                        position: "fixed",
                         padding: '0 16px'
                     }}
                     title={<GetFight />}
@@ -130,6 +139,9 @@ export default class Template extends React.Component {
                 </Popover>
                 <ActionBar />
                 <Navigation />
+                <ModalBox
+                    id={gfClassName("modalbox")}
+                />
             </div>
         );
     }

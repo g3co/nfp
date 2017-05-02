@@ -1,0 +1,236 @@
+.gf-appbar {
+
+  position: fixed;
+  background: svg-gradient(to bottom, @color-black, @tp-literal);
+
+  & > div {
+    margin: 0;
+    height: inherit;
+  }
+
+  .gf-logo {
+    margin: 0 auto;
+    height: inherit;
+    line-height: inherit;
+    font-size: 1em;
+    max-width: 1024px;
+    display: block;
+
+    & > span {
+      font-family: @font-logo;
+      font-size: 2.6em;
+      font-weight: 900;
+      font-style: normal;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    ul.gf-menu {
+
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: inline-block;
+      vertical-align: top;
+
+      &:before {
+        content: 'keyboard_arrow_down';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin: 0 0 0 -7px;
+        font-family: @font-micons;
+        font-size: 2em;
+        vertical-align: middle;
+        line-height: inherit;
+        opacity: .6;
+        cursor: pointer;
+        -moz-animation: pulsate 1.5s ease-out 0s infinite;
+        -webkit-animation: pulsate 1.5s ease-out 0s infinite;
+        animation: pulsate 1.5s ease-out 0s infinite;
+        -webkit-transition-property: transform;
+        -moz-transition-property: transform;
+        -ms-transition-property: transform;
+        -o-transition-property: transform;
+        transition-property: transform;
+        -webkit-transition-duration: .5s;
+        -moz-transition-duration: .5s;
+        -ms-transition-duration: .5s;
+        -o-transition-duration: .5s;
+        transition-duration: .5s;
+      }
+
+      li {
+        position: relative;
+        margin: 0;
+        padding: 0 15px;
+        width: auto;
+        text-align: center;
+        display: none;
+
+        a {
+          color: inherit;
+          text-decoration: none;
+
+          .Media-Desktop({
+            opacity: .5;
+            -webkit-transition: opacity .25s;
+            -moz-transition: opacity .25s;
+            -ms-transition: opacity .25s;
+            -o-transition: opacity .25s;
+            transition: opacity .25s;
+
+            &:hover {
+              opacity: 1;
+            }
+          })
+        }
+
+        &.active:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 3px;
+          width: 100%;
+          background: @color-white;
+        }
+      }
+
+      &.active {
+
+        &:before {
+          -webkit-animation: none;
+          -o-animation: none;
+          animation: none;
+          -webkit-transform: rotate(180deg);
+          -moz-transform: rotate(180deg);
+          -ms-transform: rotate(180deg);
+          -o-transform: rotate(180deg);
+          transform: rotate(180deg);
+        }
+
+        li {
+          width: inherit;
+          background: fade(@color-black, 55%);
+          display: block;
+        }
+
+      }
+
+      //@media Desktop
+      .Media-Desktop({
+        position: relative;
+        top: 0;
+        left: auto;
+        right: auto;
+        margin: 0 0 0 15%;
+
+        &:before {
+          display: none;
+        }
+
+        li {
+          display: inline-block;
+        }
+
+        &.active {
+          li {
+            width: 120px;
+            background: transparent;
+            display: inline-block;
+          }
+        }
+      })
+    }
+  }
+
+  .gf-action__login {
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin: -15px 0 0;
+    padding: 0 16px;
+    background: transparent;
+    border: 0 transparent solid;
+    font-family: @font-main;
+    font-size: 1em;
+    color: @color-white;
+    opacity: .75;
+    cursor: pointer;
+    -webkit-transition: opacity .25s;
+    -moz-transition: opacity .25s;
+    -ms-transition: opacity .25s;
+    -o-transition: opacity .25s;
+    transition: opacity .25s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    span {
+      vertical-align: middle;
+    }
+
+    .material-icons + span {
+      display: none;
+    }
+
+    //@media Desktop
+    .Media-Desktop({
+      .material-icons + span {
+        display: inline-block;
+      }
+    })
+  }
+
+  #progress {
+    position: fixed;
+    top: 0;
+    left: -6px;
+    width: 0;
+    height: 3px;
+    background: @color-red;
+    border-radius: 1px;
+    -moz-transition: width 500ms ease-out,opacity 500ms linear;
+    -webkit-transition: width 500ms ease-out,opacity 500ms linear;
+    transition: width 500ms ease-out,opacity 500ms linear;
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: width,opacity;
+
+    &.done {
+      opacity: 0;
+    }
+
+    .ab-progress(@width, @right, @rect) {
+      position: absolute;
+      top: 0;
+      height: 3px;
+      box-shadow: @color-red 1px 0 6px 1px;
+      border-radius: 100%;
+      width: @width;
+      right: @right;
+      opacity: .6;
+      clip: @rect;
+      -moz-animation: pulse 2s ease-out 0s infinite;
+      -webkit-animation: pulse 2s ease-out 0s infinite;
+      animation: pulse 2s ease-out 0s infinite;
+    }
+
+    dt {
+      .ab-progress(20px, 0, rect(-6px,22px,14px,10px));
+    }
+    dd {
+      .ab-progress(180px, -80px, rect(-6px,90px,14px,-6px));
+    }
+  }
+}
