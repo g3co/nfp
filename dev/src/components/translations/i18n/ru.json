@@ -53,5 +53,11 @@
       "MMA": "ММА",
       "MuayThai": "Муай Тай"
     }
+  },
+  "SOCIAL_LABELS": {
+    "ENTRY": {
+      "INSTAGRAM": "Instagram",
+      "VK": "Вконтакте"
+    }
   }
 }

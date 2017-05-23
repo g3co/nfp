@@ -45,7 +45,11 @@ module.exports = {
                 loader: ExtractTextPlugin.extract('style', 'css!less')
             },
             {
-                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+                test: /\.svg$/,
+                loader: 'babel!svg-react'
+            },
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|svg)$/,
                 loader: 'file',
                 query: {
                     limit: 30000,

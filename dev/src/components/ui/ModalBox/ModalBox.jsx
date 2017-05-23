@@ -8,6 +8,8 @@ import {
     gfClassName
 } from '../../helper';
 
+import SocialMedia from '../SocialMedia';
+
 const translations = i18n('ru');
 
 export default class ModalBox extends React.Component {
@@ -128,7 +130,13 @@ export default class ModalBox extends React.Component {
             >
                 <div className="modalbox__container">
                     <div className="box-body">
-asdasdasda
+                        <button>check</button>
+                        <SocialMedia
+                            className="instagram"
+                        />
+                        <SocialMedia
+                            className="vk"
+                        />
                     </div>
                 </div>
                 <i></i>

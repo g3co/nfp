@@ -39,18 +39,24 @@
     height: auto;
     max-height: calc(~"100% - 4em");
     width: calc(~"100% - 4em");
-    max-width: 640px;
     background: fade(@color-black, 50%);
-    border: 0 transparent solid;
-    -webkit-transform: translate3d(0, -50%, 0);
-    -moz-transform: translate3d(0, -50%, 0);
-    -ms-transform: translate3d(0, -50%, 0);
-    -o-transform: translate3d(0, -50%, 0);
-    transform: translate3d(0, -50%, 0);
+    border: 1px @color-gray solid;
+    -webkit-box-shadow: 0 4px 10px fade(@color-black, 350%);
+    -moz-box-shadow: 0 4px 10px fade(@color-black, 30%);
+    box-shadow: 0 4px 10px fade(@color-black, 30%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
 
     .box-body {
+      padding: 1em;
       width: 100%;
       background: @color-white;
+      font-family: @font-main;
+      font-size: 1.4rem;
+      color: @color-black;
     }
   }
 
@@ -58,6 +64,7 @@
   .Media-Desktop({
     .modalbox__container {
       padding: 1em;
+      max-width: 640px;
       -webkit-border-radius: 8px;
       -moz-border-radius: 8px;
       border-radius: 8px;

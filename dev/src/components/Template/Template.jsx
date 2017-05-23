@@ -374,7 +374,8 @@ export default class Template extends React.Component {
                     streetViewControl: false,
                     mapTypeControlOptions: {
                         mapTypeIds: []
-                    }
+                    }/*,
+                    minZoom: 9*/
                 });
 
                 map.mapTypes.set('grayscaleMap', grayscaleMap);
