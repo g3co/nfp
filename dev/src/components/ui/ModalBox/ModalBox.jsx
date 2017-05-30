@@ -18,7 +18,8 @@ export default class ModalBox extends React.Component {
 
         this.show = this.show.bind(this);
         this.hide = this.hide.bind(this);
-        this.pullData = this.pullData.bind(this);
+        this.load = this.load.bind(this);
+        this.error = this.error.bind(this);
 
         this.state = {
             visible: false,
@@ -30,22 +31,39 @@ export default class ModalBox extends React.Component {
         let visible = true,
             route = !!event.detail ? event.detail.route : false,
             _visible = this.state.visible,
-            modal = findDOMNode(this);
+            modal = findDOMNode(this),
+            $modal = $dw(modal);
 
         if(_visible) {
             return
         }
 
-        modal.addEventListener('click', this.hide, {bubbles: false});
+        $modal
+            .on('click', this.hide, {bubbles: false});
 
         this.fade(modal, ['in', 'active'])
             .then(function() {
+
                 this.setState({
                     visible,
                     route
-                })
+                });
+
+                $modal.trigger('ready');// AMAREADY!
+
+                if(!!route == false) {
+                    return
+                }
+
+                //send request to the URL:route
+                $modal.request(route)
+                    .then(function(response) {
+                        this.load(response)
+                    }.bind(this))
+                    .catch(function(error) {
+                        this.error(error)
+                    }.bind(this))
             }.bind(this))
-            .then(this.pullData);
     }
 
     hide(event) {
@@ -53,26 +71,39 @@ export default class ModalBox extends React.Component {
 
         let el = event.target,
             visible = false,
-            route = !!event.detail ? event.detail.route : false,
+            route = false,
             modal = findDOMNode(this);
 
         if(!el.className.match(/gf-modalbox/i)) {
             return
         }
 
-        modal.removeEventListener('click', this.hide);
+        $dw(modal)
+            .off('click', this.hide);
 
         this.fade(modal, ['in', 'active'])
             .then(function() {
                 this.setState({
                     visible,
                     route
-                })
+                });
             }.bind(this));
     }
 
-    pullData() {
+    load(res) {
+        let modal = findDOMNode(this),
+            $modal = $dw(modal);
 
+        $modal.addClass('ready');
+
+        $modal.trigger('load')
+    }
+
+    error(err) {
+        let modal = findDOMNode(this),
+            $modal = $dw(modal);
+
+        $modal.trigger('error')
     }
 
     fade(modal, states) {
@@ -102,15 +133,15 @@ export default class ModalBox extends React.Component {
     }
 
     componentDidMount() {
-        findDOMNode(this).addEventListener('show', this.show);
-        findDOMNode(this).addEventListener('hide', this.hide);
-        findDOMNode(this).addEventListener('pullData', this.pullData);
+        $dw(findDOMNode(this))
+            .on('show', this.show)
+            .on('hide', this.hide);
     }
 
     componentWillUnmount() {
-        findDOMNode(this).removeEventListener('show', this.show);
-        findDOMNode(this).removeEventListener('hide', this.hide);
-        findDOMNode(this).removeEventListener('pullData', this.pullData);
+        $dw(findDOMNode(this))
+            .off('show', this.show)
+            .off('hide', this.hide);
     }
 
     render(props) {
@@ -130,13 +161,7 @@ export default class ModalBox extends React.Component {
             >
                 <div className="modalbox__container">
                     <div className="box-body">
-                        <button>check</button>
-                        <SocialMedia
-                            className="instagram"
-                        />
-                        <SocialMedia
-                            className="vk"
-                        />
+                        <div className="loader--radial"></div>
                     </div>
                 </div>
                 <i></i>

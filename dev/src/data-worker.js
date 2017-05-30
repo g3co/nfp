@@ -2,22 +2,18 @@
 
     'use strict';
 
-    if(!!sel == false) {
-        throw new Error('The selector should not be empty')
-    }
-
     //initialization
-    function $nfp(sel) {
+    function $nfp(s) {
 
-        function getDOMElement(sel) {
+        function getDOMElement(s) {
             if(!!Object.prototype.toString.call(sel).match(/Window|HTML/)) {
-                return sel
+                return s
             }
 
-            return document.querySelectorAll(sel)
+            return document.querySelectorAll(s)
         }
 
-        var collection = getDOMElement(sel);
+        var collection = getDOMElement(s);
 
         if(!!collection.length) {
             for(var _el in collection) {
@@ -27,17 +23,17 @@
             this[0] = collection;
         }
 
-        this.selector = !!sel.length ? sel : this[0].tagName.toLowerCase();
+        this.selector = !!s ? !!s.length ? s : this[0].tagName.toLowerCase() : '';
     }
 
     //base functionality
     function rootDataWorker() {
 
-        var _el = this[0],//root:Element
-            _xhr = new window.XMLHttpRequest();//XHR
+        var _xhr = new window.XMLHttpRequest();//XHR
 
         return {
 
+            //exclude all except {n}
             eq: function(n) {
 
                 var el = this[n];
@@ -56,31 +52,188 @@
                 return this
             },
 
+            //get NodeElement
             get: function(i) {
 
-                if(!!i == false) {
+                if(!!i == false && i != 0) {
                     return
                 }
 
                 return this[i]
             },
 
-            xhr: function(o) {
-
-            }
-        };
-
-        function initXHR(xhr) {
-
-            xhr.upload.addEventListener('progress', function(e) {
-
-                if(e.lengthComputable) {
-
+            //attributes worker
+            attr: function(name, value) {
+                if(!!name == false) {
+                    return
                 }
 
-            }, false);
+                var el = this[i],
+                    attribute = '';
 
-        }
+                if(!!value && value !== false && value !== 0) {
+                    el.setAttribute(name, value);
+
+                    return this
+                }
+
+                return el.getAttribute(name)
+            },
+
+            addClass: function(s) {
+                if(!!s == false) {
+                    return
+                }
+
+                var el = this[i],
+                    _className = el.className;
+
+                if(!!_className.match(new RegExp(s, 'ig'))) {
+                    return this
+                }
+
+                el.className = _className +' '+ s;
+
+                return this
+            },
+
+            removeClass: function(s) {
+                s = s || '';
+
+                var el = this[0],
+                    _className = el.className;
+
+                _className = _className.replace(s, '').replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+
+                el.className = _className;
+
+                return this
+            },
+
+            //find element inside
+            find: function(s) {
+                if(!!s == false) {
+                    return
+                }
+
+                var _el = this[0] || window.document;
+
+                return _el.querySelectorAll(s)
+            },
+
+            //add event
+            on: function(et, foo, o) {
+                if(!!et == false || !!foo == false) {
+                    return
+                }
+
+                if(!!Object.prototype.toString.call(foo).match(/Function/) == false) {
+                    return
+                }
+
+                var target = this[0] || window.document;
+                target.addEventListener(et, foo, o);
+
+                return this
+            },
+
+            //dispatch event
+            off: function(et, foo) {
+                var target = this[0] || window.document;
+                target.removeEventListener(et, foo);
+
+                return this
+            },
+
+            //add an event and dispatch it after
+            once: function(et, foo, o) {
+                if(!!et == false || !!foo == false) {
+                    return
+                }
+
+                if(!!Object.prototype.toString.call(foo).match(/Function/) == false) {
+                    return
+                }
+
+                var target = this[0] || window.document;
+                target.addEventListener(et, onceFiring);
+
+                function onceFiring(e) {
+                    target.removeEventListener(et, onceFiring);
+                    foo(e);
+                }
+
+                return this
+            },
+
+            //pass event
+            trigger: function(et, o, custom) {
+                if(!!et == false) {
+                    return
+                }
+
+                o = !!o ? {detail: o} : null;
+
+                custom = !!custom && custom !== false ? !!custom : true;
+
+                var _event = custom ? new CustomEvent(et, o) : new Event(et, o);
+                var target = this[0] || window.document;
+                target.dispatchEvent(_event);
+
+                return this
+            },
+
+            //make an AJAX request
+            request: function(o) {
+
+                return new Promise(function(resolve, reject) {
+
+                    if(!!o == false) {
+                        reject(new Error('Wrong parameters'))
+                    }
+
+                    //if string passed convert to Object.url = String
+                    if(!!Object.prototype.toString.call(o).match(/String/)) {
+                        o = {
+                            url: o
+                        }
+                    }
+
+                    //initializations
+                    _xhr.responseType = o.responseType || 'json';
+
+                    if(!!o.requestHeaders) {
+                        for(var h in o.requestHeaders) {
+                            if(o.requestHeaders.hasOwnProperty(h)) {
+                                _xhr.setRequestHeader(h, o.requestHeaders[h]);
+                            }
+                        }
+                    }
+
+                    _xhr.open(
+                        o.type || 'GET',
+                        o.url, true
+                    );
+
+                    _xhr.onload = function() {
+                        if(this.status == 200) {
+                            resolve(this);
+                        } else {
+                            var error = new Error(this.statusText);
+                            error.code = this.status;
+                            reject(error);
+                        }
+                    };
+
+                    _xhr.onerror = function() {
+                        reject(new Error('Network connection failed.'))
+                    };
+
+                    _xhr.send();
+
+                })
+            }
+        };
     }
 
     //implementation
@@ -90,4 +243,5 @@
     return new $nfp(sel)
 }
 
-$dw.prototype = new $dw;
+$dw.prototype = new $dw();
+var $ = $dw();

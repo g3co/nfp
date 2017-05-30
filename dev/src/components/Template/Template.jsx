@@ -44,13 +44,13 @@ export default class Template extends React.Component {
 
         this.setState({
             open: true,
-            anchorEl: event.currentTarget,
+            anchorEl: event.currentTarget
         });
     };
 
     handleRequestClose() {
         this.setState({
-            open: false,
+            open: false
         });
     };
 
@@ -68,8 +68,17 @@ export default class Template extends React.Component {
     }
 
     modalShow() {
-        document.getElementById(gfClassName("modalbox"))
-            .dispatchEvent(new CustomEvent('show'));
+        $dw('#'+ gfClassName("modalbox"))
+            .once('ready', function(e) {
+                console.log('ready at now...');
+            })
+            .once('load', function(e) {
+                console.log('loaded!!!');
+            })
+            .once('error', function (e) {
+                console.log('Error %o', e);
+            })
+            .trigger('show', {route: 'givi/joba'});
     }
 
     render() {

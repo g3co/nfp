@@ -14,11 +14,28 @@
 
   &.active {
     opacity: 1;
-    -webkit-transition: opacity .25s;
-    -moz-transition: opacity .25s;
-    -ms-transition: opacity .25s;
-    -o-transition: opacity .25s;
-    transition: opacity .25s;
+    -webkit-transition-property: opacity, width, height;
+    -moz-transition-property: opacity, width, height;
+    -ms-transition-property: opacity, width, height;
+    -o-transition-property: opacity, width, height;
+    transition-property: opacity, width, height;
+    -webkit-transition-duration: .25s;
+    -moz-transition-duration: .25s;
+    -ms-transition-duration: .25s;
+    -o-transition-duration: .25s;
+    transition-duration: .25s;
+  }
+
+  &.ready {
+    .modalbox__container {
+      width: calc(~"100% - 4em");
+      left: 0;
+      right: 0;
+      
+      .loader--radial {
+        display: none;
+      }
+    }
   }
 
   &.in {
@@ -32,15 +49,17 @@
   .modalbox__container {
     position: absolute;
     top: 50%;
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: auto;
     margin: 0 auto;
     padding: 0;
     height: auto;
     max-height: calc(~"100% - 4em");
-    width: calc(~"100% - 4em");
+    width: auto;
+    max-width: none;
     background: fade(@color-black, 50%);
     border: 1px @color-gray solid;
+    display: block;
     -webkit-box-shadow: 0 4px 10px fade(@color-black, 350%);
     -moz-box-shadow: 0 4px 10px fade(@color-black, 30%);
     box-shadow: 0 4px 10px fade(@color-black, 30%);
@@ -49,6 +68,16 @@
     -ms-transform: translateY(-50%);
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
+    -webkit-transition-property: inherit;
+    -moz-transition-property: inherit;
+    -ms-transition-property: inherit;
+    -o-transition-property: inherit;
+    transition-property: inherit;
+    -webkit-transition-duration: inherit;
+    -moz-transition-duration: inherit;
+    -ms-transition-duration: inherit;
+    -o-transition-duration: inherit;
+    transition-duration: inherit;
 
     .box-body {
       padding: 1em;
