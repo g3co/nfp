@@ -345,8 +345,9 @@
             }
 
             &.martial-art {
-              padding: .5em 0 0;
+              padding: 0;
               font-size: 1.25em;
+              line-height: 32px;
               color: fade(@color-black, 65%);
 
               &.checked {
@@ -363,51 +364,56 @@
 
               &:before {
                 content: '';
+                height: 32px;
                 width: 32px;
                 font-family: @font-ufc;
                 font-size: 1.65em;
                 text-align: left;
                 display: inline-block;
               }
-              &.ArmyDogFight:before {
-                content: '\f17c';
-              }
-              &.BrazilianJiuJitsu:before {
-                content: '\f1a9';
-              }
-              &.CombatSambo:before {
-                content: '\f163';
-              }
-              &.Boxing:before {
-                content: '\f162';
-              }
-              &.Wrestling:before {
-                content: '\f18e';
-              }
-              &.Grappling:before {
-                content: '\f18b';
-              }
-              &.KickBoxing:before {
-                content: '\f160';
-              }
-              &.MMA:before {
-                content: '\f161';
-              }
-              &.MuayThai:before {
-                content: '\f1bc';
-              }
-
+                &.ArmyDogFight:before {
+                  content: '\f17c';
+                }
+                &.BrazilianJiuJitsu:before {
+                  content: '\f1a9';
+                }
+                &.CombatSambo:before {
+                  content: '\f163';
+                }
+                &.Boxing:before {
+                  content: '\f162';
+                }
+                &.Wrestling:before {
+                  content: '\f18e';
+                }
+                &.Grappling:before {
+                  content: '\f18b';
+                }
+                &.KickBoxing:before {
+                  content: '\f160';
+                }
+                &.MMA:before {
+                  content: '\f161';
+                }
+                &.MuayThai:before {
+                  content: '\f1bc';
+                }
 
               label {
                 width: calc(~"100% - 32px");
+                vertical-align: top;
                 display: inline-block;
-              }
 
-              &:first-child {
-                padding-top: 0;
-              }
-              &:last-child {
-                padding-bottom: .5em;
+                & > div {
+                  cursor: pointer;
+                  position: absolute;
+                  top: 5px;
+                  right: 12px;
+                  height: auto;
+                  width: auto;
+                  display: inline-block;
+                  overflow: visible;
+                }
               }
             }
           }
@@ -574,10 +580,10 @@
       margin: 100px 0 0;
       left: 400px;
       width: 400px;
-      max-height: 600px;
+      max-height: 500px;
 
-      & > section > div > ul {
-        max-height: 236px;
+      & > section > .fw > ul {
+        max-height: 170px;
         overflow-x: visible;
         overflow-y: auto;
       }

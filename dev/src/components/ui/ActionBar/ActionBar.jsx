@@ -306,7 +306,6 @@ export default class ActionBar extends React.Component {
                                                     labelPosition="left"
                                                     style={{
                                                         position: "absolute",
-                                                        right: 12,
                                                         width: "auto",
                                                         display: "inline-block"
                                                     }}

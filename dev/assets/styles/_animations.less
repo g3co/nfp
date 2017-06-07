@@ -45,3 +45,77 @@
     opacity: .6
   }
 }
+
+@keyframes dotPulsate{
+
+  0% {
+    transform:  scale(0) ;
+    opacity: 0;
+  }
+
+  5% {
+    transform:  scale(2) ;
+  }
+
+  10% {
+    transform:  scale(0.90) ;
+    opacity: 1;
+  }
+
+
+  11% {
+    transform:  scale(1.50) ;
+  }
+
+  12% {
+    transform:  scale(1.00) ;
+  }
+
+  28% {
+    background: @color-red;
+  }
+
+  29% {
+    background: white;
+  }
+
+  31% {
+    background: @color-red;
+  }
+
+  33% {
+    background: white;
+  }
+
+  35% {
+    background: @color-red;
+  }
+
+  90%{
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dotWavePulsate{
+  0% {
+    opacity: 0;
+    transform:  scale(0.00);
+  }
+
+  1% {
+    opacity: 1;
+  }
+
+  10% {
+    background: fade(@color-red, 40);
+  }
+
+  100% {
+    transform:  scale(1) ;
+    background: transparent;
+  }
+}
