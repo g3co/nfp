@@ -65,7 +65,7 @@
                     return
                 }
 
-                var el = this[i],
+                var el = this[0],
                     attribute = '';
 
                 if(!!value && value !== false && value !== 0) {
@@ -82,7 +82,7 @@
                     return
                 }
 
-                var el = this[i],
+                var el = this[0],
                     _className = el.className;
 
                 if(!!_className.match(new RegExp(s, 'ig'))) {
