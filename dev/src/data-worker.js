@@ -241,8 +241,6 @@
                         reject(new Error('Network connection failed.'))
                     };
 
-                    console.log('Body: %o', o.body);
-
                     _xhr.send(o.body);
 
                 })

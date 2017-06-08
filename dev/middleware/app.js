@@ -5,9 +5,7 @@ module.exports = function(mongoose, app, router) {
     var API = '/api/v1';
 
     var models = require('.'.concat(API).concat('/models'))(mongoose),
-        Places = models.Places,
-        Fighters = models.Fighters,
-        Sparrings = models.Sparrings;
+        controllers = require('.'.concat(API).concat('/controllers'))(models);
 
     router.use(function(req, res, next) {
         console.log(req.method+req.url);
@@ -18,7 +16,28 @@ module.exports = function(mongoose, app, router) {
         res.send('HomePage')
     });
 
-    //GET
+    //CREATE
+    router.post(API.concat('/fighter'), function(req, res) {
+        console.log(req.body);
+
+        var fighter = new Fighters({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            avatar: req.body.avatar,
+            sex: req.body.sex,
+            email: req.body.email
+        });
+
+        fighter.save(function(err) {
+            if(err) {
+                return res.send(err.name)
+            }
+
+            return res.send({fighter: fighter})
+        })
+    });
+
+    //READ
     router.get(API.concat('/places'), function (req, res) {
         res.send('Places')
     });
@@ -51,24 +70,7 @@ module.exports = function(mongoose, app, router) {
         res.send('Sparring:'+ req.params.id)
     });
 
-    //POST
-    router.post(API.concat('/fighter'), function(req, res) {
-        console.log(req.body);
+    //UPDATE
 
-        var fighter = new Fighters({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            avatar: req.body.avatar,
-            sex: req.body.sex,
-            email: req.body.email
-        });
-
-        fighter.save(function(err) {
-            if(err) {
-                return res.send(err.name)
-            }
-
-            return res.send({fighter: fighter})
-        })
-    });
+    //DELETE
 };
