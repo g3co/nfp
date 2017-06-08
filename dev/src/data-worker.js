@@ -28,9 +28,6 @@
 
     //base functionality
     function rootDataWorker() {
-
-        var _xhr = new window.XMLHttpRequest();//XHR
-
         return {
 
             //exclude all except {n}
@@ -199,8 +196,28 @@
                         }
                     }
 
+                    //defaults
+                    o.type = o.type || 'GET';
+                    o.body = o.body || null;
+
+                    var _xhr = new window.XMLHttpRequest();//XHR
+
                     //initializations
                     _xhr.responseType = o.responseType || 'json';
+
+                    //set JSON body for POST
+                    if(o.type.match(/post/i)) {
+                        o.body = JSON.stringify(o.body);
+
+                        o.requestHeaders = o.requestHeaders || {};
+
+                        o.requestHeaders['Content-Type'] = 'application/json; charset=utf-8';
+                    }
+
+                    _xhr.open(
+                        o.type,
+                        o.url, true
+                    );
 
                     if(!!o.requestHeaders) {
                         for(var h in o.requestHeaders) {
@@ -209,11 +226,6 @@
                             }
                         }
                     }
-
-                    _xhr.open(
-                        o.type || 'GET',
-                        o.url, true
-                    );
 
                     _xhr.onload = function() {
                         if(this.status == 200) {
@@ -229,7 +241,9 @@
                         reject(new Error('Network connection failed.'))
                     };
 
-                    _xhr.send();
+                    console.log('Body: %o', o.body);
+
+                    _xhr.send(o.body);
 
                 })
             }

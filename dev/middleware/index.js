@@ -8,8 +8,6 @@ var express = require('express'),
 
 var uri = require('./config');
 
-app.use(bodyParser.urlencoded({ extended: true }));
-
 //get started
 mongoose
     .connect(uri);
@@ -25,9 +23,18 @@ net_fight_promotion
     .once('open', function () {
         console.log('Connected to mLab');
 
-        require('./app')(app, router);
+        require('./app')(mongoose, app, router);
 
         //defaults
+        app.use(function(req, res, next) {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+            next();
+        });
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json());
         app.use('/', express.static(path.join(__dirname, 'public')));
         app.use('/', router);
 
