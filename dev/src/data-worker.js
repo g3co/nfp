@@ -24,6 +24,7 @@
         }
 
         this.selector = !!s ? !!s.length ? s : this[0].tagName.toLowerCase() : '';
+        this.length = this.length || 1;
     }
 
     //base functionality
@@ -113,9 +114,17 @@
                     return
                 }
 
-                var _el = this[0] || window.document;
+                return this[0].querySelectorAll(s)
+            },
 
-                return _el.querySelectorAll(s)
+            append: function(node) {
+                if(!!node == false) {
+                    return this
+                }
+
+                this[0].appendChild(node);
+
+                return this
             },
 
             //add event
@@ -128,21 +137,24 @@
                     return
                 }
 
-                var target = this[0] || window.document;
-                target.addEventListener(et, foo, o);
+                getInstance(this).forEach(function(t) {
+                    t.addEventListener(et, foo, o);
+                });
 
                 return this
             },
 
-            //dispatch event
+            //remove event
             off: function(et, foo) {
-                var target = this[0] || window.document;
-                target.removeEventListener(et, foo);
+
+                getInstance(this).forEach(function(t) {
+                    t.removeEventListener(et, foo);
+                });
 
                 return this
             },
 
-            //add an event and dispatch it after
+            //dispatch event only once
             once: function(et, foo, o) {
                 if(!!et == false || !!foo == false) {
                     return
@@ -152,18 +164,19 @@
                     return
                 }
 
-                var target = this[0] || window.document;
-                target.addEventListener(et, onceFiring);
+                getInstance(this).forEach(function(t) {
+                    t.addEventListener(et, onceFiring);
 
-                function onceFiring(e) {
-                    target.removeEventListener(et, onceFiring);
-                    foo(e);
-                }
+                    function onceFiring(e) {
+                        this.removeEventListener(et, onceFiring);
+                        foo.call(this, e);
+                    }
+                });
 
                 return this
             },
 
-            //pass event
+            //dispatch an event
             trigger: function(et, o, custom) {
                 if(!!et == false) {
                     return
@@ -174,8 +187,10 @@
                 custom = !!custom && custom !== false ? !!custom : true;
 
                 var _event = custom ? new CustomEvent(et, o) : new Event(et, o);
-                var target = this[0] || window.document;
-                target.dispatchEvent(_event);
+
+                getInstance(this).forEach(function(t) {
+                    t.dispatchEvent(_event);
+                });
 
                 return this
             },
@@ -229,7 +244,32 @@
 
                     _xhr.onload = function() {
                         if(this.status == 200) {
-                            resolve(this);
+
+                            var res = this;
+
+                            if(!!res.response && !!Object.prototype.toString.call(res.response).match(/HTMLDocument/i)) {
+                                var document = res.response,
+                                    body = res.response.body,
+                                    _div = document.createElement('div');
+
+                                removeTagList(document.getElementsByTagName('script'));
+                                removeTagList(document.getElementsByTagName('iframe'));
+                                removeTagList(document.getElementsByTagName('frame'));
+                                removeTagList(document.getElementsByTagName('object'));
+
+                                if(body.childNodes.length) {
+                                    for(var c in body.childNodes) {
+                                        if(body.childNodes.hasOwnProperty(c)) {
+                                            var _element = body.childNodes[c];
+                                            !!_element && _div.appendChild(_element);
+                                        }
+                                    }
+                                }
+
+                                res.responseHTML = _div;
+                            }
+
+                            resolve(res);
                         } else {
                             var error = new Error(this.statusText);
                             error.code = this.status;
@@ -243,9 +283,31 @@
 
                     _xhr.send(o.body);
 
+                    //closure helper
+                    function removeTagList(list) {
+                        for(var l in list) {
+                            if(list.hasOwnProperty(l)) {
+                                !!list[l] && list[l].remove();
+                            }
+                        }
+                    }
                 })
             }
         };
+
+        function getInstance(collection) {
+            var instance = [collection];
+
+            if(!!collection == false) {
+                instance = [window.document]
+            }
+
+            if(collection.length == 1) {
+                instance = [collection[0]];
+            }
+
+            return instance
+        }
     }
 
     //implementation

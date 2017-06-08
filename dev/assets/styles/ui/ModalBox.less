@@ -27,14 +27,8 @@
   }
 
   &.ready {
-    .modalbox__container {
-      width: calc(~"100% - 4em");
-      left: 0;
-      right: 0;
-      
-      .loader--radial {
-        display: none;
-      }
+    .loader--radial {
+      display: none;
     }
   }
 
@@ -63,11 +57,11 @@
     -webkit-box-shadow: 0 4px 10px fade(@color-black, 350%);
     -moz-box-shadow: 0 4px 10px fade(@color-black, 30%);
     box-shadow: 0 4px 10px fade(@color-black, 30%);
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     -webkit-transition-property: inherit;
     -moz-transition-property: inherit;
     -ms-transition-property: inherit;
@@ -86,6 +80,20 @@
       font-family: @font-main;
       font-size: 1.4rem;
       color: @color-black;
+      text-align: center;
+
+      h5, h6 {
+        margin-top: 0;
+        padding-top: 0;
+        text-align: center;
+      }
+
+      .shortcut {
+        max-width: 300px;
+        font-size: 1rem;
+        text-align: center;
+        opacity: .6;
+      }
     }
   }
 

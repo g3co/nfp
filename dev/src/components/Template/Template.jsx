@@ -26,6 +26,8 @@ const {
 
 const translations = i18n('ru');
 
+const middleware = '//localhost:3000';
+
 export default class Template extends React.Component {
 
     constructor(props) {
@@ -72,13 +74,16 @@ export default class Template extends React.Component {
             .once('ready', function(e) {
                 console.log('ready at now...');
             })
-            .once('load', function(e) {
-                console.log('loaded!!!');
+            .on('load', function(e) {
+                var $this = $dw(this),
+                    $social = $dw('.gf-social-media');
+
+                console.log('Loaded1!!');
             })
             .once('error', function (e) {
                 console.log('Error %o', e);
             })
-            .trigger('show', {route: 'givi/joba'});
+            .trigger('show', {route: middleware.concat('/auth')});
     }
 
     render() {

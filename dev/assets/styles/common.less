@@ -43,6 +43,41 @@ button {
   }
 }
 
+h1 {
+  margin: 1rem 0 0;
+  padding: .5rem 0;
+  font-family: @font-main;
+  font-size: 3.25rem;
+  font-weight: 400;
+  color: @color-gray;
+}
+
+h2 {
+  &:extend(h1);
+  font-size: 2.875rem;
+}
+
+h3 {
+  &:extend(h1);
+  font-size: 2.75rem;
+}
+h4 {
+  &:extend(h1);
+  font-size: 2.625rem;
+}
+h5 {
+  &:extend(h1);
+  font-size: 2.5rem;
+}
+h6 {
+  &:extend(h1);
+  font-size: 2.25rem;
+}
+
+a, a:visited {
+  color: @color-text-link;
+}
+
 //excludes
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {

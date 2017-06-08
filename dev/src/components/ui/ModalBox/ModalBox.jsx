@@ -56,7 +56,10 @@ export default class ModalBox extends React.Component {
                 }
 
                 //send request to the URL:route
-                $modal.request(route)
+                $modal.request({
+                    url: route,
+                    responseType: 'document'
+                })
                     .then(function(response) {
                         this.load(response)
                     }.bind(this))
@@ -93,6 +96,10 @@ export default class ModalBox extends React.Component {
     load(res) {
         let modal = findDOMNode(this),
             $modal = $dw(modal);
+
+        if(!!res.responseHTML) {
+            $modal.find('.box-body')[0].innerHTML = res.responseHTML.innerHTML;
+        }
 
         $modal.addClass('ready');
 
