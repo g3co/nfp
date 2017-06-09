@@ -15,6 +15,10 @@
     {
       "label": "Сотрудничество",
       "route": "#collaborate"
+    },
+    {
+      "label": "О Нас",
+      "route": "#about"
     }
   ],
   "LABELS": {
