@@ -3,13 +3,10 @@ import Slider from 'material-ui/Slider';
 import Checkbox from 'material-ui/Checkbox';
 
 import {
-    i18n,
     ui,
     colors,
     gfClassName
 } from '../../helper';
-
-const translations = i18n('ru');
 
 export default class ActionBar extends React.Component {
 
@@ -120,7 +117,7 @@ export default class ActionBar extends React.Component {
         })
     }
 
-    render() {
+    render(props) {
         let
             sliderStyle = {
                 height: 160,
@@ -136,7 +133,7 @@ export default class ActionBar extends React.Component {
                         <span className="material-icons left-act">search</span>
                         <input
                             type="text"
-                            placeholder={translations.LABELS.SEARCH_PLACEHOLDER}
+                            placeholder={this.props.translations.LABELS.SEARCH_PLACEHOLDER}
                         />
                         <span
                             className="material-icons right-act"
@@ -154,7 +151,7 @@ export default class ActionBar extends React.Component {
                             />
                             <label htmlFor="search-by-fighter">
                                 <span className="material-icons">person_outline</span>
-                                <span>{translations.LABELS.SEARCH_BY_FIGHTER}</span>
+                                <span>{this.props.translations.LABELS.SEARCH_BY_FIGHTER}</span>
                             </label>
                         </div>
                         <div>
@@ -167,7 +164,7 @@ export default class ActionBar extends React.Component {
                             />
                             <label htmlFor="search-by-gym">
                                 <span className="material-icons">pin_drop</span>
-                                <span>{translations.LABELS.SEARCH_BY_GYM}</span>
+                                <span>{this.props.translations.LABELS.SEARCH_BY_GYM}</span>
                             </label>
                         </div>
                     </section>
@@ -201,7 +198,7 @@ export default class ActionBar extends React.Component {
                             className="material-icons left-act"
                             onClick={this.hideEditBox}
                         >settings</span>
-                        <h2>{translations.LABELS.EDITBOX_HEADER}</h2>
+                        <h2>{this.props.translations.LABELS.EDITBOX_HEADER}</h2>
                         <span
                             className="material-icons right-act"
                             onClick={this.hideEditBox}
@@ -209,7 +206,7 @@ export default class ActionBar extends React.Component {
                     </header>
                     <section className={gfClassName("editbox__conditions")}>
                         <div className="conditions__weight">
-                            <h3>{translations.LABELS.CONDITIONS.WEIGHT}</h3>
+                            <h3>{this.props.translations.LABELS.CONDITIONS.WEIGHT}</h3>
                             <Slider
                                 className="conditional--slider"
                                 sliderStyle={sliderStyle}
@@ -223,7 +220,7 @@ export default class ActionBar extends React.Component {
                             <ul
                                 className="cond-weight__weightList"
                             >
-                                {translations.LABELS.CONDITIONS.WEIGHT_LIST.map((item, i) =>
+                                {this.props.translations.LABELS.CONDITIONS.WEIGHT_LIST.map((item, i) =>
                                     <li
                                         className={i == this.state.selectedWeight ? "active" : ""}
                                         key={i}
@@ -236,8 +233,8 @@ export default class ActionBar extends React.Component {
                         </div>
                         <div className="conditions__height">
                             <h3>
-                                {translations.LABELS.CONDITIONS.HEIGHT}
-                                <small>({translations.LABELS.CONDITIONS.HEIGHT_UNIT})</small>
+                                {this.props.translations.LABELS.CONDITIONS.HEIGHT}
+                                <small>({this.props.translations.LABELS.CONDITIONS.HEIGHT_UNIT})</small>
                             </h3>
                             <div
                                 className="cond-height__heightOption"
@@ -282,14 +279,14 @@ export default class ActionBar extends React.Component {
                     </section>
                     <section className={gfClassName("editbox__martials")}>
                         <h3>
-                            {translations.LABELS.MARTIALS}
-                            <small>{translations.LABELS.MARTIALS_PROMPT}</small>
+                            {this.props.translations.LABELS.MARTIALS}
+                            <small>{this.props.translations.LABELS.MARTIALS_PROMPT}</small>
                         </h3>
                         <div className="fw">
                             <ul>
-                                {Object.keys(translations.LABELS.MARTIAL_ARTS).map((item, i) => {
+                                {Object.keys(this.props.translations.LABELS.MARTIAL_ARTS).map((item, i) => {
                                     let itemId = "ma-"+ i,
-                                        martialArts = translations.LABELS.MARTIAL_ARTS,
+                                        martialArts = this.props.translations.LABELS.MARTIAL_ARTS,
                                         itemUnique = "martial-art "+ item;
 
                                     return(
@@ -343,7 +340,7 @@ export default class ActionBar extends React.Component {
                     </section>
                     <section className={gfClassName("editbox__action")}>
                         <button>
-                            {translations.LABELS.EDITBOX_ACCEPT}
+                            {this.props.translations.LABELS.EDITBOX_ACCEPT}
                         </button>
                     </section>
                 </aside>

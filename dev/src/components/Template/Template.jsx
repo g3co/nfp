@@ -11,7 +11,6 @@ import FontIcon from 'material-ui/FontIcon';
 import Slider from 'material-ui/Slider';
 
 import {
-    i18n,
     ui,
     colors,
     gfClassName
@@ -24,7 +23,7 @@ const {
     ModalBox
 } = ui;
 
-const translations = i18n('ru');
+let translations;
 
 const middleware = '//localhost:3000';
 
@@ -33,7 +32,10 @@ export default class Template extends React.Component {
     constructor(props) {
         super(props);
 
+        translations = props.locale.translations;
+
         this.modalShow = this.modalShow.bind(this);
+        this.switchTranslation = this.switchTranslation.bind(this);
 
         this.state = {
             open: false,
@@ -86,7 +88,12 @@ export default class Template extends React.Component {
             .trigger('show', {route: middleware.concat('/auth')});
     }
 
-    render() {
+    switchTranslation(e) {
+        console.log(e.target);
+        this.props.localeActions.setTranslation('en')
+    }
+
+    render(props) {
 
         const LoginButton = (props) => (
             <button
@@ -122,16 +129,20 @@ export default class Template extends React.Component {
         );
 
         return (
-            <div>
+            <div
+                {...props}
+            >
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{
                         position: "fixed",
                         padding: '0 16px'
                     }}
-                    title={<GetFight />}
+                    title={<GetFight
+                        translations={this.props.locale.translations}
+                    />}
                     iconElementRight={this.state.logged ? <LoggedButton /> : <LoginButton />}
-                    showMenuIconButton={false}
+                    showMenuIconButton={true}
                     onLeftIconButtonTouchTap={this.handleTouchTap.bind(this)}
                     titleStyle={{
                         fontSize: 'inherit'
@@ -145,14 +156,23 @@ export default class Template extends React.Component {
                     onRequestClose={this.handleRequestClose.bind(this)}
                 >
                     <Menu>
-                        <MenuItem primaryText="Refresh" />
-                        <MenuItem primaryText="Help &amp; feedback" />
-                        <MenuItem primaryText="Settings" />
+                        <MenuItem
+                            primaryText="Choose English"
+                            onClick={this.switchTranslation}
+                        />
+                        <MenuItem
+                            primaryText="Choose Russian"
+                            onClick={this.switchTranslation}
+                        />
                         <MenuItem primaryText="Sign out" />
                     </Menu>
                 </Popover>
-                <ActionBar />
-                <Navigation />
+                <ActionBar
+                    translations={this.props.locale.translations}
+                />
+                <Navigation
+                    translations={this.props.locale.translations}
+                />
                 <ModalBox
                     id={gfClassName("modalbox")}
                 />

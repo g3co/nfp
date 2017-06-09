@@ -2,15 +2,12 @@ import React, { PropTypes } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
 
 import {
-    i18n,
     ui,
     colors,
     gfClassName
 } from '../../helper';
 
 import SocialMedia from '../SocialMedia';
-
-const translations = i18n('ru');
 
 export default class ModalBox extends React.Component {
     constructor(props) {

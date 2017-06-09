@@ -2,13 +2,12 @@ import React, { PropTypes } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
 
 import {
-    i18n,
     ui,
     colors,
     gfClassName
 } from '../../helper';
 
-const translations = i18n('ru');
+let translations;
 
 function IconInstagram() {
     return (
@@ -70,7 +69,7 @@ export default class SocialMedia extends React.Component {
             >
                 {this.getIcon(props.className)}
                 <label>
-                    {translations.SOCIAL_LABELS.ENTRY[props.className.toUpperCase()]}
+                    {this.props.locale.translations.SOCIAL_LABELS.ENTRY[props.className.toUpperCase()]}
                 </label>
             </button>
         );

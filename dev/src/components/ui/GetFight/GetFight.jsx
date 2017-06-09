@@ -1,12 +1,9 @@
 import React, {PropTypes} from 'react';
 import {
-    i18n,
     ui,
     colors,
     gfClassName
 } from '../../helper';
-
-const translations = i18n('ru');
 
 export default class GetFight extends React.Component {
 
@@ -40,7 +37,7 @@ export default class GetFight extends React.Component {
                     onClick={this.handleDropdown.bind(this)}
                     role="navigation"
                 >
-                    {translations.HEADER.map((item, i) =>
+                    {this.props.translations.HEADER.map((item, i) =>
                         <li key={i}>
                             <a role="link" href={item.route} tabIndex={i} key={i}>
                                 {item.label}

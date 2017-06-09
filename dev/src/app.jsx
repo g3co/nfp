@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEvent from 'react-tap-event-plugin';
@@ -16,6 +17,9 @@ import {
 } from 'material-ui/styles/colors';
 import {fade} from 'material-ui/utils/colorManipulator';
 import spacing from 'material-ui/styles/spacing';
+
+//Actions
+import * as localeActions from './actions/locale.jsx';
 
 const
     brandColor1 = '#e43d35',
@@ -52,26 +56,38 @@ const muiTheme = getMuiTheme({
     }
 });
 
+injectTapEvent();
+
 class App extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        injectTapEvent();
-
         return (
             <MuiThemeProvider
                 muiTheme={muiTheme}
             >
-                <Template user={this.props.user} />
+                <Template
+                    {...this.props}
+                />
             </MuiThemeProvider>
         )
     }
 }
 
 function mapState2Props(state) {
-    return state
+    return {
+        locale: state.locale,
+        user: state.user,
+        search: state.search
+    }
 }
 
-export default connect(mapState2Props)(App);
+function mapDispatch2Props(dispatch) {
+    return {
+        localeActions: bindActionCreators(localeActions, dispatch)
+    }
+}
+
+export default connect(mapState2Props, mapDispatch2Props)(App);
