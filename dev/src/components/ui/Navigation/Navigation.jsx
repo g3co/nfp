@@ -1,8 +1,6 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 
 import {
-    ui,
-    colors,
     gfClassName
 } from '../../helper';
 

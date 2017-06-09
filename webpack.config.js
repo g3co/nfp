@@ -30,6 +30,13 @@ module.exports = {
         new ExtractTextPlugin('./assets/styles/common.css')
     ],
     module: {
+        /*preLoaders: [
+            {
+                test: /\.js/,
+                exclude: /node_modules/,
+                loader: 'eslint'
+            }
+        ],*/
         loaders: [
             {
                 test: /\.json$/,
@@ -43,10 +50,6 @@ module.exports = {
             {
                 test: /\.less$/,
                 loader: ExtractTextPlugin.extract('style', 'css!less')
-            },
-            {
-                test: /\.svg$/,
-                loader: 'babel!svg-react'
             },
             {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|svg)$/,

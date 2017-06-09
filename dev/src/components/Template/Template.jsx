@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-import ReactDOM, { findDOMNode } from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import AppBar from 'material-ui/AppBar';
 import Popover from 'material-ui/Popover';
@@ -12,7 +12,6 @@ import Slider from 'material-ui/Slider';
 
 import {
     ui,
-    colors,
     gfClassName
 } from '../helper';
 
@@ -23,8 +22,6 @@ const {
     ModalBox
 } = ui;
 
-let translations;
-
 const middleware = '//localhost:3000';
 
 export default class Template extends React.Component {
@@ -32,43 +29,13 @@ export default class Template extends React.Component {
     constructor(props) {
         super(props);
 
-        translations = props.locale.translations;
-
         this.modalShow = this.modalShow.bind(this);
-        this.switchTranslation = this.switchTranslation.bind(this);
+        this.setTranslation = this.setTranslation.bind(this);
 
         this.state = {
             open: false,
             logged: false
         };
-    }
-
-    handleTouchTap(event) {
-        event.preventDefault();
-
-        this.setState({
-            open: true,
-            anchorEl: event.currentTarget
-        });
-    };
-
-    handleRequestClose() {
-        this.setState({
-            open: false
-        });
-    };
-
-    toggleClassName(e, _className) {
-        let
-            el = e.target,
-            className = el.className
-            ;
-
-        if(!!className && !!~className.indexOf(_className)) {
-            el.className = className.replace(_className, '')
-        } else {
-            el.className += ' '+ _className
-        }
     }
 
     modalShow() {
@@ -88,9 +55,8 @@ export default class Template extends React.Component {
             .trigger('show', {route: middleware.concat('/auth')});
     }
 
-    switchTranslation(e) {
-        console.log(e.target);
-        this.props.localeActions.setTranslation('en')
+    setTranslation(lang) {
+        this.props.localeActions.setTranslation(lang)
     }
 
     render(props) {
@@ -109,7 +75,7 @@ export default class Template extends React.Component {
                         fontSize: '2em'
                     }}
                 >person</FontIcon>
-                <span>{translations.LABELS.LOG_IN}</span>
+                <span>{this.props.locale.translations.LABELS.LOG_IN}</span>
             </button>
         );
 
@@ -140,33 +106,14 @@ export default class Template extends React.Component {
                     }}
                     title={<GetFight
                         translations={this.props.locale.translations}
+                        setTranslation={this.setTranslation}
                     />}
                     iconElementRight={this.state.logged ? <LoggedButton /> : <LoginButton />}
-                    showMenuIconButton={true}
-                    onLeftIconButtonTouchTap={this.handleTouchTap.bind(this)}
+                    showMenuIconButton={false}
                     titleStyle={{
                         fontSize: 'inherit'
                     }}
                 />
-                <Popover
-                    open={this.state.open}
-                    anchorEl={this.state.anchorEl}
-                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                    onRequestClose={this.handleRequestClose.bind(this)}
-                >
-                    <Menu>
-                        <MenuItem
-                            primaryText="Choose English"
-                            onClick={this.switchTranslation}
-                        />
-                        <MenuItem
-                            primaryText="Choose Russian"
-                            onClick={this.switchTranslation}
-                        />
-                        <MenuItem primaryText="Sign out" />
-                    </Menu>
-                </Popover>
                 <ActionBar
                     translations={this.props.locale.translations}
                 />

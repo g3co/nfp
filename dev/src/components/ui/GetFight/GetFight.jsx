@@ -1,9 +1,10 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+
 import {
-    ui,
-    colors,
     gfClassName
 } from '../../helper';
+
+import ChooseLanguage from '../ChooseLanguage';
 
 export default class GetFight extends React.Component {
 
@@ -25,7 +26,10 @@ export default class GetFight extends React.Component {
         return false
     }
 
-    render() {
+    render(props) {
+
+        props = Object.assign({}, this.props);
+
         return (
             <div
                 className={gfClassName("logo")}
@@ -45,6 +49,9 @@ export default class GetFight extends React.Component {
                         </li>
                     )}
                 </ul>
+                <ChooseLanguage
+                    setTranslation={props.setTranslation}
+                />
             </div>
         )
     }

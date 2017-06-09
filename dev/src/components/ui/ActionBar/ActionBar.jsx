@@ -1,10 +1,9 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Slider from 'material-ui/Slider';
 import Checkbox from 'material-ui/Checkbox';
 
 import {
     ui,
-    colors,
     gfClassName
 } from '../../helper';
 

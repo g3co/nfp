@@ -1,0 +1,6 @@
+{
+  "name": "ChooseLanguage",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ChooseLanguage.jsx"
+}

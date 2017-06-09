@@ -5,14 +5,6 @@
       "route": "#events"
     },
     {
-      "label": "Navigation",
-      "route": "#sitemap"
-    },
-    {
-      "label": "Ratings",
-      "route": "#ratings"
-    },
-    {
       "label": "Collaboration",
       "route": "#collaborate"
     },
@@ -25,37 +17,37 @@
     "LOG_IN": "Sign in",
     "SEARCH_BY_FIGHTER": "Fighter",
     "SEARCH_BY_GYM": "GYM",
-    "SEARCH_PLACEHOLDER": "What's searching?",
+    "SEARCH_PLACEHOLDER": "What you're looking for?",
     "EDITBOX_HEADER": "Conditions",
     "EDITBOX_ACCEPT": "Find",
     "CONDITIONS": {
       "WEIGHT": "Weight",
       "HEIGHT": "Height",
       "WEIGHT_LIST": [
-        "Наилегчайший",
-        "Легчайший",
-        "Полулегкий",
-        "Легкий",
-        "Полусредний",
-        "Средний",
-        "Полутяжелый",
-        "Тяжелый",
-        "Супертяжелый"
+        "Flyweight",
+        "Bantamweight",
+        "Featherweight",
+        "Lightweight",
+        "Welterweight",
+        "Middleweight",
+        "Light Heavyweight",
+        "Heavyweight",
+        "Super Heavyweight"
       ],
-      "HEIGHT_UNIT": "см"
+      "HEIGHT_UNIT": "cm"
     },
     "MARTIALS": "Martial arts",
     "MARTIALS_PROMPT": "Choose interesting",
     "MARTIAL_ARTS": {
-      "ArmyDogFight": "АРБ",
-      "BrazilianJiuJitsu": "БЖЖ",
-      "CombatSambo": "Боевое Самбо",
-      "Boxing": "Бокс",
-      "Wrestling": "Вольная борьба",
-      "Grappling": "Грэпплинг",
-      "KickBoxing": "Кик Боксинг",
-      "MMA": "ММА",
-      "MuayThai": "Муай Тай"
+      "ArmyDogFight": "ADF",
+      "BrazilianJiuJitsu": "BJJ",
+      "CombatSambo": "Combat Sambo",
+      "Boxing": "Boxing",
+      "Wrestling": "Freestyle wrestling",
+      "Grappling": "Grappling",
+      "KickBoxing": "Kick Boxing",
+      "MMA": "MMA",
+      "MuayThai": "Muay Thai"
     }
   },
   "SOCIAL_LABELS": {
