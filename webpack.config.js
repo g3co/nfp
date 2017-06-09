@@ -17,7 +17,7 @@ module.exports = {
         'webpack-dev-server/client?http://localhost:8080',
         //'webpack/hot/only-dev-server',
         './dev/assets/styles/index.less',
-        './dev/src/app.jsx'
+        './dev/src/index.jsx'
     ],
     output: {
         path: path.join(__dirname, '/dev'),

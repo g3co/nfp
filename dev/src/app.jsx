@@ -1,11 +1,13 @@
-import React from '../../node_modules/react/lib/React.js';
-import ReactDOM from '../../node_modules/react-dom/lib/ReactDOM.js';
+import React from 'react';
+import { connect } from 'react-redux'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEvent from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+import Template from './components/Template';
 
+//import settings
 import {
     amberA700, cyan700,
     pinkA200,
@@ -14,8 +16,6 @@ import {
 } from 'material-ui/styles/colors';
 import {fade} from 'material-ui/utils/colorManipulator';
 import spacing from 'material-ui/styles/spacing';
-
-import Template from './components/Template';
 
 const
     brandColor1 = '#e43d35',
@@ -39,7 +39,7 @@ const muiTheme = getMuiTheme({
         disabledColor: fade(darkBlack, 0.3),
         pickerHeaderColor: amberA700,
         clockCircleColor: fade(darkBlack, 0.07),
-        shadowColor: fullBlack,
+        shadowColor: fullBlack
     },
     slider: {
         selectionColor: brandColor1
@@ -52,28 +52,26 @@ const muiTheme = getMuiTheme({
     }
 });
 
-//import GetFight
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
-//import Actionbar
-
-//import Navigation
-
-injectTapEvent();
-
-const App = React.createClass({
     render() {
+        injectTapEvent();
+
         return (
             <MuiThemeProvider
                 muiTheme={muiTheme}
             >
-                <Template />
+                <Template user={this.props.user} />
             </MuiThemeProvider>
         )
     }
-});
+}
 
+function mapState2Props(state) {
+    return state
+}
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-);
+export default connect(mapState2Props)(App);
