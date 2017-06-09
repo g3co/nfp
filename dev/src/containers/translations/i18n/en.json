@@ -1,0 +1,67 @@
+{
+  "HEADER": [
+    {
+      "label": "Events",
+      "route": "#events"
+    },
+    {
+      "label": "Navigation",
+      "route": "#sitemap"
+    },
+    {
+      "label": "Ratings",
+      "route": "#ratings"
+    },
+    {
+      "label": "Collaboration",
+      "route": "#collaborate"
+    },
+    {
+      "label": "About Us",
+      "route": "#about"
+    }
+  ],
+  "LABELS": {
+    "LOG_IN": "Sign in",
+    "SEARCH_BY_FIGHTER": "Fighter",
+    "SEARCH_BY_GYM": "GYM",
+    "SEARCH_PLACEHOLDER": "What's searching?",
+    "EDITBOX_HEADER": "Conditions",
+    "EDITBOX_ACCEPT": "Find",
+    "CONDITIONS": {
+      "WEIGHT": "Weight",
+      "HEIGHT": "Height",
+      "WEIGHT_LIST": [
+        "Наилегчайший",
+        "Легчайший",
+        "Полулегкий",
+        "Легкий",
+        "Полусредний",
+        "Средний",
+        "Полутяжелый",
+        "Тяжелый",
+        "Супертяжелый"
+      ],
+      "HEIGHT_UNIT": "см"
+    },
+    "MARTIALS": "Martial arts",
+    "MARTIALS_PROMPT": "Choose interesting",
+    "MARTIAL_ARTS": {
+      "ArmyDogFight": "АРБ",
+      "BrazilianJiuJitsu": "БЖЖ",
+      "CombatSambo": "Боевое Самбо",
+      "Boxing": "Бокс",
+      "Wrestling": "Вольная борьба",
+      "Grappling": "Грэпплинг",
+      "KickBoxing": "Кик Боксинг",
+      "MMA": "ММА",
+      "MuayThai": "Муай Тай"
+    }
+  },
+  "SOCIAL_LABELS": {
+    "ENTRY": {
+      "INSTAGRAM": "Instagram",
+      "VK": "Вконтакте"
+    }
+  }
+}

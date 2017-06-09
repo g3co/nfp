@@ -1,0 +1,6 @@
+{
+  "name": "translations",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./translations.jsx"
+}
