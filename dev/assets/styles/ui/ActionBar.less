@@ -83,7 +83,10 @@
     }
 
     .gf-toolbar__toggle {
+      position: absolute;
+      top: calc(~"100vh - 116px");//header+self
       height: 52px;
+      width: 100%;
       font-family: inherit;
       font-size: 1.3em;
       display: block;
@@ -138,6 +141,11 @@
           }
         }
       }
+
+      .Media-Desktop({
+        position: static;
+        top: auto;
+      })
     }
 
     .gf-toolbar__list {

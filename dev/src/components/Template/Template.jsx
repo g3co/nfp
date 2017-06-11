@@ -19,7 +19,8 @@ const {
     ActionBar,
     GetFight,
     Navigation,
-    ModalBox
+    ModalBox,
+    SplashScreen
 } = ui;
 
 const middleware = '//localhost:3000';
@@ -31,6 +32,26 @@ export default class Template extends React.Component {
 
         this.modalShow = this.modalShow.bind(this);
         this.setTranslation = this.setTranslation.bind(this);
+
+        $dw(document)
+            .on('ready', function(e) {
+                if(!!e == false || !!e.detail == false) {
+                    return
+                }
+
+                var next = e.detail;
+
+                if(!!Object.prototype.toString.call(next).match(/Function/i) == false) {
+                    return
+                }
+
+                var _to = setTimeout(function() {
+
+                    next();
+
+                    clearTimeout(_to);
+                }, 3000);
+            });
 
         this.state = {
             open: false,
@@ -98,6 +119,7 @@ export default class Template extends React.Component {
             <div
                 {...props}
             >
+                <SplashScreen />
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{

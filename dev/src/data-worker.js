@@ -23,7 +23,7 @@
             this[0] = collection;
         }
 
-        this.selector = !!s ? !!s.length ? s : this[0].tagName.toLowerCase() : '';
+        this.selector = !!s ? !!s.length ? s : this[0].tagName && this[0].tagName.toLowerCase() : '';
         this.length = this.length || 1;
     }
 
@@ -78,6 +78,18 @@
                 return el.getAttribute(name)
             },
 
+            setClass: function(s) {
+                if(!!s == false) {
+                    return
+                }
+
+                var el = this[0];
+
+                el.className = s;
+
+                return this
+            },
+
             addClass: function(s) {
                 if(!!s == false) {
                     return
@@ -125,6 +137,11 @@
                 this[0].appendChild(node);
 
                 return this
+            },
+
+            remove: function() {
+                return getInstance(this)
+                    .remove()
             },
 
             //add event
