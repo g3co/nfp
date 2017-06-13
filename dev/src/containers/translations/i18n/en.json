@@ -1,10 +1,6 @@
 {
   "HEADER": [
     {
-      "label": "Events",
-      "route": "#events"
-    },
-    {
       "label": "Collaboration",
       "route": "#collaborate"
     },
@@ -55,5 +51,8 @@
       "INSTAGRAM": "Instagram",
       "VK": "Вконтакте"
     }
+  },
+  "SPLASH_SCREEN": {
+    "AUTH_TITLE": "Auth to continue"
   }
 }

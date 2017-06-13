@@ -2,10 +2,7 @@ import React from 'react';
 import Slider from 'material-ui/Slider';
 import Checkbox from 'material-ui/Checkbox';
 
-import {
-    ui,
-    gfClassName
-} from '../../helper';
+import { gfClassName } from '../../helper';
 
 export default class ActionBar extends React.Component {
 

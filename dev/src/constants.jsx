@@ -1,1 +1,5 @@
+//locale
 export const SET_TRANSLATION = 'SET_TRANSLATION';
+
+//user
+export const GET_USER_SESSION_TOKEN = 'GET_USER_SESSION_TOKEN';

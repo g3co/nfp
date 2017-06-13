@@ -119,7 +119,9 @@ export default class Template extends React.Component {
             <div
                 {...props}
             >
-                <SplashScreen />
+                <SplashScreen
+                    translations={this.props.locale.translations}
+                />
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{

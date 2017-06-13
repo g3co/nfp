@@ -18,8 +18,9 @@ import {
 import {fade} from 'material-ui/utils/colorManipulator';
 import spacing from 'material-ui/styles/spacing';
 
-//Actions
+//import actions
 import * as localeActions from './actions/locale.jsx';
+import * as userActions from './actions/user.jsx';
 
 const
     brandColor1 = '#e43d35',
@@ -86,7 +87,8 @@ function mapState2Props(state) {
 
 function mapDispatch2Props(dispatch) {
     return {
-        localeActions: bindActionCreators(localeActions, dispatch)
+        localeActions: bindActionCreators(localeActions, dispatch),
+        userActions: bindActionCreators(userActions, dispatch)
     }
 }
 

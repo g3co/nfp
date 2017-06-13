@@ -60,6 +60,25 @@
                 return this[i]
             },
 
+            create: function(tag, o) {
+                if(!!tag == false) {
+                    return
+                }
+
+                var el = this[0] || window.document,
+                    _new = document.createElement(tag);
+
+                if(!!o) {
+                    for(var _o in o) {
+                        _new[_o] = o[_o];
+                    }
+                }
+
+                el.appendChild(_new);
+
+                return $dw(_new)
+            },
+
             //attributes worker
             attr: function(name, value) {
                 if(!!name == false) {

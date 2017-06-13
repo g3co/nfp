@@ -4,6 +4,7 @@ import ActionBar from './ActionBar';
 import ModalBox from './ModalBox';
 import ChooseLanguage from './ChooseLanguage';
 import SplashScreen from './SplashScreen';
+import SocialMedia from './SocialMedia';
 
 export default {
     GetFight,
@@ -11,5 +12,6 @@ export default {
     ActionBar,
     ModalBox,
     ChooseLanguage,
-    SplashScreen
+    SplashScreen,
+    SocialMedia
 }
