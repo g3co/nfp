@@ -3,6 +3,7 @@ var express = require('express'),
     passport = require('passport'),
     mongoose = require('mongoose'),
     path = require('path'),
+    url = require('url'),
     util = require('util'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
@@ -13,7 +14,8 @@ var express = require('express'),
 var AuthVKStrategy = require('passport-vkontakte').Strategy;
 
 var uri = require('./config'),
-    OAuthCredentials = require('./OAuthCredentials');
+    OAuthCredentials = require('./OAuthCredentials'),
+    staticPath = generateStaticPath('en');
 
 console.log(OAuthCredentials);
 
@@ -35,24 +37,9 @@ net_fight_promotion
         require('./app')(passport, mongoose, app, router);
 
         //defaults
-        app.use(function(req, res, next) {
-            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
-            res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
-            res.header('Access-Control-Allow-Headers', 'Content-Type');
-            res.header('Access-Control-Allow-Credentials', true);
-
-            next();
-        });
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cookieParser());
         app.use(bodyParser.json());
-        app.use(expressSession({
-            secret: 'test_string',
-            resave: true,
-            saveUninitialized: true
-        }));
-        app.use(passport.initialize());
-        app.use(passport.session());
 
         //authorization VK
         passport.use(new AuthVKStrategy({
@@ -78,13 +65,52 @@ net_fight_promotion
             done(null, id);
         });
 
-        app.use('/', express.static(path.join(__dirname, 'public')));
+        app.use('/', function(req, res) {
+            res.sendFile(
+                [url.parse(req.url).pathname, 'index.html'].join('/'),
+                { root: generateStaticPath(req.query.lng) },
+                function(err) {
+                    if(!!err) {
+                        res.status = 404;
+                        res.send('Not Found')
+                    }
+                }
+            );
+        });
         app.use('/', router);
+
+        //headers
+        app.use(expressSession({
+            secret: 'test_string',
+            resave: true,
+            saveUninitialized: true
+        }));
+        app.use(passport.initialize());
+        app.use(passport.session());
+        app.use(function(req, res, next) {
+            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+            res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+            res.header('Access-Control-Allow-Credentials', true);
+
+            next();
+        });
 
         app.listen(3000, function() {
             console.log('Listening on port:3000');
         })
     });
+
+//helpers
+function generateStaticPath(lng) {
+    var defLng = 'ru';
+
+    lng = !!lng ? lng.slice(0, 2) : defLng;
+
+    lng = lng.match(/en|ru/i) ? lng : defLng;
+
+    return ['.', 'static', lng, 'public'].join('/')
+}
 
 
 
