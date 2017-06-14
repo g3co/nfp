@@ -5,27 +5,14 @@ import { gfClassName } from '../../helper';
 
 function Authorize(service) {
 
-    let data = {
-        head: $dw('head'),
-        source: {
-            vk: '//vk.com/js/api/openapi.js'
-        }
-    };
+    switch(service) {
+        case 'vk':
+            window.open('//localhost:3000/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
+            break;
+        case 'instagram':
 
-    data.head.create('script', {
-        src: data.source[service],
-        onload: function() {
-            window.vkAsyncInit = function() {
-                VK.init({
-                    apiId: 5838102
-                });
-
-                VK.Auth.login(function(response) {
-                    console.log('VK Response: %', response);
-                }, 4194304);
-            }
-        }
-    });
+            break;
+    }
 }
 
 function IconInstagram() {

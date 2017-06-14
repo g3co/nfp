@@ -270,6 +270,8 @@
                         o.url, true
                     );
 
+                    _xhr.withCredentials = true;
+
                     if(!!o.requestHeaders) {
                         for(var h in o.requestHeaders) {
                             if(o.requestHeaders.hasOwnProperty(h)) {
@@ -279,9 +281,11 @@
                     }
 
                     _xhr.onload = function() {
-                        if(this.status == 200) {
+                        if(this.status == 200 || this.status == 304) {
 
                             var res = this;
+
+                            console.log('Response: %o', this.response);
 
                             if(!!res.response && !!Object.prototype.toString.call(res.response).match(/HTMLDocument/i)) {
                                 var document = res.response,

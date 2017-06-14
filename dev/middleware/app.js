@@ -1,6 +1,6 @@
 //RESTful Application
 
-module.exports = function(mongoose, app, router) {
+module.exports = function(passport, mongoose, app, router) {
 
     var API = '/api/v1';
 
@@ -14,6 +14,28 @@ module.exports = function(mongoose, app, router) {
 
     router.get('/', function(req, res) {
         res.send('HomePage')
+    });
+
+    //AUTHORIZATION
+    router.get(
+        API.concat('/auth/vk'),
+        passport.authenticate('vkontakte', { scope: ['email'], display: 'mobile' }),
+        function(req, res) {
+            console.log(req);
+            res.send('done');
+        }
+    );
+    router.get(API.concat('/auth/vk/cb'),
+        passport.authenticate('vkontakte', {
+            successRedirect: '/',
+            failureRedirect: '/auth/vk'
+        })
+    );
+
+    //SIGN OUT
+    router.get(API.concat('/logout'), function (req, res) {
+        req.logout();
+        res.send('{"result": "Success logged out"}');
     });
 
     //CREATE
@@ -45,8 +67,8 @@ module.exports = function(mongoose, app, router) {
         res.send('Place:'+ req.params.id)
     });
 
-    router.get(API.concat('/fighters'), function (req, res) {
-        res.send('Fighters')
+    router.get(API.concat('/fighters'), checkAuth, function (req, res) {
+        res.send('{"result": "Fighters"}')
     });
     router.get(API.concat('/fighter/:id'), function (req, res) {
         return Fighters.findById(req.params.id, function(err, fighter) {
@@ -73,4 +95,9 @@ module.exports = function(mongoose, app, router) {
     //UPDATE
 
     //DELETE
+
+    function checkAuth(req, res, next) {
+        if (req.isAuthenticated()) { return next(); }
+        res.redirect('/')
+    }
 };
