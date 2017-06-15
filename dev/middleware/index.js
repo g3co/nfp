@@ -7,6 +7,7 @@ var express = require('express'),
     util = require('util'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
+    serveStatic = require('serve-static'),
     app = express(),
     router = express.Router(),
     Schema = mongoose.Schema;
@@ -14,8 +15,7 @@ var express = require('express'),
 var AuthVKStrategy = require('passport-vkontakte').Strategy;
 
 var uri = require('./config'),
-    OAuthCredentials = require('./OAuthCredentials'),
-    staticPath = generateStaticPath('en');
+    OAuthCredentials = require('./OAuthCredentials');
 
 console.log(OAuthCredentials);
 
@@ -40,53 +40,28 @@ net_fight_promotion
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cookieParser());
         app.use(bodyParser.json());
-
-        //authorization VK
-        passport.use(new AuthVKStrategy({
-            clientID: OAuthCredentials.vk.appId,
-            clientSecret: OAuthCredentials.vk.secureKey,
-            callbackURL: OAuthCredentials.vk.callbackRoute,
-            scope: ['email'],
-            profileFields: ['email', 'city', 'bdate']
-        }, function(accessToken, refreshToken, params, profile, done) {
-            console.log('Access Token: %o,\r\n Refresh Token: %o,\r\n Params: %o\r\n,Profile: %o,\r\n', accessToken, refreshToken, params, profile);
-
-            process.nextTick(function () {
-                return done(null, profile);
-            });
-        }));
-
-        passport.serializeUser(function(user, done) {
-            console.log('USER: %o', user);
-            done(null, user.id);
-        });
-
-        passport.deserializeUser(function(id, done) {
-            done(null, id);
-        });
-
-        app.use('/', function(req, res) {
-            res.sendFile(
-                [url.parse(req.url).pathname, 'index.html'].join('/'),
-                { root: generateStaticPath(req.query.lng) },
-                function(err) {
-                    if(!!err) {
-                        res.status = 404;
-                        res.send('Not Found')
-                    }
-                }
-            );
-        });
-        app.use('/', router);
-
-        //headers
-        app.use(expressSession({
-            secret: 'test_string',
-            resave: true,
-            saveUninitialized: true
-        }));
         app.use(passport.initialize());
         app.use(passport.session());
+
+        //Serving Static
+        app.use('/', function(req, res, next) {
+            return serveStatic(
+                path.join(__dirname, 'static', provideLang(req.query.lng), 'public'),
+                { 'index': ['index.html', 'index.htm']}
+            )(req, res, next);
+
+            function provideLang(lng) {
+                var defLng = 'ru';
+
+                lng = !!lng ? lng.slice(0, 2) : defLng;
+
+                return lng.match(/en|ru/i) ? lng : defLng
+            }
+        });
+        //Routing
+        app.use('/', router);
+
+        //HTTP Headers
         app.use(function(req, res, next) {
             res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
             res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
@@ -95,22 +70,16 @@ net_fight_promotion
 
             next();
         });
+        app.use(expressSession({
+            secret: 'test_string',
+            resave: true,
+            saveUninitialized: true
+        }));
 
         app.listen(3000, function() {
             console.log('Listening on port:3000');
         })
     });
-
-//helpers
-function generateStaticPath(lng) {
-    var defLng = 'ru';
-
-    lng = !!lng ? lng.slice(0, 2) : defLng;
-
-    lng = lng.match(/en|ru/i) ? lng : defLng;
-
-    return ['.', 'static', lng, 'public'].join('/')
-}
 
 
 

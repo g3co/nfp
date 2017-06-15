@@ -32,6 +32,30 @@ module.exports = function(passport, mongoose, app, router) {
         })
     );
 
+    //authorization VK
+    passport.use(new AuthVKStrategy({
+        clientID: OAuthCredentials.vk.appId,
+        clientSecret: OAuthCredentials.vk.secureKey,
+        callbackURL: OAuthCredentials.vk.callbackRoute,
+        scope: ['email'],
+        profileFields: ['email', 'city', 'bdate']
+    }, function(accessToken, refreshToken, params, profile, done) {
+        console.log('Access Token: %o,\r\n Refresh Token: %o,\r\n Params: %o\r\n,Profile: %o,\r\n', accessToken, refreshToken, params, profile);
+
+        process.nextTick(function () {
+            return done(null, profile);
+        });
+    }));
+
+    passport.serializeUser(function(user, done) {
+        console.log('USER: %o', user);
+        done(null, user.id);
+    });
+
+    passport.deserializeUser(function(id, done) {
+        done(null, id);
+    });
+
     //SIGN OUT
     router.get(API.concat('/logout'), function (req, res) {
         req.logout();
