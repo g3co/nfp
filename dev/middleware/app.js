@@ -1,11 +1,13 @@
 //RESTful Application
 
-module.exports = function(passport, mongoose, app, router) {
+module.exports = function(passport, mongoose, app, router, Strategy) {
 
     var API = '/api/v1';
 
     var models = require('.'.concat(API).concat('/models'))(mongoose),
         controllers = require('.'.concat(API).concat('/controllers'))(models);
+
+    var OAuthCredentials = require('./OAuthCredentials');
 
     router.use(function(req, res, next) {
         console.log(req.method+req.url);
@@ -19,7 +21,7 @@ module.exports = function(passport, mongoose, app, router) {
     //AUTHORIZATION
     router.get(
         API.concat('/auth/vk'),
-        passport.authenticate('vkontakte', { scope: ['email'], display: 'mobile' }),
+        passport.authenticate('vkontakte', { scope: ['email']/*, display: 'mobile' */}),
         function(req, res) {
             console.log(req);
             res.send('done');
@@ -27,34 +29,26 @@ module.exports = function(passport, mongoose, app, router) {
     );
     router.get(API.concat('/auth/vk/cb'),
         passport.authenticate('vkontakte', {
-            successRedirect: '/',
-            failureRedirect: '/auth/vk'
+            successRedirect: '/auth/vk',
+            failureRedirect: '/auth'
         })
     );
 
     //authorization VK
-    passport.use(new AuthVKStrategy({
+    passport.use(new Strategy.VK({
         clientID: OAuthCredentials.vk.appId,
         clientSecret: OAuthCredentials.vk.secureKey,
         callbackURL: OAuthCredentials.vk.callbackRoute,
         scope: ['email'],
         profileFields: ['email', 'city', 'bdate']
     }, function(accessToken, refreshToken, params, profile, done) {
-        console.log('Access Token: %o,\r\n Refresh Token: %o,\r\n Params: %o\r\n,Profile: %o,\r\n', accessToken, refreshToken, params, profile);
+        //console.log('Access Token: %o,\r\n Refresh Token: %o,\r\n Params: %o\r\n,Profile: %o,\r\n', accessToken, refreshToken, params, profile);
 
         process.nextTick(function () {
+            console.log("PROFILE:", profile);
             return done(null, profile);
         });
     }));
-
-    passport.serializeUser(function(user, done) {
-        console.log('USER: %o', user);
-        done(null, user.id);
-    });
-
-    passport.deserializeUser(function(id, done) {
-        done(null, id);
-    });
 
     //SIGN OUT
     router.get(API.concat('/logout'), function (req, res) {
@@ -121,6 +115,9 @@ module.exports = function(passport, mongoose, app, router) {
     //DELETE
 
     function checkAuth(req, res, next) {
+
+        console.log('Hello, '+(req.isAuthenticated() ? '%User%' : '%Guest%'));
+
         if (req.isAuthenticated()) { return next(); }
         res.redirect('/')
     }

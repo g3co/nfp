@@ -14,10 +14,7 @@ var express = require('express'),
 
 var AuthVKStrategy = require('passport-vkontakte').Strategy;
 
-var uri = require('./config'),
-    OAuthCredentials = require('./OAuthCredentials');
-
-console.log(OAuthCredentials);
+var uri = require('./config');
 
 //get started
 mongoose
@@ -34,14 +31,38 @@ net_fight_promotion
     .once('open', function () {
         console.log('Connected to mLab');
 
-        require('./app')(passport, mongoose, app, router);
+        require('./app')(passport, mongoose, app, router, {
+            VK: AuthVKStrategy
+        });
 
         //defaults
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cookieParser());
         app.use(bodyParser.json());
+        app.use(expressSession({
+            secret: 'test_string',
+            resave: true,
+            saveUninitialized: true
+        }));
         app.use(passport.initialize());
         app.use(passport.session());
+        app.use(function(req, res, next) {
+            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+            res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+            res.header('Access-Control-Allow-Credentials', true);
+
+            next();
+        });
+
+        passport.serializeUser(function(user, done) {
+            //console.log('USER: %o', user);
+            done(null, user.id);
+        });
+
+        passport.deserializeUser(function(id, done) {
+            done(null, id);
+        });
 
         //Serving Static
         app.use('/', function(req, res, next) {
@@ -61,20 +82,6 @@ net_fight_promotion
         //Routing
         app.use('/', router);
 
-        //HTTP Headers
-        app.use(function(req, res, next) {
-            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
-            res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
-            res.header('Access-Control-Allow-Headers', 'Content-Type');
-            res.header('Access-Control-Allow-Credentials', true);
-
-            next();
-        });
-        app.use(expressSession({
-            secret: 'test_string',
-            resave: true,
-            saveUninitialized: true
-        }));
 
         app.listen(3000, function() {
             console.log('Listening on port:3000');
