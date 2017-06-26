@@ -247,6 +247,8 @@
                         }
                     }
 
+                    var base = '//localhost:3000';
+
                     //defaults
                     o.type = o.type || 'GET';
                     o.body = o.body || null;
@@ -259,18 +261,16 @@
                     //set JSON body for POST
                     if(o.type.match(/post/i)) {
                         o.body = JSON.stringify(o.body);
-
-                        o.requestHeaders = o.requestHeaders || {};
-
-                        o.requestHeaders['Content-Type'] = 'application/json; charset=utf-8';
                     }
 
                     _xhr.open(
                         o.type,
-                        o.url, true
+                        (base + o.url), true
                     );
 
                     _xhr.withCredentials = true;
+
+                    o.requestHeaders = o.requestHeaders || {};
 
                     if(!!o.requestHeaders) {
                         for(var h in o.requestHeaders) {
@@ -281,11 +281,9 @@
                     }
 
                     _xhr.onload = function() {
-                        if(this.status == 200 || this.status == 304) {
+                        if(this.status == 200 || this.status == 304 || this.status == 301) {
 
                             var res = this;
-
-                            console.log('Response: %o', this.response);
 
                             if(!!res.response && !!Object.prototype.toString.call(res.response).match(/HTMLDocument/i)) {
                                 var document = res.response,
@@ -307,9 +305,20 @@
                                 }
 
                                 res.responseHTML = _div;
+                                resolve(_div)
                             }
 
-                            resolve(res);
+                            if(!!res.response) {
+                                var response = res.response;
+
+                                if(response.error < 200) {
+                                    reject(new Error(response.error_description))
+                                }
+
+                                resolve(response.result)
+                            }
+
+                            resolve(res)
                         } else {
                             var error = new Error(this.statusText);
                             error.code = this.status;

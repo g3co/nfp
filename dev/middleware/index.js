@@ -1,5 +1,4 @@
 var express = require('express'),
-    expressSession = require('express-session'),
     passport = require('passport'),
     mongoose = require('mongoose'),
     path = require('path'),
@@ -39,13 +38,6 @@ net_fight_promotion
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(cookieParser());
         app.use(bodyParser.json());
-        app.use(expressSession({
-            secret: 'test_string',
-            resave: true,
-            saveUninitialized: true
-        }));
-        app.use(passport.initialize());
-        app.use(passport.session());
         app.use(function(req, res, next) {
             res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
             res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
@@ -55,17 +47,13 @@ net_fight_promotion
             next();
         });
 
-        passport.serializeUser(function(user, done) {
-            //console.log('USER: %o', user);
-            done(null, user.id);
-        });
-
-        passport.deserializeUser(function(id, done) {
-            done(null, id);
-        });
-
         //Serving Static
         app.use('/', function(req, res, next) {
+
+            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+            res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+
             return serveStatic(
                 path.join(__dirname, 'static', provideLang(req.query.lng), 'public'),
                 { 'index': ['index.html', 'index.htm']}

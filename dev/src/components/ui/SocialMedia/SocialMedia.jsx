@@ -1,18 +1,26 @@
 import React from 'react';
-import ReactDOM, { findDOMNode } from 'react-dom';
+import ReactDOM from 'react-dom';
 
 import { gfClassName } from '../../helper';
 
-function Authorize(service) {
+function Authorize(service, callback) {
 
+    var OAuthWindow;
     switch(service) {
         case 'vk':
-            window.open('//localhost:3000/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
+            OAuthWindow = window.open('//localhost:3000/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
             break;
         case 'instagram':
 
             break;
     }
+
+    var _ti = setInterval(function() {
+        if(OAuthWindow.closed) {
+            callback();
+            clearInterval(_ti);
+        }
+    }, 500);
 }
 
 function IconInstagram() {
@@ -63,7 +71,7 @@ export default class SocialMedia extends React.Component {
         el = !!~el.tagName.indexOf('svg') ? el.parentNode : el;
         type = el.className.split(' ')[1];
 
-        return new Authorize(type)
+        return new Authorize(type, this.props.getUserAccount)
     }
 
     getIcon(name) {
@@ -81,8 +89,7 @@ export default class SocialMedia extends React.Component {
 
         props = Object.assign({}, this.props);
         delete props.resourceName;
-
-
+        delete props.getUserAccount;
 
         return (
             <button
@@ -90,7 +97,7 @@ export default class SocialMedia extends React.Component {
                 className={[gfClassName('social-media'),
                     props.className
                 ].join(' ')}
-                onClick={this.initAuthorization}
+                onClick={this.initAuthorization.bind(this)}
             >
                 {this.getIcon(props.className)}
             </button>

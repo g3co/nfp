@@ -17,27 +17,43 @@ export default class SplashScreen extends React.Component {
     }
 
     componentDidMount() {
-        $dw(document)
-            .trigger('ready', this.hide.bind(this));
+
+        var splashScreen = findDOMNode(this),
+            $splashScreen = $dw(splashScreen);
+
+        $splashScreen
+            .on('load', this.load.bind(this))
+            .on('done', this.done.bind(this))
+            .once('close', this.close.bind(this));
     }
 
-    hide() {
-        let $splash = $dw(findDOMNode(this)),
-            _to;
+    load() {
+        this.setState({
+            loading: true
+        });
+    }
 
+    done() {
         this.setState({
             loading: false
         });
+    }
+    
+    close() {
+        let $splash = $dw(findDOMNode(this)),
+            _to;
 
-        //inactivate Splash
-        /*_to = setTimeout(function() {
+        $splash
+            .removeClass('active');
 
-            $splash
-                .removeClass('active')
-                .addClass('inactive');
+        _to = setTimeout(function() {
+
+            this.setState({
+                open: false
+            });
 
             clearTimeout(_to);
-        }, 200);*/
+        }.bind(this), 200);
     }
 
     render(props) {
@@ -47,7 +63,7 @@ export default class SplashScreen extends React.Component {
         return (
             <div
                 className={[gfClassName('splash-screen'),
-                    (this.state.open ? 'active' : '')
+                    (this.state.open ? 'active' : 'inactive')
                 ].join(' ')}
             >
                 <h2>nfp
@@ -65,8 +81,14 @@ export default class SplashScreen extends React.Component {
                         className={(this.state.loading ? '' : 'active')}
                     >
                         <span>{props.translations.SPLASH_SCREEN.AUTH_TITLE}</span>
-                        <SocialMedia className="vk" />
-                        <SocialMedia className="instagram" />
+                        <SocialMedia
+                            className="vk"
+                            getUserAccount={props.getUserAccount}
+                        />
+                        <SocialMedia
+                            className="instagram"
+                            getUserAccount={props.getUserAccount}
+                        />
                     </section>
                 </div>
                 <ul>

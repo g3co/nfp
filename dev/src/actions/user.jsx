@@ -1,9 +1,12 @@
-import { GET_USER_SESSION_TOKEN } from '../constants.jsx';
+import {
+    SET_USER_ACCOUNT
+} from '../constants.jsx';
 
-export function getUserSessionToken() {
+export function setUserAccount(account) {
+
     return {
-        type: GET_USER_SESSION_TOKEN,
-        payload: getCookie('nfpr')
+        type: SET_USER_ACCOUNT,
+        payload: account
     }
 }
 

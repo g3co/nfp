@@ -11,6 +11,10 @@
   ],
   "LABELS": {
     "LOG_IN": "Войти",
+    "LOG_OUT": "Выйти",
+    "USER_PROFILE": "Профиль бойца",
+    "USER_SCHEDULE": "События",
+    "USER_SETTINGS": "Настройки",
     "SEARCH_BY_FIGHTER": "Боец",
     "SEARCH_BY_GYM": "Клуб",
     "SEARCH_PLACEHOLDER": "Что Ищете?",

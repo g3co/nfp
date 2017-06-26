@@ -1,11 +1,19 @@
 //RESTful Application
+var path = require('path'),
+    expressSession = require('express-session');
 
 module.exports = function(passport, mongoose, app, router, Strategy) {
 
     var API = '/api/v1';
 
     var models = require('.'.concat(API).concat('/models'))(mongoose),
-        controllers = require('.'.concat(API).concat('/controllers'))(models);
+        io = new (require('./io.js'))();
+
+    var AuthTokens = models.AuthTokens,
+        Places = models.Places,
+        Fighters = models.Fighters,
+        Tournaments = models.Tournaments,
+        Pairs = models.Pairs;
 
     var OAuthCredentials = require('./OAuthCredentials');
 
@@ -18,13 +26,12 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
         res.send('HomePage')
     });
 
-    //AUTHORIZATION
+    //authorization VK
     router.get(
         API.concat('/auth/vk'),
-        passport.authenticate('vkontakte', { scope: ['email']/*, display: 'mobile' */}),
+        passport.authenticate('vkontakte', { scope: ['email'], display: 'mobile' }),
         function(req, res) {
-            console.log(req);
-            res.send('done');
+            //none
         }
     );
     router.get(API.concat('/auth/vk/cb'),
@@ -34,7 +41,7 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
         })
     );
 
-    //authorization VK
+
     passport.use(new Strategy.VK({
         clientID: OAuthCredentials.vk.appId,
         clientSecret: OAuthCredentials.vk.secureKey,
@@ -42,83 +49,88 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
         scope: ['email'],
         profileFields: ['email', 'city', 'bdate']
     }, function(accessToken, refreshToken, params, profile, done) {
-        //console.log('Access Token: %o,\r\n Refresh Token: %o,\r\n Params: %o\r\n,Profile: %o,\r\n', accessToken, refreshToken, params, profile);
-
-        process.nextTick(function () {
-            console.log("PROFILE:", profile);
-            return done(null, profile);
-        });
+        require(pathTo('auth', 'vk'))(AuthTokens, Fighters, io, profile, done)
     }));
 
-    //SIGN OUT
+    //Account
+    router.get(API.concat('/account'), function (req, res) {
+        require(pathTo('get', 'account'))(Fighters, io, req, res)
+    });
+
+    //Log OUT
     router.get(API.concat('/logout'), function (req, res) {
         req.logout();
-        res.send('{"result": "Success logged out"}');
+        
+        io.write(res, { result: 'Logged out' })
     });
 
     //CREATE
     router.post(API.concat('/fighter'), function(req, res) {
-        console.log(req.body);
-
-        var fighter = new Fighters({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            avatar: req.body.avatar,
-            sex: req.body.sex,
-            email: req.body.email
-        });
-
-        fighter.save(function(err) {
-            if(err) {
-                return res.send(err.name)
-            }
-
-            return res.send({fighter: fighter})
-        })
+        require(pathTo('post', 'fighter'))(Fighters, io, req, res)
     });
 
     //READ
     router.get(API.concat('/places'), function (req, res) {
-        res.send('Places')
+        require(pathTo('get', 'places'))(Places, io, req, res)
     });
     router.get(API.concat('/place/:id'), function (req, res) {
-        res.send('Place:'+ req.params.id)
+        require(pathTo('get', 'place'))(Places, io, req, res)
     });
 
     router.get(API.concat('/fighters'), checkAuth, function (req, res) {
-        res.send('{"result": "Fighters"}')
+        require(pathTo('get', 'fighters'))(Fighters, io, req, res)
     });
     router.get(API.concat('/fighter/:id'), function (req, res) {
-        return Fighters.findById(req.params.id, function(err, fighter) {
-            if(err) {
-                return res.send(err.name)
-            }
-
-            if(!fighter) {
-                res.statusCode = 404;
-                return res.send({ error: 'Fighter Not found' })
-            }
-
-            return res.send({fighter: fighter})
-        })
+        require(pathTo('get', 'fighter'))(Fighters, io, req, res)
     });
 
     router.get(API.concat('/sparrings'), function(req, res) {
-        res.send('Sparrings')
+        require(pathTo('get', 'sparrings'))(Sparrings, io, req, res)
     });
     router.get(API.concat('/sparring/:id'), function (req, res) {
-        res.send('Sparring:'+ req.params.id)
+        require(pathTo('get', 'sparring'))(Sparrings, io, req, res)
     });
 
     //UPDATE
 
     //DELETE
 
+    //settings
+    app.use(expressSession({
+        secret: 'test_string',
+        resave: true,
+        saveUninitialized: true
+    }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    //Passport
+    passport.serializeUser(function(user, done) {
+        done(null, user._id);
+    });
+
+    passport.deserializeUser(function(id, done) {
+        Fighters.findById(id, function(err, user) {
+            if(!!err) {
+                return done(err, null)
+            }
+
+            return done(null, user)
+        })
+    });
+
+    //helpers
+    function pathTo(type, entity) {
+        return path.join(__dirname, API, type, entity)
+    }
+
     function checkAuth(req, res, next) {
 
-        console.log('Hello, '+(req.isAuthenticated() ? '%User%' : '%Guest%'));
+        if(req.isAuthenticated())
+        {
+            return next()
+        }
 
-        if (req.isAuthenticated()) { return next(); }
-        res.redirect('/')
+        return res.redirect('/')
     }
 };

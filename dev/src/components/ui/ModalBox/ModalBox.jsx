@@ -90,12 +90,12 @@ export default class ModalBox extends React.Component {
             }.bind(this));
     }
 
-    load(res) {
+    load(block) {
         let modal = findDOMNode(this),
             $modal = $dw(modal);
 
-        if(!!res.responseHTML) {
-            $modal.find('.box-body')[0].innerHTML = res.responseHTML.innerHTML;
+        if(!!block) {
+            $modal.find('.box-body')[0].innerHTML = block.innerHTML;
         }
 
         $modal.addClass('ready');

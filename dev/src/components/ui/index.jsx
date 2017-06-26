@@ -5,6 +5,8 @@ import ModalBox from './ModalBox';
 import ChooseLanguage from './ChooseLanguage';
 import SplashScreen from './SplashScreen';
 import SocialMedia from './SocialMedia';
+import AccountButton from './AccountButton';
+import LoginButton from './LoginButton';
 
 export default {
     GetFight,
@@ -13,5 +15,7 @@ export default {
     ModalBox,
     ChooseLanguage,
     SplashScreen,
-    SocialMedia
+    SocialMedia,
+    AccountButton,
+    LoginButton
 }

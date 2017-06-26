@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, { findDOMNode } from 'react-dom';
 
 import AppBar from 'material-ui/AppBar';
 import Popover from 'material-ui/Popover';
@@ -7,7 +7,7 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
-import FontIcon from 'material-ui/FontIcon';
+
 import Slider from 'material-ui/Slider';
 
 import {
@@ -20,10 +20,10 @@ const {
     GetFight,
     Navigation,
     ModalBox,
-    SplashScreen
+    SplashScreen,
+    AccountButton,
+    LoginButton
 } = ui;
-
-const middleware = '//localhost:3000';
 
 export default class Template extends React.Component {
 
@@ -32,26 +32,10 @@ export default class Template extends React.Component {
 
         this.modalShow = this.modalShow.bind(this);
         this.setTranslation = this.setTranslation.bind(this);
+        this.getUserAccount = this.getUserAccount.bind(this);
 
         $dw(document)
-            .on('ready', function(e) {
-                if(!!e == false || !!e.detail == false) {
-                    return
-                }
-
-                var next = e.detail;
-
-                if(!!Object.prototype.toString.call(next).match(/Function/i) == false) {
-                    return
-                }
-
-                var _to = setTimeout(function() {
-
-                    next();
-
-                    clearTimeout(_to);
-                }, 3000);
-            });
+            .on('ready', this.getUserAccount);
 
         this.state = {
             open: false,
@@ -73,76 +57,82 @@ export default class Template extends React.Component {
             .once('error', function (e) {
                 console.log('Error %o', e);
             })
-            .trigger('show', {route: middleware.concat('/auth')});
+            .trigger('show', {route: '/auth'});
     }
 
     setTranslation(lang) {
         this.props.localeActions.setTranslation(lang)
     }
 
+    getUserAccount() {
+        var $template = $dw(findDOMNode(this)),
+            $splashScreen = $dw('.'+ gfClassName('splash-screen'));
+
+        if(!!this.props.user.account) {
+            $splashScreen
+                .trigger('close');
+
+            return
+        }
+
+        $splashScreen
+            .trigger('load');
+
+        return $template
+            .request('/api/v1/account')
+            .then(function(res) {
+                $splashScreen
+                    .trigger('close');
+
+                this.props.userActions.setUserAccount(res);
+            }.bind(this))
+            .catch(function (e) {
+                $splashScreen
+                    .trigger('done');
+            })
+    }
+
     render(props) {
 
-        const LoginButton = (props) => (
-            <button
-                {...props}
-                className={gfClassName("action__login")}
-                type="button"
-                onClick={this.modalShow}
-            >
-                <FontIcon
-                    className="material-icons"
-                    color="#fff"
-                    style={{
-                        fontSize: '2em'
-                    }}
-                >person</FontIcon>
-                <span>{this.props.locale.translations.LABELS.LOG_IN}</span>
-            </button>
-        );
-
-        const LoggedButton = (props) => (
-            <IconMenu
-                {...props}
-                iconButtonElement={
-                    <FontIcon>person</FontIcon>
-                }
-                targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            >
-                <MenuItem primaryText="Refresh" />
-                <MenuItem primaryText="Help" />
-                <MenuItem primaryText="Sign out" />
-            </IconMenu>
-        );
+        props = {...this.props};
 
         return (
-            <div
-                {...props}
-            >
+            <div>
                 <SplashScreen
-                    translations={this.props.locale.translations}
+                    translations={props.locale.translations}
+                    getUserAccount={this.getUserAccount}
                 />
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{
-                        position: "fixed",
+                        position: 'fixed',
                         padding: '0 16px'
                     }}
                     title={<GetFight
-                        translations={this.props.locale.translations}
+                        translations={props.locale.translations}
                         setTranslation={this.setTranslation}
                     />}
-                    iconElementRight={this.state.logged ? <LoggedButton /> : <LoginButton />}
+                    iconElementRight={
+                    !!props.user.account ?
+                        <AccountButton
+                            translations={props.locale.translations}
+                            user={props.user}
+                        /> :
+                        <LoginButton
+                            translations={props.locale.translations}
+                            user={props.user}
+                        />
+                    }
                     showMenuIconButton={false}
                     titleStyle={{
                         fontSize: 'inherit'
                     }}
                 />
                 <ActionBar
-                    translations={this.props.locale.translations}
+                    translations={props.locale.translations}
                 />
                 <Navigation
-                    translations={this.props.locale.translations}
+                    translations={props.locale.translations}
                 />
                 <ModalBox
                     id={gfClassName("modalbox")}
@@ -159,6 +149,8 @@ export default class Template extends React.Component {
             if('geolocation' in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     initMap(position);
+
+                    $dw(document).trigger('ready');
 
                     //google.maps.event.addDomListener(window, 'load', initMap);
                 });

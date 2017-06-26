@@ -1,16 +1,17 @@
 import {
-    GET_USER_SESSION_TOKEN
+    SET_USER_ACCOUNT
 } from '../constants.jsx';
 
 const initialState = {
-    session: null
+    account: null,
+    schedule: []
 };
 
 export default function user(state = initialState, action) {
     switch(action.type) {
-        case GET_USER_SESSION_TOKEN:
+        case SET_USER_ACCOUNT:
             return {...state,
-                session: action.payload
+                account: action.payload
             };
             break;
         default:

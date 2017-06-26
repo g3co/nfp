@@ -1,6 +1,9 @@
 module.exports = function(mongoose) {
 
     var Schema = mongoose.Schema,
+    //predefines
+        _now,
+        _offset,
     //Mixins
         _Position,
         _MartialArts,
@@ -8,10 +11,14 @@ module.exports = function(mongoose) {
         _createdAt,
         _finishedAt,
     //Schemas
+        AuthTokens,
         Places,
         Fighters,
         Tournaments,
         Pairs;
+
+    _now = new Date();
+    _offset = _now.getTimezoneOffset() * 3600;
 
     _Position = {
         position: {
@@ -31,11 +38,17 @@ module.exports = function(mongoose) {
         mma: {type: Boolean, required: true, default: false},
         muayThai: {type: Boolean, required: true, default: false}
     };
-    _updatedAt = {type: Date, default: Date.now, required: true};
-    _createdAt = {type: Date, default: Date.now, required: true};
-    _finishedAt = {type: Date};
+    _updatedAt = {type: Date, default: Date.now, required: true, offset: _offset};
+    _createdAt = {type: Date, default: Date.now, required: true, offset: _offset};
+    _finishedAt = {type: Date, offset: _offset};
 
     //Implementation
+    AuthTokens = new Schema({
+        user: (new Pointer('Fighters')),
+        expiredAt: _finishedAt,
+        createdAt: _createdAt
+    });
+
     Places = new Schema({
         place: {
             position: {
@@ -73,6 +86,9 @@ module.exports = function(mongoose) {
         sex: {type: Boolean, required: true},
         email: {type: String, required: true, index: true, unique: true},
         dateBirth: {type: Date, required: true},
+        //sign fields
+        vkID: {type: Number, index: true, unique: true},
+        instagramID: {type: Number, index: true, unique: true},
         //additional fields
         nickname: {type: String},
         conditions: {
@@ -126,6 +142,7 @@ module.exports = function(mongoose) {
     }
 
     return {
+        AuthTokens: mongoose.model('AuthTokens', AuthTokens),
         Places: mongoose.model('Places', Places),
         Fighters: mongoose.model('Fighters', Fighters),
         Tournaments: mongoose.model('Tournaments', Tournaments),

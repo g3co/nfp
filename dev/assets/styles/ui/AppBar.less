@@ -192,6 +192,67 @@
     })
   }
 
+  .gf-action__account {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    margin: -16px 0 0;
+    padding: 0;
+    height: 32px;
+    width: 32px;
+    background: transparent;
+    border: 0 transparent solid;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    cursor: pointer;
+
+    span {
+      height: inherit;
+      width: inherit;
+      border: 0 transparent solid;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    img {
+      height: inherit;
+      width: inherit;
+      display: block;
+    }
+
+    i {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      padding: 0 4px;
+      margin: 0 -4px -4px 0;
+      height: 16px;
+      min-width: 8px;
+      line-height: 1.225;
+      background: red;
+      border: 2px white solid;
+      -webkit-border-radius: 16px;
+      -moz-border-radius: 16px;
+      border-radius: 16px;
+      font-family: @font-main;
+      font-size: 14px;
+      font-style: normal;
+      display: inline-block;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      visibility: hidden;
+
+      &.active {
+        visibility: visible;
+      }
+    }
+
+  }
+
   #progress {
     position: fixed;
     top: 0;
