@@ -1,6 +1,7 @@
 var express = require('express'),
     passport = require('passport'),
     mongoose = require('mongoose'),
+    connect = require('connect'),
     path = require('path'),
     url = require('url'),
     util = require('util'),
@@ -35,7 +36,9 @@ net_fight_promotion
         });
 
         //defaults
-        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.urlencoded({
+            extended: true
+        }));
         app.use(cookieParser());
         app.use(bodyParser.json());
         app.use(function(req, res, next) {
@@ -49,10 +52,6 @@ net_fight_promotion
 
         //Serving Static
         app.use('/', function(req, res, next) {
-
-            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
-            res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
-            res.header('Access-Control-Allow-Headers', 'Content-Type');
 
             return serveStatic(
                 path.join(__dirname, 'static', provideLang(req.query.lng), 'public'),

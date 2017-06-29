@@ -5,6 +5,7 @@ module.exports = function(mongoose) {
         _now,
         _offset,
     //Mixins
+        _Place,
         _Position,
         _MartialArts,
         _updatedAt,
@@ -20,11 +21,12 @@ module.exports = function(mongoose) {
     _now = new Date();
     _offset = _now.getTimezoneOffset() * 3600;
 
+    _Place = {
+        type: [Number],
+        index: '2d'
+    };
     _Position = {
-        position: {
-            lat: {type: Number},
-            lng: {type: Number}
-        },
+        position: _Place,
         accuracy: {type: Number}
     };
     _MartialArts = {
@@ -50,13 +52,7 @@ module.exports = function(mongoose) {
     });
 
     Places = new Schema({
-        place: {
-            position: {
-                lat: {type: Number, required: true},
-                lng: {type: Number, required: true}
-            },
-            accuracy: {type: Number}
-        },
+        place: _Place,
         placeName: {type: String, required: true},
         cityName: {type: String, required: true},
         streetName: {type: String, required: true},
@@ -102,7 +98,7 @@ module.exports = function(mongoose) {
             draws: [(new Pointer('Pairs'))]
         },
         //service fields
-        lastGeo: _Position,
+        lastGeo: _Place,
         updatedAt: _updatedAt,
         createdAt: _createdAt,
         banned: {type: Boolean, required: true, default: false}
@@ -112,7 +108,7 @@ module.exports = function(mongoose) {
         name: {type: String, required: true},
         card: [(new Pointer('Pairs'))],
         kind: _MartialArts,
-        place: _Position,
+        place: _Place,
         placeName: {type: String, required: true},
         scheduled: {type: Date, required: true},
         //service fields

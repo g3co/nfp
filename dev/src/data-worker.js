@@ -252,15 +252,21 @@
                     //defaults
                     o.type = o.type || 'GET';
                     o.body = o.body || null;
+                    o.requestHeaders = o.requestHeaders || {};
 
                     var _xhr = new window.XMLHttpRequest();//XHR
 
                     //initializations
                     _xhr.responseType = o.responseType || 'json';
 
-                    //set JSON body for POST
+                    //set URLEncoded body for POST
                     if(o.type.match(/post/i)) {
+                        o.requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
+                    }
+                    //set JSON body for PUT
+                    if(o.type.match(/put/i)) {
                         o.body = JSON.stringify(o.body);
+                        o.requestHeaders['Content-Type'] = 'application/json';
                     }
 
                     _xhr.open(
@@ -269,8 +275,6 @@
                     );
 
                     _xhr.withCredentials = true;
-
-                    o.requestHeaders = o.requestHeaders || {};
 
                     if(!!o.requestHeaders) {
                         for(var h in o.requestHeaders) {
@@ -311,7 +315,7 @@
                             if(!!res.response) {
                                 var response = res.response;
 
-                                if(response.error < 200) {
+                                if(response.error < 200 && response.error !== 0) {
                                     reject(new Error(response.error_description))
                                 }
 

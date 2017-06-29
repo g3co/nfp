@@ -1,17 +1,24 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import Popover, { PopoverAnimationVertical } from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+
+import * as userActions from '../../../actions/user.jsx';
+
 import { gfClassName } from '../../helper';
 
-export default class AccountButton extends React.Component {
+class AccountButton extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.handleOpenPopover = this.handleOpenPopover.bind(this);
         this.handleClosePopover = this.handleClosePopover.bind(this);
+        this.userLogout = this.userLogout.bind(this);
 
         this.state = {
             open: false
@@ -33,9 +40,22 @@ export default class AccountButton extends React.Component {
         });
     }
 
+    userLogout() {
+        let props = {...this.props},
+            logoutUser = props.userActions.setUserAccount;
+
+        $dw(findDOMNode(this))
+            .request('/api/v1/logout')
+            .then(logoutUser)
+    }
+
     render(props) {
 
         props = {...this.props};
+
+        let translations = props.translations,
+            account = props.user.account || {},
+            schedule = props.user.schedule || [];
 
         return (
             <button
@@ -44,16 +64,16 @@ export default class AccountButton extends React.Component {
                 onClick={this.handleOpenPopover}
             >
                 <span><img
-                    src={props.user.account.avatar}
+                    src={account.avatar}
                 /></span>
                 <i
-                    className={props.user.schedule.length ? "active" : ""}
-                >{props.user.schedule.length}</i>
+                    className={schedule.length ? "active" : ""}
+                >{schedule.length}</i>
                 <Popover
                     open={this.state.open}
                     anchorEl={this.state.anchorEl}
-                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                    anchorOrigin={{horizontal: "left", vertical: "bottom"}}
+                    targetOrigin={{horizontal: "left", vertical: "top"}}
                     animation={PopoverAnimationVertical}
                     onRequestClose={this.handleClosePopover}
                     useLayerForClickAway={true}
@@ -63,19 +83,20 @@ export default class AccountButton extends React.Component {
                     >
                         <MenuItem
                             value="user_profile"
-                            primaryText={props.translations.LABELS.USER_PROFILE}
+                            primaryText={translations.LABELS.USER_PROFILE}
                         />
                         <MenuItem
                             value="user_schedule"
-                            primaryText={props.translations.LABELS.USER_SCHEDULE}
+                            primaryText={translations.LABELS.USER_SCHEDULE}
                         />
                         <MenuItem
                             value="user_settings"
-                            primaryText={props.translations.LABELS.USER_SETTINGS}
+                            primaryText={translations.LABELS.USER_SETTINGS}
                         />
                         <MenuItem
                             value="log_out"
-                            primaryText={props.translations.LABELS.LOG_OUT}
+                            primaryText={translations.LABELS.LOG_OUT}
+                            onClick={this.userLogout}
                         />
                     </Menu>
                 </Popover>
@@ -83,3 +104,9 @@ export default class AccountButton extends React.Component {
         )
     }
 }
+
+export default connect(state => {return {
+    user: state.user
+}}, dispatch => {return {
+    userActions: bindActionCreators(userActions, dispatch)
+}})(AccountButton);

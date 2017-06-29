@@ -59,15 +59,11 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
 
     //Log OUT
     router.get(API.concat('/logout'), function (req, res) {
-        req.logout();
-        
-        io.write(res, { result: 'Logged out' })
+        require(pathTo('get', 'logout'))(Fighters, io, req, res)
     });
 
     //CREATE
-    router.post(API.concat('/fighter'), function(req, res) {
-        require(pathTo('post', 'fighter'))(Fighters, io, req, res)
-    });
+
 
     //READ
     router.get(API.concat('/places'), function (req, res) {
@@ -80,8 +76,8 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
     router.get(API.concat('/fighters'), checkAuth, function (req, res) {
         require(pathTo('get', 'fighters'))(Fighters, io, req, res)
     });
-    router.get(API.concat('/fighter/:id'), function (req, res) {
-        require(pathTo('get', 'fighter'))(Fighters, io, req, res)
+    router.get(API.concat('/fighter/:id'), checkAuth, function (req, res) {
+        require(pathTo('get', 'fighters'))(Fighters, io, req, res)
     });
 
     router.get(API.concat('/sparrings'), function(req, res) {
@@ -92,6 +88,9 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
     });
 
     //UPDATE
+    router.put(API.concat('/account'), function (req, res) {
+        require(pathTo('put', 'account'))(Fighters, io, req, res)
+    });
 
     //DELETE
 

@@ -65,6 +65,7 @@ class App extends React.Component {
     }
 
     render() {
+        
         return (
             <MuiThemeProvider
                 muiTheme={muiTheme}
@@ -80,8 +81,7 @@ class App extends React.Component {
 function mapState2Props(state) {
     return {
         locale: state.locale,
-        user: state.user,
-        search: state.search
+        user: state.user
     }
 }
 

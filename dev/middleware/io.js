@@ -5,7 +5,8 @@ module.exports = function io() {
         2: 'Unknown method passed',
         3: 'Authorization failed',
         4: 'Access denied',
-        5: 'Internal server error'
+        5: 'Internal server error',
+        6: 'Invalid response body'
     };
 
     this.read = read;
@@ -19,7 +20,10 @@ module.exports = function io() {
         var query,
             session;
 
-        query = !!req.params == false ? !!req.query == false ? !!req.body == false ? {} : req.body : req.query : req.params;
+        query = !!Object.keys(req.params).length == false ?
+                !!Object.keys(req.query).length == false ?
+                !!Object.keys(req.body).length == false ?
+                {} : req.body : req.query : req.params;
         session = !!req.session && !!req.session.passport ? req.session.passport : null;
 
         return {
@@ -67,7 +71,7 @@ module.exports = function io() {
 
                 if(!!_value && !!_value.match(/json/i)) {
                     data = {
-                        error: o.result,
+                        error: (o.result < 200) ? o.result : 0,
                         error_description: messages[o.result] || '',
                         result: data
                     }

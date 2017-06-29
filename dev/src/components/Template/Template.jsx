@@ -31,11 +31,6 @@ export default class Template extends React.Component {
         super(props);
 
         this.modalShow = this.modalShow.bind(this);
-        this.setTranslation = this.setTranslation.bind(this);
-        this.getUserAccount = this.getUserAccount.bind(this);
-
-        $dw(document)
-            .on('ready', this.getUserAccount);
 
         this.state = {
             open: false,
@@ -60,47 +55,19 @@ export default class Template extends React.Component {
             .trigger('show', {route: '/auth'});
     }
 
-    setTranslation(lang) {
-        this.props.localeActions.setTranslation(lang)
-    }
-
-    getUserAccount() {
-        var $template = $dw(findDOMNode(this)),
-            $splashScreen = $dw('.'+ gfClassName('splash-screen'));
-
-        if(!!this.props.user.account) {
-            $splashScreen
-                .trigger('close');
-
-            return
-        }
-
-        $splashScreen
-            .trigger('load');
-
-        return $template
-            .request('/api/v1/account')
-            .then(function(res) {
-                $splashScreen
-                    .trigger('close');
-
-                this.props.userActions.setUserAccount(res);
-            }.bind(this))
-            .catch(function (e) {
-                $splashScreen
-                    .trigger('done');
-            })
-    }
-
     render(props) {
 
         props = {...this.props};
 
+        let translations = props.locale.translations,
+            user = props.user,
+            account = user.account,
+            setTranslation = props.localeActions.setTranslation;
+
         return (
             <div>
                 <SplashScreen
-                    translations={props.locale.translations}
-                    getUserAccount={this.getUserAccount}
+                    translations={translations}
                 />
                 <AppBar
                     className={gfClassName("appbar")}
@@ -109,18 +76,18 @@ export default class Template extends React.Component {
                         padding: '0 16px'
                     }}
                     title={<GetFight
-                        translations={props.locale.translations}
-                        setTranslation={this.setTranslation}
+                        translations={translations}
+                        setTranslation={setTranslation}
                     />}
                     iconElementRight={
-                    !!props.user.account ?
+                    !!account ?
                         <AccountButton
-                            translations={props.locale.translations}
-                            user={props.user}
+                            translations={translations}
+                            user={user}
                         /> :
                         <LoginButton
-                            translations={props.locale.translations}
-                            user={props.user}
+                            translations={translations}
+                            user={user}
                         />
                     }
                     showMenuIconButton={false}
@@ -129,26 +96,26 @@ export default class Template extends React.Component {
                     }}
                 />
                 <ActionBar
-                    translations={props.locale.translations}
+                    translations={translations}
                 />
                 <Navigation
-                    translations={props.locale.translations}
+                    translations={translations}
                 />
                 <ModalBox
                     id={gfClassName("modalbox")}
                 />
             </div>
-        );
+        )
     }
 
     componentDidMount() {
         setTimeout(() => {
 
-            initMap();
+            //initMap();
 
             if('geolocation' in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    initMap(position);
+                    //initMap(position);
 
                     $dw(document).trigger('ready');
 
