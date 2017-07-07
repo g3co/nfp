@@ -1,4 +1,4 @@
-module.exports = function(AuthTokens, Fighters, io, profile, done) {
+module.exports = function(Fighters, io, profile, done) {
 
     profile = profile._json;
 

@@ -12,7 +12,7 @@ module.exports = function(mongoose) {
         _createdAt,
         _finishedAt,
     //Schemas
-        AuthTokens,
+        MapSynchronization,
         Places,
         Fighters,
         Tournaments,
@@ -45,35 +45,41 @@ module.exports = function(mongoose) {
     _finishedAt = {type: Date, offset: _offset};
 
     //Implementation
-    AuthTokens = new Schema({
-        user: (new Pointer('Fighters')),
+    MapSynchronization = new Schema({
+        place: _Place,
         expiredAt: _finishedAt,
         createdAt: _createdAt
     });
 
     Places = new Schema({
-        place: _Place,
-        placeName: {type: String, required: true},
-        cityName: {type: String, required: true},
-        streetName: {type: String, required: true},
-        zipCode: {type: Number, required: true},
-        building: {type: String, required: true},
-        phoneNumber: {type: String, required: true},
-        photo: {type: String, required: true},
-        schedule: {
-            0: {type: String, required: true},
-            1: {type: String, required: true},
-            2: {type: String, required: true},
-            3: {type: String, required: true},
-            4: {type: String, required: true},
-            5: {type: String, required: true},
-            6: {type: String, required: true}
-        },
+        place: _Place,//[$place.geometry.location.lat,$place.geometry.location.lng]
+        schoolType: {type: String, required: true},//$keyword
+        placeName: {type: String, required: true},//$place.name
+        address: {type: String, required: true},//$place.vicinity
+        zipCode: {type: Number, required: true},//$place.address_components.each -> find 'postal_code'
+        phoneNumber: {type: String, required: true},//$place.international_phone_number
+        website: {type: String, required: true, default: ''},//$place.website
+        schedule: [Schema.Types.Mixed],
+        /*{
+            close: {
+                day : {type: Number},
+                time: {type: String}
+            },
+            open: {
+                day: {type: Number},
+                time: {type: String}
+            }
+        }//$place.opening_hours.periods*/
+        utc_offset: {type: Number, required: true, default: 0},//$place.utc_offset
+        serviceID: {type: String, index: true, unique: true},//$place_id
         //service fields
         updatedAt: _updatedAt,
         createdAt: _createdAt,
         unavailable: {type: Boolean, required: true, default: false}
     });
+
+    //GET PLACES: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=[$place]&radius=$radius&type=gym&keyword=$schoolType&key=YOUR_API_KEY
+    //GET PLACE BY place_id: https://maps.googleapis.com/maps/api/place/details/json?placeid=$place_id&key=YOUR_API_KEY
 
     Fighters = new Schema({
         firstName: {type: String, required: true},
@@ -138,7 +144,7 @@ module.exports = function(mongoose) {
     }
 
     return {
-        AuthTokens: mongoose.model('AuthTokens', AuthTokens),
+        MapSynchronization: mongoose.model('MapSynchronization', MapSynchronization),
         Places: mongoose.model('Places', Places),
         Fighters: mongoose.model('Fighters', Fighters),
         Tournaments: mongoose.model('Tournaments', Tournaments),

@@ -6,5 +6,8 @@ module.exports = {
     },
     instagram: {
 
+    },
+    google: {
+        APIKey: 'AIzaSyDpHpeuh-5IezBSx56BJXyvFTE-Ky4gyIo'
     }
 };

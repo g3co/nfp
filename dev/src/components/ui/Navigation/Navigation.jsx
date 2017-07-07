@@ -1,24 +1,36 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import Map from '../Map';
 import {
     gfClassName
 } from '../../helper';
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+
+import * as placesActions from '../../../actions/places.jsx';
+import * as fightersActions from '../../../actions/fighters.jsx';
+
 let _interval;
 
-export default class Navigation extends React.Component {
+class Navigation extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.updateCurrentPosition = this.updateCurrentPosition.bind(this);
+        this.getFightersNearby = this.getFightersNearby.bind(this);
+        this.setFightersNearby = this.setFightersNearby.bind(this);
+        this.getGYMsNearby = this.getGYMsNearby.bind(this);
+        this.setGYMsNearby = this.setGYMsNearby.bind(this);
 
         this.state = {
             currentPosition: [-28.024, 40.887],
-            currentAdv: {}
+            currentAdv: {},
+            allowTrackLastGeo: true
         };
 
-        if('geolocation' in navigator) {
+        if('geolocation' in navigator && this.state.allowTrackLastGeo) {
             _interval = setInterval(this.updateCurrentPosition, 3000);
         } else {
             alert('To continue, please, get access to your geo location.');
@@ -26,6 +38,10 @@ export default class Navigation extends React.Component {
     }
 
     updateCurrentPosition() {
+
+        let getFightersNearby = this.getFightersNearby,
+            getGYMsNearby = this.getGYMsNearby;
+
         navigator.geolocation.getCurrentPosition(function(position) {
 
             if(!!position && !!position.coords) {
@@ -48,6 +64,9 @@ export default class Navigation extends React.Component {
                     currentAdv
                 });
 
+                getFightersNearby();
+                getGYMsNearby();
+
                 return
             }
 
@@ -55,16 +74,77 @@ export default class Navigation extends React.Component {
         }.bind(this))
     }
 
+    getFightersNearby() {
+        let $this = $dw(findDOMNode(this)),
+            setFightersNearby = this.setFightersNearby;
+
+        return $this
+            .request('/api/v1/fighters')
+            .then(setFightersNearby)
+    }
+
+    getGYMsNearby() {
+        let $this = $dw(findDOMNode(this)),
+            setGYMsNearby = this.setGYMsNearby;
+
+        return $this
+            .request('/api/v1/places')
+            .then(setGYMsNearby)
+    }
+
+    setFightersNearby(fighters) {
+        this.props.fightersActions.setFightersNearby(fighters);
+
+        return fighters
+    }
+
+    setGYMsNearby(gyms) {
+        this.props.placesActions.setPlacesNearby(gyms);
+
+        return gyms
+    }
+
+    switchTrackLastGeo() {
+
+        let allowTrackLastGeo = !this.state.allowTrackLastGeo;
+
+        this.setState({
+            allowTrackLastGeo
+        });
+
+        return allowTrackLastGeo
+    }
+
     render() {
+
+        let props = {...this.props},
+            fighters = props.fighters.nearby,
+            gyms = props.places.nearby,
+            currentPosition = this.state.currentPosition,
+            trackLastGeo = this.state.allowTrackLastGeo,
+            switchTrackLastGeo = this.switchTrackLastGeo.bind(this);
+
         return (
             <div
                 id={gfClassName("navigation")}
                 className={gfClassName("navigation")}
             >
                 <Map
-                    currentPosition={this.state.currentPosition}
+                    currentPosition={currentPosition}
+                    fighters={fighters}
+                    gyms={gyms}
+                    switchTrackLastGeo={switchTrackLastGeo}
+                    trackLastGeo={trackLastGeo}
                 />
             </div>
         )
     }
 }
+
+export default connect(state => {return {
+    places: state.places,
+    fighters: state.fighters
+}}, dispatch => {return {
+    placesActions: bindActionCreators(placesActions, dispatch),
+    fightersActions: bindActionCreators(fightersActions, dispatch)
+}})(Navigation);

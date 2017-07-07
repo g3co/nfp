@@ -6,7 +6,8 @@ module.exports = function io() {
         3: 'Authorization failed',
         4: 'Access denied',
         5: 'Internal server error',
-        6: 'Invalid response body'
+        6: 'Invalid body request',
+        7: 'Object is unavailable'
     };
 
     this.read = read;

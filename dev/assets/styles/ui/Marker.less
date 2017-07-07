@@ -1,0 +1,196 @@
+.gf-geo--tracker{
+  position: absolute;
+  margin: 0;
+  width: 1px;
+  height: 1px;
+
+  i{
+    position: absolute;
+    top: -800%;
+    left: -800%;
+    height: 1600%;
+    width: 1600%;
+    background: white;
+    border: 0 transparent solid;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    transform-origin: 50% 50%;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -1200%;
+    left: -1200%;
+    margin: 0;
+    height: 2400%;
+    width: 2400%;
+    background: fade(white, 30);
+    border: 0 transparent solid;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  &.active {
+    i{
+      background: @color-geo-track;
+      animation: dotPulsate linear 3s;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+    }
+
+    &:before{
+      content: '';
+      position: absolute;
+      top: -8000%;
+      left: -8000%;
+      margin: 0;
+      width: 16000%;
+      height: 16000%;
+      background: fade(@color-red, 40);
+      border: 0 transparent solid;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      opacity: 0;
+      animation: dotWavePulsate cubic-bezier(0,.54,.53,1) 3s;
+      transform-origin: 50% 50%;
+      animation-fill-mode: forwards;
+      animation-delay: 0.9s;
+      animation-iteration-count: infinite;
+    }
+
+    &:after{
+      content: '';
+      position: absolute;
+      top: -8000%;
+      left: -8000%;
+      margin: 0;
+      height: 16000%;
+      width: 16000%;
+      background: fade(@color-red, 40);
+      border: 0 transparent solid;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      opacity: 0;
+      animation: dotWavePulsate cubic-bezier(0,.54,.53,1) 3s;
+      transform-origin: 50% 50%;
+      animation-fill-mode:forwards;
+      animation-delay: 1.07s;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+.gf-geo--fighter {
+  position: absolute;
+  margin: 0;
+  width: 1px;
+  height: 1px;
+
+  div {
+    position: absolute;
+    top: -2400%;
+    left: -2400%;
+    height: 4800%;
+    width: 4800%;
+    background: @color-gray;
+    border: 2px white solid;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    transform-origin: 50% 50%;
+    img {
+      height: 100%;
+      width: 100%;
+      display: block;
+    }
+  }
+}
+
+.gf-geo--gym {
+  position: absolute;
+  margin: 0;
+  width: 1px;
+  height: 1px;
+
+  div {
+    position: absolute;
+    top: -1400%;
+    left: -1400%;
+    height: 2800%;
+    width: 2800%;
+    background: @color-yellow;
+    border: 0 transparent solid;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    display: block;
+    overflow: hidden;
+    transform-origin: 50% 50%;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -30% 0 0 -30%;
+      height: 60%;
+      width: 60%;
+      background: white;
+      border: 0 transparent solid;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-box-shadow: 0 0 10px @color-gray;
+      -moz-box-shadow: 0 0 10px @color-gray;
+      box-shadow: 0 0 10px @color-gray;
+    }
+
+    /*&:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-bottom: 2.9em currentColor solid;
+      border-left: 2.9em transparent solid;
+      border-right: 2.9em transparent solid;
+      width: 4.2em;
+      height: 0;
+    }
+
+    b {
+      position: absolute;
+      top: 2.9em;
+      bottom: 2.9em;
+      height: 4.2em;
+      width: 4.2em;
+      background: currentColor;
+      border: 2.9em currentColor solid;
+      border-top-width: 0;
+      border-bottom-width: 0;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-top: 2.9em currentColor solid;
+      border-left: 2.9em transparent solid;
+      border-right: 2.9em transparent solid;
+      width: 4.2em;
+      height: 0;
+    }*/
+  }
+}

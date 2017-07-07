@@ -9,13 +9,13 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
     var models = require('.'.concat(API).concat('/models'))(mongoose),
         io = new (require('./io.js'))();
 
-    var AuthTokens = models.AuthTokens,
+    var MapSynchronization = models.MapSynchronization,
         Places = models.Places,
         Fighters = models.Fighters,
         Tournaments = models.Tournaments,
         Pairs = models.Pairs;
 
-    var OAuthCredentials = require('./OAuthCredentials');
+    var Credentials = require('./Credentials');
 
     router.use(function(req, res, next) {
         console.log(req.method+req.url);
@@ -43,13 +43,13 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
 
 
     passport.use(new Strategy.VK({
-        clientID: OAuthCredentials.vk.appId,
-        clientSecret: OAuthCredentials.vk.secureKey,
-        callbackURL: OAuthCredentials.vk.callbackRoute,
+        clientID: Credentials.vk.appId,
+        clientSecret: Credentials.vk.secureKey,
+        callbackURL: Credentials.vk.callbackRoute,
         scope: ['email'],
         profileFields: ['email', 'city', 'bdate']
     }, function(accessToken, refreshToken, params, profile, done) {
-        require(pathTo('auth', 'vk'))(AuthTokens, Fighters, io, profile, done)
+        require(pathTo('auth', 'vk'))(Fighters, io, profile, done)
     }));
 
     //Account
@@ -63,11 +63,13 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
     });
 
     //CREATE
-
+    router.post(API.concat('/place'), function (req, res) {
+        require(pathTo('post', 'place'))(Places, io, req, res)
+    });
 
     //READ
     router.get(API.concat('/places'), function (req, res) {
-        require(pathTo('get', 'places'))(Places, io, req, res)
+        require(pathTo('get', 'places'))(MapSynchronization, Fighters, Places, io, req, res)
     });
     router.get(API.concat('/place/:id'), function (req, res) {
         require(pathTo('get', 'place'))(Places, io, req, res)
@@ -77,7 +79,7 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
         require(pathTo('get', 'fighters'))(Fighters, io, req, res)
     });
     router.get(API.concat('/fighter/:id'), checkAuth, function (req, res) {
-        require(pathTo('get', 'fighters'))(Fighters, io, req, res)
+        require(pathTo('get', 'fighter'))(Fighters, io, req, res)
     });
 
     router.get(API.concat('/sparrings'), function(req, res) {

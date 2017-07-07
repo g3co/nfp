@@ -1,9 +1,11 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import ReactMapboxGl,
 {
     Layer,
     Feature,
-    Marker
+    Marker,
+    Popup
 } from 'react-mapbox-gl';
 
 import {
@@ -26,7 +28,12 @@ export default class Map extends React.Component {
 
         props = {...this.props};
 
-        let currentPosition = props.currentPosition;
+        let $mapbox = findDOMNode(this),
+            fighters = props.fighters,
+            gyms = props.gyms,
+            currentPosition = props.currentPosition,
+            trackLastGeo = props.trackLastGeo,
+            switchTrackLastGeo = props.switchTrackLastGeo;
         
         return (
             <Mapbox
@@ -47,12 +54,59 @@ export default class Map extends React.Component {
 
                 </Layer>
                 <Marker
-                    className={gfClassName("geo--tracker")}
+                    className={[
+                        gfClassName("geo--tracker"),
+                        (trackLastGeo ? "active" : "")
+                    ].join(' ')}
                     coordinates={currentPosition}
                     anchor="bottom"
+                    onClick={function() {
+                        let $this = $dw('.'+ gfClassName("geo--tracker")),
+                            classTrackGeo = "active";
+
+                        if(switchTrackLastGeo()) {
+                            $this
+                                .addClass(classTrackGeo);
+
+                            return false
+                        }
+
+                        $this
+                            .removeClass(classTrackGeo);
+
+                        return false
+                    }}
                 >
                     <i>&nbsp;</i>
                 </Marker>
+                {fighters.map((fighter, i) =>
+                    <Marker
+                        className={gfClassName("geo--fighter")}
+                        coordinates={fighter.lastGeo}
+                        anchor="bottom"
+                        key={i}
+                    >
+                        <div><img
+                            src={fighter.avatar}
+                        /></div>
+                    </Marker>
+                )}
+                {gyms.map((gym, i) =>
+                    <Marker
+                        className={gfClassName("geo--gym")}
+                        coordinates={gym.location}
+                        anchor="bottom"
+                        >
+                        <div>&nbsp;</div>
+                    </Marker>
+                )}
+                <Popup
+                    coordinates={[-0.13235092163085938,51.518250335096376]}
+                    offset={{
+    'bottom-left': [12, -38],  'bottom': [0, -38], 'bottom-right': [-12, -38]
+  }}>
+                    <h1>Popup</h1>
+                </Popup>
             </Mapbox>
         )
     }

@@ -27,14 +27,14 @@ module.exports = function(Fighters, io, req, res) {
             }}, function(err, user) {
 
                 if(!!err) {
-                    return io.write(res, null, { result: 4 })
+                    return io.write(res, null, { result: 1 })
                 }
 
                 if(!!user == false) {
                     return io.write(res, null, { result: 1 })
                 }
 
-                return io.write(res, 'Success', { result: 200 })
+                return io.write(res, 'Success', { result: 202 })
             })
     }
     return io.write(res, null, { result: 6 })

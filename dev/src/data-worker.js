@@ -261,6 +261,32 @@
 
                     //set URLEncoded body for POST
                     if(o.type.match(/post/i)) {
+
+                        if(!!o.body && !!o.body.jsonRequest) {
+                            o.body = {
+                                jsonRequest: JSON.stringify(o.body.jsonRequest)
+                            }
+                        }
+
+                        var urlencoded = [],
+                            _len;
+
+                        if(!!o.body && !o.body.length) {
+                            var body = o.body;
+                            for(var key in body) {
+                                if(body.hasOwnProperty(key)) {
+                                    var value = body[key];
+
+                                    urlencoded.push(key +'='+ value);
+                                }
+                            }
+                        }
+                        _len = urlencoded.length;
+
+                        urlencoded = urlencoded.join('&');
+
+                        o.body = _len > 1 ? urlencoded.slice(0, -1) : urlencoded;
+
                         o.requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
                     }
                     //set JSON body for PUT

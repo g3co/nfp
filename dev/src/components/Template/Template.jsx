@@ -98,32 +98,17 @@ export default class Template extends React.Component {
                 <ActionBar
                     translations={translations}
                 />
-                <Navigation
-                    translations={translations}
-                />
+                {(function() {
+                    if(!!account) {
+                        return (<Navigation
+                            translations={translations}
+                        />)
+                    }
+                })()}
                 <ModalBox
                     id={gfClassName("modalbox")}
                 />
             </div>
         )
-    }
-
-    componentDidMount() {
-        setTimeout(() => {
-
-            //initMap();
-
-            if('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    //initMap(position);
-
-                    $dw(document).trigger('ready');
-
-                    //google.maps.event.addDomListener(window, 'load', initMap);
-                });
-            } else {
-                alert('To continue, please, get access to your geo location.')
-            }
-        }, 1000);
     }
 }

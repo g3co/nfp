@@ -14,6 +14,9 @@ module.exports = function(Fighters, io, req, res) {
     }
 
     Fighters.findOne({ _id: id }, function (err, user) {
+
+        console.error('Account (GET) Error:', err);
+
         if(!!err) {
             return io.write(res, null, { result: 4 })
         }

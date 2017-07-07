@@ -4,8 +4,6 @@ module.exports = function(Fighters, io, req, res) {
         session = input.session,
         query = input.query;
 
-    console.log('Query:', query);
-
     if(!!session == false) {
         return io.write(res, null, { result: 4 })
     }
@@ -23,7 +21,6 @@ module.exports = function(Fighters, io, req, res) {
 
         return Fighters
             .findOne({ _id: id })
-            .limit(1)
             .exec(function (err, user) {
                 if(!!err) {
                     return io.write(res, null, { result: 4 })
@@ -34,10 +31,15 @@ module.exports = function(Fighters, io, req, res) {
                 }
 
                 var findByQuery = {
-                    lastGeo: {
-                        $near: user.lastGeo,
-                        $maxDistance: 5
-                    }
+                    $and: [
+                        {lastGeo: {
+                            $near: user.lastGeo,
+                            $maxDistance: 500
+                        },
+                        _id: {
+                            $ne: id
+                        }}
+                    ]
                 };
 
                 Fighters
@@ -48,9 +50,9 @@ module.exports = function(Fighters, io, req, res) {
                         firstName: 1
                     })
                     .select({
-                        firstName: 1,
-                        lastName: 1,
-                        avatar: 1
+                        _id: 1,
+                        avatar: 1,
+                        lastGeo: 1
                     })
                     .exec(showFighters);
             });
@@ -73,16 +75,18 @@ module.exports = function(Fighters, io, req, res) {
         })
         .exec(showFighters);
 
-    function showFighters(err, result) {
+    function showFighters(err, fighters) {
+
+        console.error('Fighters (GET) Error:', err);
 
         if(!!err) {
-            return io.write(res, null, { result: 4 })
-        }
-
-        if(!!result == false) {
             return io.write(res, null, { result: 1 })
         }
 
-        return io.write(res, result)
+        if(!!fighters == false) {
+            return io.write(res, null, { result: 1 })
+        }
+
+        return io.write(res, fighters)
     }
 };
