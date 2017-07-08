@@ -73,7 +73,7 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
 
                                 return io.write(res, places.map(function(p, i) {
                                     return {
-                                        _id: p._id,
+                                        id: p._id,
                                         location: p.place
                                     }
                                 }))

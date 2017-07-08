@@ -7,6 +7,7 @@ import SplashScreen from './SplashScreen';
 import SocialMedia from './SocialMedia';
 import AccountButton from './AccountButton';
 import LoginButton from './LoginButton';
+import ProgressBar from './ProgressBar';
 
 export default {
     GetFight,
@@ -17,5 +18,6 @@ export default {
     SplashScreen,
     SocialMedia,
     AccountButton,
-    LoginButton
+    LoginButton,
+    ProgressBar
 }

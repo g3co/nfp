@@ -1,3 +1,6 @@
+//app
+export const SET_APP_PROGRESS = 'SET_APP_PROGRESS';
+
 //locale
 export const SET_TRANSLATION = 'SET_TRANSLATION';
 

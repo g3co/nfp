@@ -37,6 +37,10 @@ class Navigation extends React.Component {
         }
     }
 
+    getProgressBar() {
+        return $dw('#progress')
+    }
+
     updateCurrentPosition() {
 
         let getFightersNearby = this.getFightersNearby,
@@ -49,9 +53,6 @@ class Navigation extends React.Component {
                     currentAdv,
                     lngDiff = Math.abs(this.state.currentPosition[0] - currentPosition[0]),
                     latDiff = Math.abs(this.state.currentPosition[1] - currentPosition[1]);
-
-                delete position.coords.longitude;
-                delete position.coords.latitude;
 
                 currentAdv = position.coords;
 
@@ -76,20 +77,30 @@ class Navigation extends React.Component {
 
     getFightersNearby() {
         let $this = $dw(findDOMNode(this)),
+            $progress = this.getProgressBar(),
             setFightersNearby = this.setFightersNearby;
+
+        $progress.attr('data-value', 15);
 
         return $this
             .request('/api/v1/fighters')
             .then(setFightersNearby)
+            .then(function() {
+                $progress.attr('data-value', 70)
+            })
     }
 
     getGYMsNearby() {
         let $this = $dw(findDOMNode(this)),
+            $progress = this.getProgressBar(),
             setGYMsNearby = this.setGYMsNearby;
 
         return $this
             .request('/api/v1/places')
             .then(setGYMsNearby)
+            .then(function() {
+                $progress.attr('data-value', 100)
+            })
     }
 
     setFightersNearby(fighters) {

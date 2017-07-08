@@ -1,3 +1,6 @@
+var mapFightersNearby = require('./mapFightersNearby'),
+    mapFightersList = require('./mapFightersList');
+
 module.exports = function(Fighters, io, req, res) {
 
     var input = io.read(req),
@@ -54,7 +57,19 @@ module.exports = function(Fighters, io, req, res) {
                         avatar: 1,
                         lastGeo: 1
                     })
-                    .exec(showFighters);
+                    .exec(function(err, fighters) {
+                        console.error('Fighters/Nearby (GET) Error:', err);
+
+                        if(!!err) {
+                            return io.write(res, null, { result: 1 })
+                        }
+
+                        if(!!fighters == false) {
+                            return io.write(res, null, { result: 1 })
+                        }
+
+                        return io.write(res, fighters.map(mapFightersNearby))
+                    });
             });
     }
 
@@ -73,20 +88,17 @@ module.exports = function(Fighters, io, req, res) {
             lastName: 1,
             avatar: 1
         })
-        .exec(showFighters);
+        .exec(function(err, fighters) {
+            console.error('Fighters/List (GET) Error:', err);
 
-    function showFighters(err, fighters) {
+            if(!!err) {
+                return io.write(res, null, { result: 1 })
+            }
 
-        console.error('Fighters (GET) Error:', err);
+            if(!!fighters == false) {
+                return io.write(res, null, { result: 1 })
+            }
 
-        if(!!err) {
-            return io.write(res, null, { result: 1 })
-        }
-
-        if(!!fighters == false) {
-            return io.write(res, null, { result: 1 })
-        }
-
-        return io.write(res, fighters)
-    }
+            return io.write(res, fighters.map(mapFightersList))
+        });
 };

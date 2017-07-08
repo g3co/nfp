@@ -18,10 +18,16 @@ const Mapbox = ReactMapboxGl({
     maxZoom: 18
 });
 
+let _mapbox;
+
 export default class Map extends React.Component {
 
     constructor(props) {
         super(props);
+    }
+
+    initMapbox(Map) {
+        return _mapbox = Map;
     }
 
     render(props) {
@@ -29,6 +35,7 @@ export default class Map extends React.Component {
         props = {...this.props};
 
         let $mapbox = findDOMNode(this),
+            initMapbox = this.initMapbox,
             fighters = props.fighters,
             gyms = props.gyms,
             currentPosition = props.currentPosition,
@@ -45,49 +52,50 @@ export default class Map extends React.Component {
                 movingMethod="easeTo"
                 center={currentPosition}
                 zoom={[13]}
+                onRender={initMapbox}
+                onClick={function(map, e) {
+                    console.log('Map: %o',map);
+                    console.log('Event: %o',e)
+                }}
             >
-                <Layer
-                    type="symbol"
-                    id="marker"
-                    layout={{ "icon-image": "marker-15" }}>
-                    <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
-
-                </Layer>
                 <Marker
+                    coordinates={currentPosition}
                     className={[
                         gfClassName("geo--tracker"),
                         (trackLastGeo ? "active" : "")
                     ].join(' ')}
-                    coordinates={currentPosition}
-                    anchor="bottom"
                     onClick={function() {
                         let $this = $dw('.'+ gfClassName("geo--tracker")),
                             classTrackGeo = "active";
 
-                        if(switchTrackLastGeo()) {
+                            _mapbox.flyTo({
+                                center: currentPosition
+                            });
+
+                            if(switchTrackLastGeo()) {
+                                $this
+                                    .addClass(classTrackGeo);
+
+                                return false
+                            }
+
                             $this
-                                .addClass(classTrackGeo);
-
-                            return false
-                        }
-
-                        $this
-                            .removeClass(classTrackGeo);
+                                .removeClass(classTrackGeo);
 
                         return false
                     }}
                 >
-                    <i>&nbsp;</i>
+                    <div><i>&nbsp;</i></div>
                 </Marker>
                 {fighters.map((fighter, i) =>
                     <Marker
                         className={gfClassName("geo--fighter")}
-                        coordinates={fighter.lastGeo}
+                        coordinates={fighter.position}
                         anchor="bottom"
                         key={i}
                     >
                         <div><img
-                            src={fighter.avatar}
+                            src={fighter.photo}
                         /></div>
                     </Marker>
                 )}
@@ -96,17 +104,11 @@ export default class Map extends React.Component {
                         className={gfClassName("geo--gym")}
                         coordinates={gym.location}
                         anchor="bottom"
-                        >
+                        key={i}
+                    >
                         <div>&nbsp;</div>
                     </Marker>
                 )}
-                <Popup
-                    coordinates={[-0.13235092163085938,51.518250335096376]}
-                    offset={{
-    'bottom-left': [12, -38],  'bottom': [0, -38], 'bottom-right': [-12, -38]
-  }}>
-                    <h1>Popup</h1>
-                </Popup>
             </Mapbox>
         )
     }

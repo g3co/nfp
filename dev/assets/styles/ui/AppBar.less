@@ -252,48 +252,4 @@
     }
 
   }
-
-  #progress {
-    position: fixed;
-    top: 0;
-    left: -6px;
-    width: 0;
-    height: 3px;
-    background: @color-red;
-    border-radius: 1px;
-    -moz-transition: width 500ms ease-out,opacity 500ms linear;
-    -webkit-transition: width 500ms ease-out,opacity 500ms linear;
-    transition: width 500ms ease-out,opacity 500ms linear;
-    -moz-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    will-change: width,opacity;
-
-    &.done {
-      opacity: 0;
-    }
-
-    .ab-progress(@width, @right, @rect) {
-      position: absolute;
-      top: 0;
-      height: 3px;
-      box-shadow: @color-red 1px 0 6px 1px;
-      border-radius: 100%;
-      width: @width;
-      right: @right;
-      opacity: .6;
-      clip: @rect;
-      -moz-animation: pulse 2s ease-out 0s infinite;
-      -webkit-animation: pulse 2s ease-out 0s infinite;
-      animation: pulse 2s ease-out 0s infinite;
-    }
-
-    dt {
-      .ab-progress(20px, 0, rect(-6px,22px,14px,10px));
-    }
-    dd {
-      .ab-progress(180px, -80px, rect(-6px,90px,14px,-6px));
-    }
-  }
 }
