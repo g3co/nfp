@@ -14,6 +14,7 @@ export default class Fighter extends React.Component {
 
     componentWillMount() {
         let props = Object.assign({}, this.props),
+            setState = this.setState.bind(this),
             id = props.id;
 
         if(!!id == false) {
@@ -22,22 +23,25 @@ export default class Fighter extends React.Component {
 
         let $this = $dw(findDOMNode(this)),
             $instant = $dw(`#${gfClassName("instant")}`),
+            $progress = $dw("#progress"),
             unload = props.unload;
 
+        $progress.attr('data-value', 35);
+
         $instant
-            .once('unload', function() {
-                unload()
-            });
+            .once('unload', unload);
 
         $this
             .request(`/api/v1/fighter/${id}`)
-            .then(function(fighter) {console.log('Fighter: %o', fighter);
+            .then(function(fighter) {
+                $progress.attr('data-value', 100);
+
                 if(!!fighter == false) {
                     return
                 }
 
-                this.setState(fighter);
-            }.bind(this))
+                setState(fighter);
+            })
     }
 
     render(props) {

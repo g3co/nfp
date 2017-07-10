@@ -13,6 +13,7 @@ export default class Gym extends React.Component {
 
     componentWillMount() {
         let props = Object.assign({}, this.props),
+            setState = this.setState.bind(this),
             id = props.id;
 
         if(!!id == false) {
@@ -21,22 +22,25 @@ export default class Gym extends React.Component {
 
         let $this = $dw(findDOMNode(this)),
             $instant = $dw(`#${gfClassName("instant")}`),
+            $progress = $dw("#progress"),
             unload = props.unload;
 
+        $progress.attr('data-value', 35);
+
         $instant
-            .once('unload', function() {
-                unload()
-            });
+            .once('unload', unload);
 
         $this
             .request(`/api/v1/place/${id}`)
             .then(function(gym) {
+                $progress.attr('data-value', 100);
+
                 if(!!gym == false) {
                     return
                 }
 
-                this.setState(gym);
-            }.bind(this))
+                setState(gym);
+            })
     }
 
     render(props) {

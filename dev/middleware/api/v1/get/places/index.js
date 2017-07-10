@@ -93,25 +93,25 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
 
         var schoolTypes = {
             ru: {
-                armyDogFight: 'арб',
-                brazilianJiuJitsu: 'бжж',
-                combatSambo: 'самбо',
-                boxing: 'бокс',
-                wrestling: 'борьба',
-                grappling: 'грэпплинг',
-                kickboxing: 'кик',
-                mma: 'мма',
-                muayThai: 'тай'
+                armyDogFight: ['рукопашный', 'армейский'],
+                brazilianJiuJitsu: ['бразильское', 'джитсу'],
+                combatSambo: ['самбо', 'боевое'],
+                boxing: ['бокс', 'бойцовский'],
+                wrestling: ['борьба', 'единоборств'],
+                grappling: ['грэпплинг', 'грепплинг'],
+                kickboxing: ['кик', 'боксинг'],
+                mma: ['смешанных', 'ММА'],
+                muayThai: ['тайский', 'бокс']
             },
             en: {
-                armyDogFight: 'army',
-                brazilianJiuJitsu: 'jiujitsu',
+                armyDogFight: 'martial',
+                brazilianJiuJitsu: 'brazilian',
                 combatSambo: 'sambo',
                 boxing: 'boxing',
                 wrestling: 'wrestling',
                 grappling: 'grappling',
                 kickboxing: 'kickboxing',
-                mma: 'mma',
+                mma: 'mixed',
                 muayThai: 'thai'
             }
         };

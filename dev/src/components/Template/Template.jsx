@@ -23,7 +23,8 @@ const {
     SplashScreen,
     AccountButton,
     LoginButton,
-    Instant
+    Instant,
+    ProgressBar
 } = ui;
 
 export default class Template extends React.Component {
@@ -70,6 +71,7 @@ export default class Template extends React.Component {
                 <SplashScreen
                     translations={translations}
                 />
+                <ProgressBar />
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{

@@ -1,25 +1,32 @@
-var Deferred = require('./Deferred'),
+var querystring  = require('querystring'),
+    Deferred = require('./Deferred'),
     Credentials = require('../../../../Credentials'),
     createPlace = require('../../post/place'),
     mapPlaceGoogle2NFP = require('./mapPlaceGoogle2NFP');
 
-function getPlacesPath(position, radius, type, schoolType) {
+function getPlacesPath(position, radius, type, schoolType, schoolName, lang) {
     return [
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
-        '?location='+ position,
-        '&radius='+radius,
-        '&type='+ type,
-        '&keyword='+ schoolType,
-        '&key='+ Credentials.google.APIKey
-    ].join('')
+        querystring.stringify({
+            location: position.toString(),
+            radius: radius,
+            type: type,
+            keyword: schoolType,
+            name: schoolName,
+            language: lang,
+            key: Credentials.google.APIKey
+        })
+    ].join('?')
 }
 
 function getPlacePath(place_id) {
     return [
         'https://maps.googleapis.com/maps/api/place/details/json',
-        '?placeid='+ place_id,
-        '&key='+ Credentials.google.APIKey
-    ].join('')
+        querystring.stringify({
+            placeid: place_id,
+            key: Credentials.google.APIKey
+        })
+    ].join('?')
 }
 
 function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
@@ -30,10 +37,19 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
     for(var s in schoolTypes) {
         var _schoolType = schoolTypes[s];
-        (function(placesNearby, placesToSync, schoolKey, uri) {
+        (function(placesNearby, placesToSync, schoolKey, school) {
 
-            console.log('school:', schoolKey);
+            var uri = getPlacesPath(
+                place,
+                5000,//catch whole City
+                'gym',
+                school[0],
+                school[1],
+                'ru'
+            );
 
+            console.log('Request to:\r\n\t'+ uri);
+            
             placesNearby.push(
                 dfr.req({
                     uri: uri,
@@ -41,9 +57,17 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
                     timeout: 10000,
                     followRedirect: true,
                     maxRedirects: 10,
-                    json: true
+                    json: true,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
+                        'Origin': 'http://localhost:8080'
+                    }
                 })
                     .then(function(res) {
+
+                        console.log('Status: '+ res.status);
+
+                        console.log('Res count: for'+school[0] +' is:'+ res.results.length);
 
                         if(!!res == false) {
                             return {}
@@ -56,6 +80,8 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
                             var place_id = o.place_id;
 
+                            //console.log('GYM: for'+school +' name:'+ o.name);
+
                             placesToSync.push({
                                 place_id: place_id,
                                 schoolType: schoolKey
@@ -65,12 +91,7 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
                         return res
                     })
             )
-        })(placesNearby, placesToSync, s, getPlacesPath(
-            place,
-            5000,//catch whole City
-            'gym',
-            _schoolType
-        ));
+        })(placesNearby, placesToSync, s, _schoolType);
     }
 
     return dfr.when.apply(null, placesNearby)

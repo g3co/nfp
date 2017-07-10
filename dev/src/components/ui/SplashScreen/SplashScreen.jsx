@@ -70,7 +70,7 @@ class SplashScreen extends React.Component {
         var props = {...this.props},
             account = props.user.account,
             setUserAccount = props.userActions.setUserAccount,
-            $splashScreen = $dw('.'+ gfClassName('splash-screen'));
+            $splashScreen = $dw(`.${gfClassName("splash-screen")}`);
 
         if(!!account) {
             $splashScreen

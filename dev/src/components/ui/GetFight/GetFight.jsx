@@ -5,7 +5,6 @@ import {
 } from '../../helper';
 
 import ChooseLanguage from '../ChooseLanguage';
-import ProgressBar from '../ProgressBar';
 
 export default class GetFight extends React.Component {
 
@@ -35,7 +34,6 @@ export default class GetFight extends React.Component {
             <div
                 className={gfClassName("logo")}
             >
-                <ProgressBar />
                 <span>nfp</span>
                 <ul
                     className={gfClassName("menu"+ (this.state.active ? " active": ""))}

@@ -2,7 +2,7 @@ var request = require('request');
 
 function Deferred() {
 
-    var bind = this;
+    var requests = [];
 
     this.when = when;
     this.req = req;
@@ -44,23 +44,33 @@ function Deferred() {
     }
 
     function req(options) {
+        requests.push(options);
+
+        var timeout = 200 * (requests.length || 0);
+
         return new Promise(function(resolve, reject) {
 
-            request(options, function(error, response, body) {
+            var _to = setTimeout(function() {
+                request(requests.pop(), function(error, response, body) {
 
-                if(!!error) {
-                    return reject(new Error(error))
-                }
+                    if(!!error) {
+                        return reject(new Error(error))
+                    }
 
-                if(!!body == false) {
-                    return reject(new Error('Null requested'))
-                }
+                    if(!!body == false) {
+                        return reject(new Error('Null requested'))
+                    }
 
-                return resolve(body)
+                    return resolve(body)
 
-            });
+                });
+
+                clearTimeout(_to);
+            }, timeout)
 
         })
+
+
     }
 }
 

@@ -25,7 +25,8 @@ class Navigation extends React.Component {
         this.setGYMsNearby = this.setGYMsNearby.bind(this);
 
         this.state = {
-            currentPosition: [-28.024, 40.887],
+            ready: false,
+            currentPosition: [0, 0],
             currentAdv: {},
             allowTrackLastGeo: true
         };
@@ -93,13 +94,18 @@ class Navigation extends React.Component {
     getGYMsNearby() {
         let $this = $dw(findDOMNode(this)),
             $progress = this.getProgressBar(),
-            setGYMsNearby = this.setGYMsNearby;
+            setGYMsNearby = this.setGYMsNearby,
+            setState = this.setState.bind(this);
 
         return $this
             .request('/api/v1/places')
             .then(setGYMsNearby)
             .then(function() {
-                $progress.attr('data-value', 100)
+                $progress.attr('data-value', 100);
+
+                $this.trigger('ready');
+
+                setState({ready: true})
             })
     }
 
@@ -129,6 +135,7 @@ class Navigation extends React.Component {
     render() {
 
         let props = {...this.props},
+            ready = this.state.ready,
             translations = props.translations,
             fighters = props.fighters.nearby,
             gyms = props.places.nearby,
@@ -139,7 +146,10 @@ class Navigation extends React.Component {
         return (
             <div
                 id={gfClassName("navigation")}
-                className={gfClassName("navigation")}
+                className={[
+                    gfClassName("navigation"),
+                    (ready ? "ready" : "")
+                ].join(' ')}
             >
                 <Map
                     translations={translations}

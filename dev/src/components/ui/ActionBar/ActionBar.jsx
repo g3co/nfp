@@ -19,6 +19,7 @@ export default class ActionBar extends React.Component {
             showFilterWindow: false,
             editBoxState: false,
             searchByFighter: true,//false: by GYM
+            value: '',
             selectedWeight: 4,
             selectedHeight: 170
         }
@@ -100,11 +101,11 @@ export default class ActionBar extends React.Component {
 
         _id = el.id;
 
-        if(_id.match('fighter')) {
+        if(_id.match(/fighter/i)) {
             searchByFighter = true;
         }
 
-        if(_id.match('gym')) {
+        if(_id.match(/gym/i)) {
             searchByFighter = false;
         }
 
@@ -114,13 +115,86 @@ export default class ActionBar extends React.Component {
     }
 
     render(props) {
-        let
+
+        props = Object.assign({}, this.props);
+
+        let translations = props.translations,
+            searchFilter = this.searchFilter,
+            toggleSearch = this.toggleSearch,
+            changeWeight = this.changeWeight,
+            checkHeight = this.checkHeight,
+            changeHeight = this.changeHeight,
+            hideEditBox = this.hideEditBox,
             sliderStyle = {
                 height: 160,
                 margin: 0
             },
+            value = this.state.value,
+            editBoxState = this.state.editBoxState,
+            searchByFighter = this.state.searchByFighter,
+            selectedWeight = this.state.selectedWeight,
+            selectedHeight = this.state.selectedHeight,
             minHeight = 145,
-            maxHeight = 220;
+            maxHeight = 220,
+            weightList = translations.LABELS.CONDITIONS.WEIGHT_LIST.map((item, i) =>
+                <li
+                    className={i == selectedWeight ? "active" : ""}
+                    key={i}
+                    onClick={changeWeight.bind(this, null, i)}
+                >
+                    {item}
+                </li>
+            ),
+            martialArtsList = Object.keys(translations.LABELS.MARTIAL_ARTS).map((item, i) => {
+                let itemId = "ma-"+ i,
+                    martialArts = translations.LABELS.MARTIAL_ARTS,
+                    itemUnique = "martial-art "+ item;
+
+                return (
+                    <li
+                        className={itemUnique}
+                        key={i}
+                    >
+                        <label
+                            htmlFor={itemId}
+                        >
+                            <span>{martialArts[item]}</span>
+                            <Checkbox
+                                id={itemId}
+                                labelPosition="left"
+                                style={{
+                                    position: "absolute",
+                                    width: "auto",
+                                    display: "inline-block"
+                                }}
+                                onCheck={function(event) {
+                                    let el = !!event ? event.target : false,
+                                        item, _itemClassName;
+
+                                        if(!el) {
+                                            return
+                                        }
+
+                                        item = el.closest('.martial-art');
+
+                                        if(!item) {
+                                            return
+                                        }
+
+                                        _itemClassName = item.className;
+
+                                        if(el && el.checked) {
+                                            _itemClassName = _itemClassName +' checked';
+                                        } else {
+                                            _itemClassName = _itemClassName.replace(/checked/ig, '');
+                                        }
+
+                                        item.setAttribute('class', _itemClassName);
+                                }}
+                            />
+                        </label>
+                    </li>)
+            });
 
         return (
             <aside className={gfClassName("actionbar")}>
@@ -129,11 +203,12 @@ export default class ActionBar extends React.Component {
                         <span className="material-icons left-act">search</span>
                         <input
                             type="text"
-                            placeholder={this.props.translations.LABELS.SEARCH_PLACEHOLDER}
+                            value={value}
+                            placeholder={translations.LABELS.SEARCH_PLACEHOLDER}
                         />
                         <span
                             className="material-icons right-act"
-                            onClick={this.searchFilter}
+                            onClick={searchFilter}
                         >settings</span>
                     </header>
                     <section className={gfClassName("toolbar__toggle")}>
@@ -142,12 +217,12 @@ export default class ActionBar extends React.Component {
                                 id="search-by-fighter"
                                 name="search_by"
                                 type="radio"
-                                checked={this.state.searchByFighter}
-                                onChange={this.toggleSearch}
+                                checked={searchByFighter}
+                                onChange={toggleSearch}
                             />
                             <label htmlFor="search-by-fighter">
                                 <span className="material-icons">person_outline</span>
-                                <span>{this.props.translations.LABELS.SEARCH_BY_FIGHTER}</span>
+                                <span>{translations.LABELS.SEARCH_BY_FIGHTER}</span>
                             </label>
                         </div>
                         <div>
@@ -155,12 +230,12 @@ export default class ActionBar extends React.Component {
                                 id="search-by-gym"
                                 name="search_by"
                                 type="radio"
-                                checked={!this.state.searchByFighter}
-                                onChange={this.toggleSearch}
+                                checked={!searchByFighter}
+                                onChange={toggleSearch}
                             />
                             <label htmlFor="search-by-gym">
                                 <span className="material-icons">pin_drop</span>
-                                <span>{this.props.translations.LABELS.SEARCH_BY_GYM}</span>
+                                <span>{translations.LABELS.SEARCH_BY_GYM}</span>
                             </label>
                         </div>
                     </section>
@@ -185,52 +260,44 @@ export default class ActionBar extends React.Component {
                 </aside>
                 <aside
                     className={gfClassName("editbox"+
-                        (this.state.editBoxState ? " active" : "")+
-                        (this.state.searchByFighter ? " by-fighter" : " by-gym")
+                        (editBoxState ? " active" : "")+
+                        (searchByFighter ? " by-fighter" : " by-gym")
                     )}
                 >
                     <header className={gfClassName("editbox__header")}>
                         <span
                             className="material-icons left-act"
-                            onClick={this.hideEditBox}
+                            onClick={hideEditBox}
                         >settings</span>
-                        <h2>{this.props.translations.LABELS.EDITBOX_HEADER}</h2>
+                        <h2>{translations.LABELS.EDITBOX_HEADER}</h2>
                         <span
                             className="material-icons right-act"
-                            onClick={this.hideEditBox}
+                            onClick={hideEditBox}
                         >close</span>
                     </header>
                     <section className={gfClassName("editbox__conditions")}>
                         <div className="conditions__weight">
-                            <h3>{this.props.translations.LABELS.CONDITIONS.WEIGHT}</h3>
+                            <h3>{translations.LABELS.CONDITIONS.WEIGHT}</h3>
                             <Slider
                                 className="conditional--slider"
                                 sliderStyle={sliderStyle}
                                 axis="y-reverse"
-                                value={this.state.selectedWeight}
+                                value={selectedWeight}
                                 step={1}
                                 min={0}
                                 max={8}
-                                onChange={this.changeWeight}
+                                onChange={changeWeight}
                             />
                             <ul
                                 className="cond-weight__weightList"
                             >
-                                {this.props.translations.LABELS.CONDITIONS.WEIGHT_LIST.map((item, i) =>
-                                    <li
-                                        className={i == this.state.selectedWeight ? "active" : ""}
-                                        key={i}
-                                        onClick={this.changeWeight.bind(this, null, i)}
-                                    >
-                                        {item}
-                                    </li>
-                                )}
+                                {weightList}
                             </ul>
                         </div>
                         <div className="conditions__height">
                             <h3>
-                                {this.props.translations.LABELS.CONDITIONS.HEIGHT}
-                                <small>({this.props.translations.LABELS.CONDITIONS.HEIGHT_UNIT})</small>
+                                {translations.LABELS.CONDITIONS.HEIGHT}
+                                <small>({translations.LABELS.CONDITIONS.HEIGHT_UNIT})</small>
                             </h3>
                             <div
                                 className="cond-height__heightOption"
@@ -244,17 +311,17 @@ export default class ActionBar extends React.Component {
                                 <div
                                     className="heightOption--current"
                                     style={{
-                                        top: (100 - (100 * (this.state.selectedHeight - minHeight) / (maxHeight - minHeight))) +'%'
+                                        top: (100 - (100 * (selectedHeight - minHeight) / (maxHeight - minHeight))) +'%'
                                     }}
                                 >
                                     <input
                                         className="height--centi"
                                         type="number"
-                                        value={this.state.selectedHeight}
+                                        value={selectedHeight}
                                         min={minHeight}
                                         max={maxHeight}
                                         placeholder="0"
-                                        onChange={this.checkHeight.bind(this)}
+                                        onChange={checkHeight.bind(this)}
                                     />
                                 </div>
                                 <span className="heightOption--min">
@@ -265,78 +332,28 @@ export default class ActionBar extends React.Component {
                                 className="conditional--slider"
                                 sliderStyle={sliderStyle}
                                 axis="y"
-                                value={this.state.selectedHeight}
+                                value={selectedHeight}
                                 step={1}
                                 min={minHeight}
                                 max={maxHeight}
-                                onChange={this.changeHeight}
+                                onChange={changeHeight}
                             />
                         </div>
                     </section>
                     <section className={gfClassName("editbox__martials")}>
                         <h3>
-                            {this.props.translations.LABELS.MARTIALS}
-                            <small>{this.props.translations.LABELS.MARTIALS_PROMPT}</small>
+                            {translations.LABELS.MARTIALS}
+                            <small>{translations.LABELS.MARTIALS_PROMPT}</small>
                         </h3>
                         <div className="fw">
                             <ul>
-                                {Object.keys(this.props.translations.LABELS.MARTIAL_ARTS).map((item, i) => {
-                                    let itemId = "ma-"+ i,
-                                        martialArts = this.props.translations.LABELS.MARTIAL_ARTS,
-                                        itemUnique = "martial-art "+ item;
-
-                                    return(
-                                        <li
-                                            className={itemUnique}
-                                            key={i}
-                                        >
-                                            <label
-                                                htmlFor={itemId}
-                                            >
-                                                <span>{martialArts[item]}</span>
-                                                <Checkbox
-                                                    id={itemId}
-                                                    labelPosition="left"
-                                                    style={{
-                                                        position: "absolute",
-                                                        width: "auto",
-                                                        display: "inline-block"
-                                                    }}
-                                                    onCheck={function(event) {
-
-                                                        let el = !!event ? event.target : false,
-                                                            item, _itemClassName;
-
-                                                        if(!el) {
-                                                            return
-                                                        }
-
-                                                        item = el.closest('.martial-art');
-
-                                                        if(!item) {
-                                                            return
-                                                        }
-
-                                                        _itemClassName = item.className;
-
-                                                        if(el && el.checked) {
-                                                            _itemClassName = _itemClassName +' checked';
-                                                        } else {
-                                                            _itemClassName = _itemClassName.replace(/checked/ig, '');
-                                                        }
-
-                                                        item.setAttribute('class', _itemClassName);
-                                                    }}
-                                                />
-                                            </label>
-                                        </li>)
-                                })}
+                                {martialArtsList}
                             </ul>
                         </div>
                     </section>
                     <section className={gfClassName("editbox__action")}>
                         <button>
-                            {this.props.translations.LABELS.EDITBOX_ACCEPT}
+                            {translations.LABELS.EDITBOX_ACCEPT}
                         </button>
                     </section>
                 </aside>
