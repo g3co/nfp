@@ -22,7 +22,8 @@ const {
     ModalBox,
     SplashScreen,
     AccountButton,
-    LoginButton
+    LoginButton,
+    Instant
 } = ui;
 
 export default class Template extends React.Component {
@@ -101,10 +102,11 @@ export default class Template extends React.Component {
                 {(function() {
                     if(!!account) {
                         return (<Navigation
-                            translations={translations}
-                        />)
+                                translations={translations}
+                            />)
                     }
                 })()}
+                <Instant />
                 <ModalBox
                     id={gfClassName("modalbox")}
                 />

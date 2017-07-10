@@ -12,15 +12,28 @@ import {
     gfClassName
 } from '../../helper';
 
-const Mapbox = ReactMapboxGl({
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+
+import * as instantActions from '../../../actions/instant.jsx';
+
+import Fighter from '../../../containers/Fighter';
+import Gym from '../../../containers/Gym';
+
+const MapboxData = Object.freeze({
     accessToken: 'pk.eyJ1IjoicnNodGciLCJhIjoiY2o0ZmViN29oMTcwcjJ3bWs3M3I1eHg1dyJ9.05e-MJ6_PyeRpW65IwsLxw',
+    style: 'mapbox://styles/rshtg/cj4fouv633ifj2ss6lv9ydvog'
+});
+
+const Mapbox = ReactMapboxGl({
+    accessToken: MapboxData.accessToken,
     minZoom: 11,
     maxZoom: 18
 });
 
 let _mapbox;
 
-export default class Map extends React.Component {
+class Map extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,17 +47,18 @@ export default class Map extends React.Component {
 
         props = {...this.props};
 
-        let $mapbox = findDOMNode(this),
-            initMapbox = this.initMapbox,
+        let initMapbox = this.initMapbox,
+            translations = props.translations,
             fighters = props.fighters,
             gyms = props.gyms,
             currentPosition = props.currentPosition,
             trackLastGeo = props.trackLastGeo,
+            instantActions = props.instantActions,
             switchTrackLastGeo = props.switchTrackLastGeo;
         
         return (
             <Mapbox
-                style="mapbox://styles/rshtg/cj4fouv633ifj2ss6lv9ydvog"
+                style={MapboxData.style}
                 containerStyle={{
                     height: "100vh",
                     width: "100vw"
@@ -93,6 +107,20 @@ export default class Map extends React.Component {
                         coordinates={fighter.position}
                         anchor="bottom"
                         key={i}
+                        onClick={() => {
+                        console.log('init fighter');
+                            instantActions.setInit({
+                                header: [
+                                    <span className="material-icons">arrow_upward</span>,
+                                    translations.INSTANT.FIGHTER,
+                                    <span className="material-icons">person_add</span>
+                                ],
+                                content: (<Fighter
+                                    id={fighter.id}
+                                    unload={instantActions.setInit}
+                                />)
+                            })
+                        }}
                     >
                         <div><img
                             src={fighter.photo}
@@ -105,6 +133,19 @@ export default class Map extends React.Component {
                         coordinates={gym.location}
                         anchor="bottom"
                         key={i}
+                        onClick={() => (
+                            instantActions.setInit({
+                                header: [
+                                    <span className="material-icons">close</span>,
+                                    translations.INSTANT.GYM,
+                                    <span className="material-icons">phone</span>
+                                ],
+                                content: (<Gym
+                                    id={gym.id}
+                                    unload={instantActions.setInit}
+                                />)
+                            })
+                        )}
                     >
                         <div>&nbsp;</div>
                     </Marker>
@@ -113,3 +154,6 @@ export default class Map extends React.Component {
         )
     }
 }
+export default connect(() => {return {}}, dispatch => {return {
+    instantActions: bindActionCreators(instantActions, dispatch)
+}})(Map);

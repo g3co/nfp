@@ -2,12 +2,8 @@ import React, { PropTypes } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
 
 import {
-    ui,
-    colors,
     gfClassName
 } from '../../helper';
-
-import SocialMedia from '../SocialMedia';
 
 export default class ModalBox extends React.Component {
     constructor(props) {
@@ -36,7 +32,7 @@ export default class ModalBox extends React.Component {
         }
 
         $modal
-            .on('click', this.hide, {bubbles: false});
+            .on('click', this.hide, { bubbles: false });
 
         this.fade(modal, ['in', 'active'])
             .then(function() {
@@ -158,17 +154,18 @@ export default class ModalBox extends React.Component {
         return (
             <section
                 {...props}
-                className={gfClassName("modalbox")+
-                    (this.props.asPopup ? " as-popup" : "")+
-                    (this.state.visible ? " in active" : "")
-                }
+                className={[
+                    gfClassName("modalbox"),
+                    (this.props.asPopup ? "as-popup" : ""),
+                    (this.state.visible ? "in active" : "")
+                ].join(' ')}
             >
                 <div className="modalbox__container">
                     <div className="box-body">
                         <div className="loader--radial"></div>
                     </div>
                 </div>
-                <i></i>
+                <i>&nbsp;</i>
             </section>
         )
     }

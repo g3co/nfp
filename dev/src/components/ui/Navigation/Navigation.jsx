@@ -129,6 +129,7 @@ class Navigation extends React.Component {
     render() {
 
         let props = {...this.props},
+            translations = props.translations,
             fighters = props.fighters.nearby,
             gyms = props.places.nearby,
             currentPosition = this.state.currentPosition,
@@ -141,6 +142,7 @@ class Navigation extends React.Component {
                 className={gfClassName("navigation")}
             >
                 <Map
+                    translations={translations}
                     currentPosition={currentPosition}
                     fighters={fighters}
                     gyms={gyms}
@@ -153,6 +155,7 @@ class Navigation extends React.Component {
 }
 
 export default connect(state => {return {
+    translations: state.locale.translations,
     places: state.places,
     fighters: state.fighters
 }}, dispatch => {return {

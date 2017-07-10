@@ -1,0 +1,6 @@
+{
+  "name": "Fighter",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Fighter.jsx"
+}

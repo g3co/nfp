@@ -8,6 +8,7 @@ import SocialMedia from './SocialMedia';
 import AccountButton from './AccountButton';
 import LoginButton from './LoginButton';
 import ProgressBar from './ProgressBar';
+import Instant from './Instant';
 
 export default {
     GetFight,
@@ -19,5 +20,6 @@ export default {
     SocialMedia,
     AccountButton,
     LoginButton,
-    ProgressBar
+    ProgressBar,
+    Instant
 }

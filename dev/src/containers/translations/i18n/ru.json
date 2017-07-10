@@ -50,6 +50,10 @@
       "MuayThai": "Муай Тай"
     }
   },
+  "INSTANT": {
+    "FIGHTER": "Боец",
+    "GYM": "Зал"
+  },
   "SOCIAL_LABELS": {
     "ENTRY": {
       "INSTAGRAM": "Instagram",
