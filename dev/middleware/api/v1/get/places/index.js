@@ -99,7 +99,7 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                 boxing: ['бокс', 'бойцовский'],
                 wrestling: ['борьба', 'единоборств'],
                 grappling: ['грэпплинг', 'грепплинг'],
-                kickboxing: ['кик', 'боксинг'],
+                kickboxing: ['боевых', 'кикбоксинг'],
                 mma: ['смешанных', 'ММА'],
                 muayThai: ['тайский', 'бокс']
             },

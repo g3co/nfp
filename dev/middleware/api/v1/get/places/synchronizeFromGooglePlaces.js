@@ -57,17 +57,13 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
                     timeout: 10000,
                     followRedirect: true,
                     maxRedirects: 10,
-                    json: true,
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1',
-                        'Origin': 'http://localhost:8080'
-                    }
+                    json: true
                 })
                     .then(function(res) {
 
                         console.log('Status: '+ res.status);
 
-                        console.log('Res count: for'+school[0] +' is:'+ res.results.length);
+                        console.log('Res count:\r\n\tfor '+school[0] +'\r\n\tis:'+ res.results.length);
 
                         if(!!res == false) {
                             return {}
