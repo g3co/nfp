@@ -4,6 +4,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import rootReducer from './reducers';
 import App from './app.jsx';
+import { $dw } from './data-worker';
 
 const store = initStore();
 

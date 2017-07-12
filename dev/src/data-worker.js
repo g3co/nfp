@@ -1,4 +1,11 @@
-;function $dw(sel) {
+;(function(window, $dw) {
+
+    $dw.prototype = new $dw();
+
+    window.$dw = $dw;
+})(window, $dw);
+
+function $dw(sel) {
 
     'use strict';
 
@@ -396,5 +403,4 @@
     return new $nfp(sel)
 }
 
-$dw.prototype = new $dw();
-var $ = $dw();
+module.exports = $dw;
