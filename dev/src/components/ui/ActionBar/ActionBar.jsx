@@ -142,7 +142,8 @@ export default class ActionBar extends React.Component {
                     key={i}
                     onClick={changeWeight.bind(this, null, i)}
                 >
-                    {item}
+                    {item.CAPTION}
+                    <span>{item.GRADE}</span>
                 </li>
             ),
             martialArtsList = Object.keys(translations.LABELS.MARTIAL_ARTS).map((item, i) => {
@@ -277,7 +278,10 @@ export default class ActionBar extends React.Component {
                     </header>
                     <section className={gfClassName("editbox__conditions")}>
                         <div className="conditions__weight">
-                            <h3>{translations.LABELS.CONDITIONS.WEIGHT}</h3>
+                            <h3>
+                                {translations.LABELS.CONDITIONS.WEIGHT}
+                                <small>({translations.LABELS.CONDITIONS.WEIGHT_UNIT})</small>
+                            </h3>
                             <Slider
                                 className="conditional--slider"
                                 sliderStyle={sliderStyle}

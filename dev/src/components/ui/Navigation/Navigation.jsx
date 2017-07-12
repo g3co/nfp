@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 
 import * as placesActions from '../../../actions/places.jsx';
 import * as fightersActions from '../../../actions/fighters.jsx';
+import { setAppNotification } from '../../../actions/app.jsx';
 
 let _interval;
 
@@ -23,6 +24,7 @@ class Navigation extends React.Component {
         this.setFightersNearby = this.setFightersNearby.bind(this);
         this.getGYMsNearby = this.getGYMsNearby.bind(this);
         this.setGYMsNearby = this.setGYMsNearby.bind(this);
+        this.updateNotification = this.updateNotification.bind(this);
 
         this.state = {
             ready: false,
@@ -40,6 +42,10 @@ class Navigation extends React.Component {
 
     getProgressBar() {
         return $dw('#progress')
+    }
+
+    updateNotification(data) {
+        return this.props.setNotification(data)
     }
 
     updateCurrentPosition() {
@@ -66,8 +72,8 @@ class Navigation extends React.Component {
                     currentAdv
                 });
 
-                getFightersNearby();
-                getGYMsNearby();
+                getFightersNearby()
+                    .then(getGYMsNearby);
 
                 return
             }
@@ -86,26 +92,37 @@ class Navigation extends React.Component {
         return $this
             .request('/api/v1/fighters')
             .then(setFightersNearby)
-            .then(function() {
-                $progress.attr('data-value', 70)
+            .then(function(fighters) {
+                $progress.attr('data-value', 50);
+                return fighters
             })
     }
 
-    getGYMsNearby() {
+    getGYMsNearby(fighters) {
         let $this = $dw(findDOMNode(this)),
             $progress = this.getProgressBar(),
+            updateNotification = this.updateNotification,
             setGYMsNearby = this.setGYMsNearby,
             setState = this.setState.bind(this);
+
+        $progress.attr('data-value', 70);
 
         return $this
             .request('/api/v1/places')
             .then(setGYMsNearby)
-            .then(function() {
+            .then(function(gyms) {
                 $progress.attr('data-value', 100);
 
                 $this.trigger('ready');
 
-                setState({ready: true})
+                setState({ready: true});
+
+                updateNotification({
+                    type: 'success',
+                    text: `Рядом с Вами ${gyms.length} залов`
+                });
+
+                return gyms
             })
     }
 
@@ -170,5 +187,6 @@ export default connect(state => {return {
     fighters: state.fighters
 }}, dispatch => {return {
     placesActions: bindActionCreators(placesActions, dispatch),
-    fightersActions: bindActionCreators(fightersActions, dispatch)
+    fightersActions: bindActionCreators(fightersActions, dispatch),
+    setNotification: bindActionCreators(setAppNotification, dispatch)
 }})(Navigation);

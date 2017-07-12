@@ -1,0 +1,39 @@
+.gf-notification {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+  height: auto;
+  width: 100%;
+  background: @color-gray;
+  font-family: @font-main;
+  font-size: 1.5rem;
+  color: white;
+  text-align: center;
+  opacity: 0;
+  z-index: 1100;
+  display: none;
+  -webkit-transition: opacity .35s;
+  -moz-transition: opacity .35s;
+  -ms-transition: opacity .35s;
+  -o-transition: opacity .35s;
+  transition: opacity .35s;
+
+  span {
+    padding: .625rem 0;
+    max-width: 75%;
+    display: inline-block;
+  }
+
+  &.active {
+    display: block;
+  }
+
+  &.ready {
+    opacity: 1;
+  }
+
+  &.success {
+    background: @color-green;
+  }
+}

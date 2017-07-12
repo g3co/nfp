@@ -24,7 +24,8 @@ const {
     AccountButton,
     LoginButton,
     Instant,
-    ProgressBar
+    ProgressBar,
+    Notification
 } = ui;
 
 export default class Template extends React.Component {
@@ -72,6 +73,7 @@ export default class Template extends React.Component {
                     translations={translations}
                 />
                 <ProgressBar />
+                <Notification />
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{

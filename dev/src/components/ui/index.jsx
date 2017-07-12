@@ -9,6 +9,7 @@ import AccountButton from './AccountButton';
 import LoginButton from './LoginButton';
 import ProgressBar from './ProgressBar';
 import Instant from './Instant';
+import Notification from './Notification';
 
 export default {
     GetFight,
@@ -21,5 +22,6 @@ export default {
     AccountButton,
     LoginButton,
     ProgressBar,
-    Instant
+    Instant,
+    Notification
 }

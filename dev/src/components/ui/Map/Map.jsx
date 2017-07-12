@@ -108,14 +108,14 @@ class Map extends React.Component {
                         anchor="bottom"
                         key={i}
                         onClick={() => {
-                        console.log('init fighter');
                             instantActions.write({
                                 header: [
                                     <span className="material-icons">arrow_upward</span>,
                                     translations.INSTANT.FIGHTER,
                                     <span className="material-icons">person_add</span>
                                 ],
-                                content: (<Fighter
+                                content: (
+                                <Fighter
                                     id={fighter.id}
                                     unload={instantActions.write}
                                 />)
@@ -140,7 +140,8 @@ class Map extends React.Component {
                                     translations.INSTANT.GYM,
                                     <span className="material-icons">phone</span>
                                 ],
-                                content: (<Gym
+                                content: (
+                                <Gym
                                     id={gym.id}
                                     unload={instantActions.write}
                                 />)
