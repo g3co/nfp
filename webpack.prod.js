@@ -1,12 +1,9 @@
 var path = require('path');
 var webpack = require('webpack');
-
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: [
-        //'webpack-dev-server/client?http://localhost:8080',
-        //'webpack/hot/only-dev-server',
         './dev/index.html',
         './dev/assets/styles/index.less',
         './dev/src/index.jsx'
@@ -17,7 +14,6 @@ module.exports = {
         library: '[name]'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
         new ExtractTextPlugin('./assets/styles/common.css'),
         new webpack.optimize.UglifyJsPlugin({
             beautify: false,
@@ -31,7 +27,8 @@ module.exports = {
             comments: false
         })
     ],
-    module: {loaders: [
+    module: {
+        loaders: [
             {
                 test: /\.html/,
                 loader: 'file?name=[name].[ext]'
