@@ -30,6 +30,7 @@ function $dw(sel) {
             this[0] = collection;
         }
 
+        this.middleware = '//localhost:3000';
         this.selector = !!s ? !!s.length ? s : this[0].tagName && this[0].tagName.toLowerCase() : '';
         this.length = this.length || 1;
     }
@@ -241,6 +242,8 @@ function $dw(sel) {
             //make an AJAX request
             request: function(o) {
 
+                var base = this.middleware;
+
                 return new Promise(function(resolve, reject) {
 
                     if(!!o == false) {
@@ -254,14 +257,14 @@ function $dw(sel) {
                         }
                     }
 
-                    var base = '//localhost:3000';
-
                     //defaults
                     o.type = o.type || 'GET';
                     o.body = o.body || null;
                     o.requestHeaders = o.requestHeaders || {};
 
                     var _xhr = new window.XMLHttpRequest();//XHR
+
+                    o.url = !!o.url.match(/:*\/\/+/i) ? o.url : (base + o.url);
 
                     //initializations
                     _xhr.responseType = o.responseType || 'json';
@@ -304,7 +307,7 @@ function $dw(sel) {
 
                     _xhr.open(
                         o.type,
-                        (base + o.url), true
+                        o.url, true
                     );
 
                     _xhr.withCredentials = true;

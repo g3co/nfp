@@ -5,18 +5,20 @@ import { gfClassName } from '../../helper';
 
 function Authorize(service, callback) {
 
-    var OAuthWindow;
+    let middleware = $dw(window).middleware,
+        OAuthWindow;
+
     switch(service) {
         case 'vk':
-            OAuthWindow = window.open('//localhost:3000/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
+            OAuthWindow = window.open(middleware +'/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
             break;
         case 'instagram':
 
             break;
     }
 
-    var _ti = setInterval(function() {
-        if(OAuthWindow.closed) {
+    let _ti = setInterval(function() {
+        if(!!OAuthWindow && OAuthWindow.closed) {
             callback();
             clearInterval(_ti);
         }

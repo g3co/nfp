@@ -17,13 +17,6 @@ module.exports = {
         new ExtractTextPlugin('./assets/styles/common.css'),
         new webpack.optimize.UglifyJsPlugin({
             beautify: false,
-            mangle: {
-                screw_ie8: true,
-                keep_fnames: true
-            },
-            compress: {
-                screw_ie8: true
-            },
             comments: false
         })
     ],
