@@ -65,6 +65,19 @@ class App extends React.Component {
     }
 
     render() {
+
+        let props = Object.assign({}, this.props),
+            language = props.locale.language,
+            $window = $dw(window),
+            userLanguage = $window.localStorage('language'),
+            setLanguage = props.localeActions.setTranslation;
+
+        if(!!userLanguage && language != userLanguage) {
+            language = userLanguage;
+            setLanguage(language);
+        }
+
+        $window.localStorage('language', language);
         
         return (
             <MuiThemeProvider

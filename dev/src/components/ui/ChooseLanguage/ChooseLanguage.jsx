@@ -1,4 +1,5 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import Popover, {PopoverAnimationVertical} from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
@@ -16,7 +17,7 @@ export default class ChooseLanguage extends React.Component {
 
         this.state = {
             open: false,
-            language: 'ru'
+            language: $dw(window).localStorage('language') || 'ru'
         }
     }
 
@@ -52,6 +53,9 @@ export default class ChooseLanguage extends React.Component {
         });
 
         this.props.setTranslation(val);
+
+        $dw(findDOMNode(this))
+            .localStorage('language', val);
 
         return false
     }
@@ -126,22 +130,31 @@ export default class ChooseLanguage extends React.Component {
     }
 
     render() {
+
+        let open = this.state.open,
+            language = this.state.language,
+            anchorEl = this.state.anchorEl,
+            getIcon = this.getIcon,
+            handleOpenPopover = this.handleOpenPopover,
+            handleClosePopover = this.handleClosePopover,
+            handleLanguageSelector = this.handleLanguageSelector;
+
         return (
             <div
                 className={gfClassName("language-selector")}
-                onClick={this.handleOpenPopover}
+                onClick={handleOpenPopover}
             >
-                {this.getIcon(this.state.language)}
+                {getIcon(language)}
                 <Popover
-                    open={this.state.open}
-                    anchorEl={this.state.anchorEl}
-                    anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                    targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                    onRequestClose={this.handleClosePopover}
+                    open={open}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    onRequestClose={handleClosePopover}
                     animation={PopoverAnimationVertical}
                 >
                     <Menu
-                        onChange={this.handleLanguageSelector}
+                        onChange={handleLanguageSelector}
                     >
                         <MenuItem
                             value="ru"

@@ -239,6 +239,25 @@ function $dw(sel) {
                 return this
             },
 
+            //localStorage worker
+            localStorage: function(name, value) {
+
+                var localStorage = window.localStorage;
+
+                if(!!name == false) {
+                    return false
+                }
+
+                name = 'NFP-'.concat(name);
+
+                if(!!value) {
+                    return localStorage.setItem(name, value)
+                }
+
+                return localStorage.getItem(name)
+
+            },
+
             //make an AJAX request
             request: function(o) {
 

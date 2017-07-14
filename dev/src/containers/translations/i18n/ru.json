@@ -2,11 +2,11 @@
   "HEADER": [
     {
       "label": "Сотрудничество",
-      "route": "#collaborate"
+      "route": "/collaborate"
     },
     {
       "label": "О Нас",
-      "route": "#about"
+      "route": "/about"
     }
   ],
   "LABELS": {

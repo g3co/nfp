@@ -59,21 +59,25 @@ function IconVk() {
     );
 }
 
+function IconFb() {
+    return (
+        <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+	        viewBox="0 0 16 16"
+        >
+            <path
+                d="M6.6,14.8c0-2.1,0-4.1,0-6.2H4.5V6.2h2.1V4.4c0-2.1,1.3-3.2,3.1-3.2c0.9,0,1.6,0.1,1.9,0.1v2.2h-1.3c-1,0-1.2,0.5-1.2,1.2v1.5h2.4l-0.3,2.4H9.1c0,2.1,0,4.1,0,6.2C8.2,14.8,7.4,14.8,6.6,14.8z"
+            />
+        </svg>
+    );
+}
+
 export default class SocialMedia extends React.Component {
     constructor(props) {
         super(props);
-
-        this.initAuthorization = this.initAuthorization.bind(this);
-    }
-
-    initAuthorization(e) {
-        let el = e.target,
-            type;
-
-        el = !!~el.tagName.indexOf('svg') ? el.parentNode : el;
-        type = el.className.split(' ')[1];
-
-        return new Authorize(type, this.props.getUserAccount)
     }
 
     getIcon(name) {
@@ -84,24 +88,30 @@ export default class SocialMedia extends React.Component {
             case 'vk':
                 return IconVk();
                 break;
+            case 'fb':
+                return IconFb();
+                break;
         }
     }
 
     render(props) {
 
         props = Object.assign({}, this.props);
-        delete props.resourceName;
-        delete props.getUserAccount;
+
+        let getIcon = this.getIcon,
+            getUserAccount = props.getUserAccount,
+            type = props.className;
 
         return (
             <button
-                {...props}
                 className={[gfClassName('social-media'),
-                    props.className
+                    type
                 ].join(' ')}
-                onClick={this.initAuthorization.bind(this)}
+                onClick={function() {
+                    return new Authorize(type, getUserAccount)
+                }}
             >
-                {this.getIcon(props.className)}
+                {getIcon(type)}
             </button>
         );
     }

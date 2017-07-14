@@ -31,23 +31,26 @@ const Mapbox = ReactMapboxGl({
     maxZoom: 18
 });
 
-let _mapbox;
-
 class Map extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
+    getMapboxGL() {
+        return window.MapboxGL
+    }
+
     initMapbox(Map) {
-        return _mapbox = Map;
+        return window.MapboxGL = Map
     }
 
     render(props) {
 
         props = {...this.props};
 
-        let initMapbox = this.initMapbox,
+        let getMapboxGL = this.getMapboxGL,
+            initMapbox = this.initMapbox,
             translations = props.translations,
             fighters = props.fighters,
             gyms = props.gyms,
@@ -82,7 +85,7 @@ class Map extends React.Component {
                         let $this = $dw('.'+ gfClassName("geo--tracker")),
                             classTrackGeo = "active";
 
-                            _mapbox.flyTo({
+                            getMapboxGL().flyTo({
                                 center: currentPosition
                             });
 

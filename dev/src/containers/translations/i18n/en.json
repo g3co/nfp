@@ -2,15 +2,19 @@
   "HEADER": [
     {
       "label": "Collaboration",
-      "route": "#collaborate"
+      "route": "/collaborate"
     },
     {
       "label": "About Us",
-      "route": "#about"
+      "route": "/about"
     }
   ],
   "LABELS": {
     "LOG_IN": "Sign in",
+    "LOG_OUT": "Log out",
+    "USER_PROFILE": "Bellator profile",
+    "USER_SCHEDULE": "Events",
+    "USER_SETTINGS": "Settings",
     "SEARCH_BY_FIGHTER": "Fighter",
     "SEARCH_BY_GYM": "GYM",
     "SEARCH_PLACEHOLDER": "What you're looking for?",
@@ -20,17 +24,18 @@
       "WEIGHT": "Weight",
       "HEIGHT": "Height",
       "WEIGHT_LIST": [
-        "Flyweight",
-        "Bantamweight",
-        "Featherweight",
-        "Lightweight",
-        "Welterweight",
-        "Middleweight",
-        "Light Heavyweight",
-        "Heavyweight",
-        "Super Heavyweight"
+        { "CAPTION": "Flyweight", "GRADE": "<57" },
+        { "CAPTION": "Bantamweight", "GRADE": "57-61" },
+        { "CAPTION": "Featherweight", "GRADE": "61-66" },
+        { "CAPTION": "Lightweight", "GRADE": "66-70" },
+        { "CAPTION": "Welterweight", "GRADE": "70-77" },
+        { "CAPTION": "Middleweight", "GRADE": "77-84" },
+        { "CAPTION": "Light Heavyweight", "GRADE": "84-93" },
+        { "CAPTION": "Heavyweight", "GRADE": "93-120" },
+        { "CAPTION": "Super Heavyweight", "GRADE": ">120" }
       ],
-      "HEIGHT_UNIT": "cm"
+      "HEIGHT_UNIT": "cm",
+      "WEIGHT_UNIT": "kg"
     },
     "MARTIALS": "Martial arts",
     "MARTIALS_PROMPT": "Choose interesting",
@@ -45,6 +50,10 @@
       "MMA": "MMA",
       "MuayThai": "Muay Thai"
     }
+  },
+  "INSTANT": {
+    "FIGHTER": "Fighter",
+    "GYM": "GYM"
   },
   "SOCIAL_LABELS": {
     "ENTRY": {

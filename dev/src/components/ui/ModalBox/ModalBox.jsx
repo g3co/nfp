@@ -24,6 +24,7 @@ export default class ModalBox extends React.Component {
         let visible = true,
             route = !!event.detail ? event.detail.route : false,
             _visible = this.state.visible,
+            lang = this.props.lang,
             modal = findDOMNode(this),
             $modal = $dw(modal);
 
@@ -50,7 +51,7 @@ export default class ModalBox extends React.Component {
 
                 //send request to the URL:route
                 $modal.request({
-                    url: route,
+                    url: (route +'?lng='+ lang),
                     responseType: 'document'
                 })
                     .then(function(response) {

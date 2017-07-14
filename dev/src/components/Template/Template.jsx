@@ -63,6 +63,7 @@ export default class Template extends React.Component {
         props = {...this.props};
 
         let translations = props.locale.translations,
+            lang = props.locale.language,
             user = props.user,
             account = user.account,
             setTranslation = props.localeActions.setTranslation;
@@ -113,6 +114,7 @@ export default class Template extends React.Component {
                 <Instant />
                 <ModalBox
                     id={gfClassName("modalbox")}
+                    lang={lang}
                 />
             </div>
         )

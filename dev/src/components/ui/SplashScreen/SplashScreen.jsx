@@ -4,7 +4,7 @@ import ReactDOM, { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 
-import * as userActions from '../../../actions/user.jsx';
+import { setUserAccount } from '../../../actions/user.jsx';
 
 import { gfClassName } from '../../helper';
 
@@ -34,6 +34,21 @@ class SplashScreen extends React.Component {
             .on('load', this.load.bind(this))
             .on('done', this.done.bind(this))
             .on('close', this.close.bind(this));
+    }
+
+    modalShow(route) {
+        $dw('#'+ gfClassName("modalbox"))
+            .once('ready', function(e) {
+                console.log('ready at now...');
+            })
+            .on('load', function(e) {
+
+                console.log('Loaded1!!');
+            })
+            .once('error', function (e) {
+                console.log('Error %o', e);
+            })
+            .trigger('show', {route: route});
     }
 
     load() {
@@ -69,7 +84,7 @@ class SplashScreen extends React.Component {
     getUserAccount() {
         var props = {...this.props},
             account = props.user.account,
-            setUserAccount = props.userActions.setUserAccount,
+            setUserAccount = props.setUserAccount,
             $splashScreen = $dw(`.${gfClassName("splash-screen")}`);
 
         if(!!account) {
@@ -102,27 +117,54 @@ class SplashScreen extends React.Component {
 
         let translations = props.translations,
             account = props.user.account,
-            getUserAccount = this.getUserAccount;
+            getUserAccount = this.getUserAccount,
+            modalShow = this.modalShow,
+            open = this.state.open,
+            loading = this.state.loading,
+            previewLinksList = function() {
+                return translations.HEADER.map((item, i) =>
+                    <li
+                        key={i}
+                    >
+                        <a
+                            role="link"
+                            href={item.route}
+                            tabIndex={i}
+                            onClick={function(e) {
+                                e.preventDefault();
+
+                                modalShow(item.route);
+
+                                return false
+                            }}
+                        >
+                            {item.label}
+                        </a>
+                    </li>
+                )
+            };
 
         return (
             <div
-                className={[gfClassName('splash-screen'),
-                    (this.state.open || !!account == false ? 'active' : 'inactive')
-                ].join(' ')}
+                className={[
+                    gfClassName("splash-screen"),
+                    (open || !!account == false ? "active" : "inactive")
+                ].join(" ")}
             >
                 <h2>nfp
                     <small>net fight promotion</small>
                 </h2>
                 <div
-                    className={gfClassName('splash-screen__auth-block')}
+                    className={gfClassName("splash-screen__auth-block")}
                 >
                     <div
-                        className={['loader--radial',
-                            (this.state.loading ? '' : 'hidden')
-                        ].join(' ')}
+                        className={[
+                            "loader--radial",
+                            (loading ? "" : "hidden")
+                        ].join(" ")}
                     ></div>
                     <section
-                        className={(this.state.loading ? '' : 'active')}
+                        className={(loading ? "" : "active")}
                     >
                         <span>{translations.SPLASH_SCREEN.AUTH_TITLE}</span>
                         <SocialMedia
@@ -133,16 +175,14 @@ class SplashScreen extends React.Component {
                             className="instagram"
                             getUserAccount={getUserAccount}
                         />
+                        <SocialMedia
+                            className="fb"
+                            getUserAccount={getUserAccount}
+                        />
                     </section>
                 </div>
                 <ul>
-                    {translations.HEADER.map((item, i) =>
-                        <li>
-                            <a role="link" href={item.route} tabIndex={i}>
-                            {item.label}
-                            </a>
-                        </li>
-                    )}
+                    {previewLinksList()}
                 </ul>
             </div>
         )
@@ -152,5 +192,5 @@ class SplashScreen extends React.Component {
 export default connect(state => {return {
     user: state.user
 }}, dispatch => {return {
-    userActions: bindActionCreators(userActions, dispatch)
+    setUserAccount: bindActionCreators(setUserAccount, dispatch)
 }})(SplashScreen);
