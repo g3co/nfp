@@ -34,15 +34,13 @@ module.exports = function(Fighters, io, req, res) {
                 }
 
                 var findByQuery = {
-                    $and: [
-                        {lastGeo: {
-                            $near: user.lastGeo,
-                            $maxDistance: 500
-                        },
-                        _id: {
-                            $ne: id
-                        }}
-                    ]
+                    lastGeo: {
+                        $near: user.lastGeo,
+                        $maxDistance: 0.6
+                    },
+                    _id: {
+                        $ne: id
+                    }
                 };
 
                 Fighters

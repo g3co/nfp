@@ -42,9 +42,9 @@ net_fight_promotion
         app.use(cookieParser());
         app.use(bodyParser.json());
         app.use(function(req, res, next) {
-            //res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+            res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
             //res.header('Access-Control-Allow-Origin', 'http://nfpromo.com');
-            res.header('Access-Control-Allow-Origin', 'https://rshtg.github.io/');
+            //res.header('Access-Control-Allow-Origin', 'https://rshtg.github.io/');
             res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,DELETE');
             res.header('Access-Control-Allow-Headers', 'Content-Type');
             res.header('Access-Control-Allow-Credentials', true);

@@ -53,7 +53,7 @@ module.exports = function(mongoose) {
 
     Places = new Schema({
         place: _Place,//[$place.geometry.location.lat,$place.geometry.location.lng]
-        schoolType: {type: String, required: true},//$keyword
+        schoolType: [Schema.Types.Mixed],//$keyword
         placeName: {type: String, required: true},//$place.name
         address: {type: String, required: true},//$place.vicinity
         zipCode: {type: Number, required: true},//$place.address_components.each -> find 'postal_code'

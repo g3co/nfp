@@ -50,7 +50,8 @@ class Navigation extends React.Component {
 
     updateCurrentPosition() {
 
-        let getFightersNearby = this.getFightersNearby,
+        let $window = $dw(window),
+            getFightersNearby = this.getFightersNearby,
             getGYMsNearby = this.getGYMsNearby;
 
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -72,7 +73,15 @@ class Navigation extends React.Component {
                     currentAdv
                 });
 
-                getFightersNearby()
+                $window
+                    .request({
+                        type: 'put',
+                        url: '/api/v1/account',
+                        body: {
+                            lastGeo: currentPosition
+                        }
+                    })
+                    .then(getFightersNearby)
                     .then(getGYMsNearby);
 
                 return

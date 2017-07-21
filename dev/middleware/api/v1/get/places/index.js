@@ -28,7 +28,8 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
             })
             .exec(function (err, user) {
 
-                var place = [user.lastGeo[1], user.lastGeo[0]];//reverse Array, google specified
+                var place = user.lastGeo,
+                    googlePlace = [user.lastGeo[1], user.lastGeo[0]];//reverse Array, google specified
 
                 console.log('Places (GET) Error:', err);
 
@@ -42,7 +43,7 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
 
                 syncPlaces(
                     lang,
-                    place
+                    googlePlace
                 )
                     .then(function(sync) {
 
@@ -58,10 +59,12 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                             .find({
                                 place: {
                                     $near: place,
-                                    $maxDistance: 500
+                                    $maxDistance: 0.6
                                 }
                             })
                             .exec(function(err, places) {
+
+                                console.log('Error:', err);
 
                                 if(!!err) {
                                     return io.write(res, null, { result: 1 })
@@ -96,11 +99,11 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                 armyDogFight: ['рукопашный', 'армейский'],
                 brazilianJiuJitsu: ['бразильское', 'джитсу'],
                 combatSambo: ['самбо', 'боевое'],
-                boxing: ['бокс', 'бойцовский'],
-                wrestling: ['борьба', 'единоборств'],
+                boxing: ['бокс', 'спортивный'],
+                wrestling: ['борьба', 'борцовский'],
                 grappling: ['грэпплинг', 'грепплинг'],
-                kickboxing: ['боевых', 'кикбоксинг'],
-                mma: ['смешанных', 'ММА'],
+                kickboxing: ['кикбоксинг', 'боевые'],
+                mma: ['ММА', 'смешанные'],
                 muayThai: ['тайский', 'бокс']
             },
             en: {
@@ -122,7 +125,7 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                 .findOne({
                     place: {
                         $near: place,
-                        $maxDistance: 1000
+                        $maxDistance: 0.6
                     },
                     expiredAt: {
                         $gt: (new Date()).toISOString()

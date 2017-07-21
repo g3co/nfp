@@ -41,7 +41,7 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
             var uri = getPlacesPath(
                 place,
-                5000,//catch whole City
+                20000,//catch whole City
                 'gym',
                 school[0],
                 school[1],
@@ -74,14 +74,25 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
                         res.forEach(function(o, i) {
 
-                            var place_id = o.place_id;
+                            var place_id = o.place_id,
+                                schoolType = [];
 
                             //console.log('GYM: for'+school +' name:'+ o.name);
 
-                            placesToSync.push({
-                                place_id: place_id,
-                                schoolType: schoolKey
-                            })
+                            var place = placesToSync.find(function(place) {
+                                return place.place_id == place_id
+                            });
+
+                            if(!place) {
+                                schoolType.push(schoolKey);
+
+                                return placesToSync.push({
+                                    place_id: place_id,
+                                    schoolType: schoolType
+                                })
+                            }
+
+                            return place.schoolType.push(schoolKey)
                         });
 
                         return res
