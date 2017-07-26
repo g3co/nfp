@@ -139,7 +139,7 @@ class Map extends React.Component {
                         onClick={() => (
                             instantActions.write({
                                 header: [
-                                    <span className="material-icons">close</span>,
+                                    <span className="material-icons">arrow_upward</span>,
                                     translations.INSTANT.GYM,
                                     <span className="material-icons">phone</span>
                                 ],

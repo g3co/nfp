@@ -116,6 +116,13 @@ export default class Template extends React.Component {
                     id={gfClassName("modalbox")}
                     lang={lang}
                 />
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <filter id="svgBlur" x="-5%" y="-5%" width="110%" height="110%">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="10">&nbsp;</feGaussianBlur>
+                    </filter>
+                </svg>
             </div>
         )
     }

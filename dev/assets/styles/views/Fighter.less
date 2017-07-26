@@ -1,0 +1,37 @@
+.fighter-view {
+  position: relative;
+  height: 100%;
+  font-family: @font-main;
+  font-size: 1.5rem;
+}
+
+.fighter-view__bio {
+  height: calc(30% - 45px);
+
+  .fighter-avatar {
+    margin: 0 auto .5em;
+    height: 64px;
+    width: 64px;
+    border: 3px white solid;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: block;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  h2 {
+    margin: 0 auto;
+    width: 75%;
+    font-family: @font-logo;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+    display: block;
+  }
+}

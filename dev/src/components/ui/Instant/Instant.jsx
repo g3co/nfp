@@ -87,7 +87,10 @@ class Instant extends React.Component {
         return (
             <section
                 id={jid}
-                className={(active ? "active" : "")}
+                className={[
+                    jid,
+                    (active ? "active" : "")
+                ].join(" ")}
             >
                 <div className="instant-container">
                     <header>

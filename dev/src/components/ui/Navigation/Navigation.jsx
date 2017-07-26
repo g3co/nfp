@@ -25,6 +25,7 @@ class Navigation extends React.Component {
         this.getGYMsNearby = this.getGYMsNearby.bind(this);
         this.setGYMsNearby = this.setGYMsNearby.bind(this);
         this.updateNotification = this.updateNotification.bind(this);
+        this.getCurrentPosition = this.getCurrentPosition.bind(this);
 
         this.state = {
             ready: false,
@@ -50,45 +51,57 @@ class Navigation extends React.Component {
 
     updateCurrentPosition() {
 
+        let getCurrentPosition = this.getCurrentPosition;
+
+        /*getCurrentPosition({
+            coords: {
+                longitude: 49.263929,
+                latitude: 53.509613
+            }
+        })*/
+
+        navigator.geolocation.getCurrentPosition(getCurrentPosition);
+    }
+
+    getCurrentPosition(position) {
+
         let $window = $dw(window),
+            state = this.state,
             getFightersNearby = this.getFightersNearby,
             getGYMsNearby = this.getGYMsNearby;
 
-        navigator.geolocation.getCurrentPosition(function(position) {
+        if(!!position && !!position.coords) {
+            let currentPosition = [position.coords.longitude, position.coords.latitude],
+                currentAdv,
+                lngDiff = Math.abs(state.currentPosition[0] - currentPosition[0]),
+                latDiff = Math.abs(state.currentPosition[1] - currentPosition[1]);
 
-            if(!!position && !!position.coords) {
-                let currentPosition = [position.coords.longitude, position.coords.latitude],
-                    currentAdv,
-                    lngDiff = Math.abs(this.state.currentPosition[0] - currentPosition[0]),
-                    latDiff = Math.abs(this.state.currentPosition[1] - currentPosition[1]);
+            currentAdv = position.coords;
 
-                currentAdv = position.coords;
-
-                if((isNaN(lngDiff) || isNaN(latDiff)) || (lngDiff < 5 && latDiff < 5)) {
-                    return
-                }
-
-                this.setState({
-                    currentPosition,
-                    currentAdv
-                });
-
-                $window
-                    .request({
-                        type: 'put',
-                        url: '/api/v1/account',
-                        body: {
-                            lastGeo: currentPosition
-                        }
-                    })
-                    .then(getFightersNearby)
-                    .then(getGYMsNearby);
-
+            if((isNaN(lngDiff) || isNaN(latDiff)) || (lngDiff < 5 && latDiff < 5)) {
                 return
             }
 
-            clearInterval(_interval)
-        }.bind(this))
+            this.setState({
+                currentPosition,
+                currentAdv
+            });
+
+            $window
+                .request({
+                    type: 'put',
+                    url: '/api/v1/account',
+                    body: {
+                        lastGeo: currentPosition
+                    }
+                })
+                .then(getFightersNearby)
+                .then(getGYMsNearby);
+
+            return
+        }
+
+        clearInterval(_interval)
     }
 
     getFightersNearby() {

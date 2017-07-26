@@ -48,11 +48,28 @@ export default class Fighter extends React.Component {
 
         props = Object.assign({}, this.props);
 
-        let fighter = this.state;
+        let fighter = this.state,
+            displayName = [fighter.firstName, fighter.lastName].join(' ');
 
         return (
-            <div style={{color: 'white'}}>
-                {fighter.firstName}
+            <div
+                className="fighter-view"
+            >
+                <section
+                    className="fighter-view__bio"
+                >
+                    <div
+                        className="fighter-avatar"
+                    >
+                        <img src={fighter.avatar} alt={displayName} />
+                    </div>
+                    <h2>{displayName}</h2>
+                </section>
+                <section
+                    className="fighter-view__content"
+                >
+
+                </section>
             </div>
         )
     }

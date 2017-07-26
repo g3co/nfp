@@ -19,14 +19,15 @@ module.exports = function(Fighters, io, profile, done) {
             lastName: profile.last_name,
             avatar: profile.photo || '',
             sex: profile.sex == 2 ? 1 : 0,
-            email: profile.email || '(none)',
+            email: profile.email || '(none)',//@todo
             dateBirth: (new Date(+_bdate[2], +_bdate[1]-1, +_bdate[0], 0, 0, 0, 0)).toISOString(),
-            vkID: profile.id
+            vkID: profile.id,
+            instagramID: '123'//@todo
         });
 
         user.save(function(err, user) {
             if(!!err) {
-                return io.write(0, { result: 1 })
+                return done(null, null)
             }
 
             return done(null, user)
