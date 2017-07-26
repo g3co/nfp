@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux';
 import * as placesActions from '../../../actions/places.jsx';
 import * as fightersActions from '../../../actions/fighters.jsx';
 import { setAppNotification } from '../../../actions/app.jsx';
+import { updateCurrentPosition } from '../../../actions/user.jsx';
 
 let _interval;
 
@@ -19,6 +20,7 @@ class Navigation extends React.Component {
     constructor(props) {
         super(props);
 
+        this.setState = this.setState.bind(this);
         this.updateCurrentPosition = this.updateCurrentPosition.bind(this);
         this.getFightersNearby = this.getFightersNearby.bind(this);
         this.setFightersNearby = this.setFightersNearby.bind(this);
@@ -29,7 +31,6 @@ class Navigation extends React.Component {
 
         this.state = {
             ready: false,
-            currentPosition: [0, 0],
             currentAdv: {},
             allowTrackLastGeo: true
         };
@@ -67,14 +68,18 @@ class Navigation extends React.Component {
 
         let $window = $dw(window),
             state = this.state,
+            props = this.props,
+            setState = this.setState,
+            updateCurrentPosition = props.updateCurrentPosition,
+            currentPosition = props.currentPosition,
             getFightersNearby = this.getFightersNearby,
             getGYMsNearby = this.getGYMsNearby;
 
         if(!!position && !!position.coords) {
-            let currentPosition = [position.coords.longitude, position.coords.latitude],
+            let _currentPosition = [position.coords.longitude, position.coords.latitude],
                 currentAdv,
-                lngDiff = Math.abs(state.currentPosition[0] - currentPosition[0]),
-                latDiff = Math.abs(state.currentPosition[1] - currentPosition[1]);
+                lngDiff = Math.abs(currentPosition[0] - _currentPosition[0]),
+                latDiff = Math.abs(currentPosition[1] - _currentPosition[1]);
 
             currentAdv = position.coords;
 
@@ -82,8 +87,9 @@ class Navigation extends React.Component {
                 return
             }
 
-            this.setState({
-                currentPosition,
+            updateCurrentPosition(_currentPosition);
+
+            setState({
                 currentAdv
             });
 
@@ -92,7 +98,7 @@ class Navigation extends React.Component {
                     type: 'put',
                     url: '/api/v1/account',
                     body: {
-                        lastGeo: currentPosition
+                        lastGeo: _currentPosition
                     }
                 })
                 .then(getFightersNearby)
@@ -178,7 +184,7 @@ class Navigation extends React.Component {
             translations = props.translations,
             fighters = props.fighters.nearby,
             gyms = props.places.nearby,
-            currentPosition = this.state.currentPosition,
+            currentPosition = props.currentPosition,
             trackLastGeo = this.state.allowTrackLastGeo,
             switchTrackLastGeo = this.switchTrackLastGeo.bind(this);
 
@@ -206,9 +212,11 @@ class Navigation extends React.Component {
 export default connect(state => {return {
     translations: state.locale.translations,
     places: state.places,
-    fighters: state.fighters
+    fighters: state.fighters,
+    currentPosition: state.user.currentPosition
 }}, dispatch => {return {
     placesActions: bindActionCreators(placesActions, dispatch),
     fightersActions: bindActionCreators(fightersActions, dispatch),
-    setNotification: bindActionCreators(setAppNotification, dispatch)
+    setNotification: bindActionCreators(setAppNotification, dispatch),
+    updateCurrentPosition: bindActionCreators(updateCurrentPosition, dispatch)
 }})(Navigation);

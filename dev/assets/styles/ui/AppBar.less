@@ -41,8 +41,8 @@
         content: 'keyboard_arrow_down';
         position: absolute;
         bottom: 100%;
-        left: 50%;
-        margin: 0 0 0 -.5em;
+        left: 100px;
+        margin: 0;
         width: 1em;
         font-family: @font-micons;
         font-size: 2em;
@@ -51,9 +51,6 @@
         line-height: inherit;
         opacity: .6;
         cursor: pointer;
-        -moz-animation: pulsate 1.5s ease-out 0s infinite;
-        -webkit-animation: pulsate 1.5s ease-out 0s infinite;
-        animation: pulsate 1.5s ease-out 0s infinite;
         -webkit-transition-property: transform;
         -moz-transition-property: transform;
         -ms-transition-property: transform;
@@ -148,6 +145,26 @@
           }
         }
       })
+    }
+  }
+
+  .navbtn--location {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin: 0 0 0 -1em;
+    line-height: inherit;
+    height: 100%;
+    width: 2em;
+    text-align: center;
+    color: white;
+    -webkit-animation: pulsate 1.5s ease-in-out 0s infinite;
+    -o-animation: pulsate 1.5s ease-in-out 0s infinite;
+    animation: pulsate 1.5s ease-in-out 0s infinite;
+    vertical-align: middle;
+
+    .material-icons {
+      vertical-align: middle;
     }
   }
 

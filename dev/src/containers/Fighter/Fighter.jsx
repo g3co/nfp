@@ -51,6 +51,8 @@ export default class Fighter extends React.Component {
         let fighter = this.state,
             displayName = [fighter.firstName, fighter.lastName].join(' ');
 
+        $dw(window).lazy();
+
         return (
             <div
                 className="fighter-view"
@@ -61,14 +63,13 @@ export default class Fighter extends React.Component {
                     <div
                         className="fighter-avatar"
                     >
-                        <img src={fighter.avatar} alt={displayName} />
+                        <img data-src={fighter.avatar} alt={displayName} />
                     </div>
                     <h2>{displayName}</h2>
                 </section>
                 <section
                     className="fighter-view__content"
                 >
-
                 </section>
             </div>
         )

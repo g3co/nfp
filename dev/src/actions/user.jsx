@@ -1,5 +1,6 @@
 import {
-    SET_USER_ACCOUNT
+    SET_USER_ACCOUNT,
+    SET_USER_POSITION
 } from '../constants.jsx';
 
 export function setUserAccount(account) {
@@ -7,6 +8,13 @@ export function setUserAccount(account) {
     return {
         type: SET_USER_ACCOUNT,
         payload: account
+    }
+}
+
+export function updateCurrentPosition(position) {
+    return {
+        type: SET_USER_POSITION,
+        payload: position
     }
 }
 

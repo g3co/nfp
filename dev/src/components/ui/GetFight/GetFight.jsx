@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     gfClassName
@@ -6,7 +7,7 @@ import {
 
 import ChooseLanguage from '../ChooseLanguage';
 
-export default class GetFight extends React.Component {
+class GetFight extends React.Component {
 
     constructor(props) {
         super(props);
@@ -30,6 +31,8 @@ export default class GetFight extends React.Component {
 
         props = Object.assign({}, this.props);
 
+        let currentPosition = props.currentPosition;
+
         return (
             <div
                 className={gfClassName("logo")}
@@ -48,6 +51,16 @@ export default class GetFight extends React.Component {
                         </li>
                     )}
                 </ul>
+                <div
+                    className="navbtn--location"
+                    onClick={function() {
+                        window.MapboxGL.flyTo({
+                            center: currentPosition
+                        })
+                    }}
+                >
+                    <span className="material-icons">my_location</span>
+                </div>
                 <ChooseLanguage
                     setTranslation={props.setTranslation}
                 />
@@ -55,3 +68,7 @@ export default class GetFight extends React.Component {
         )
     }
 }
+
+export default connect(state => {return {
+    currentPosition: state.user.currentPosition
+}})(GetFight);
