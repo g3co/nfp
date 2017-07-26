@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import * as placesActions from '../../../actions/places.jsx';
 import * as fightersActions from '../../../actions/fighters.jsx';
 import { setAppNotification } from '../../../actions/app.jsx';
-import { updateCurrentPosition } from '../../../actions/user.jsx';
+import { updateCurrentPosition, setUserTracking } from '../../../actions/user.jsx';
 
 let _interval;
 
@@ -26,16 +26,19 @@ class Navigation extends React.Component {
         this.setFightersNearby = this.setFightersNearby.bind(this);
         this.getGYMsNearby = this.getGYMsNearby.bind(this);
         this.setGYMsNearby = this.setGYMsNearby.bind(this);
+        this.loadNearby = this.loadNearby.bind(this);
         this.updateNotification = this.updateNotification.bind(this);
         this.getCurrentPosition = this.getCurrentPosition.bind(this);
+        this.switchTracking = this.switchTracking.bind(this);
+        this.initTracking = this.initTracking.bind(this);
+        this.getClientTracking = this.getClientTracking.bind(this);
 
         this.state = {
             ready: false,
-            currentAdv: {},
-            allowTrackLastGeo: true
+            currentAdv: {}
         };
 
-        if('geolocation' in navigator && this.state.allowTrackLastGeo) {
+        if('geolocation' in navigator) {
             _interval = setInterval(this.updateCurrentPosition, 3000);
         } else {
             alert('To continue, please, get access to your geo location.');
@@ -70,10 +73,10 @@ class Navigation extends React.Component {
             state = this.state,
             props = this.props,
             setState = this.setState,
+            allowTracking = props.allowTracking,
             updateCurrentPosition = props.updateCurrentPosition,
             currentPosition = props.currentPosition,
-            getFightersNearby = this.getFightersNearby,
-            getGYMsNearby = this.getGYMsNearby;
+            loadNearby = this.loadNearby;
 
         if(!!position && !!position.coords) {
             let _currentPosition = [position.coords.longitude, position.coords.latitude],
@@ -93,25 +96,31 @@ class Navigation extends React.Component {
                 currentAdv
             });
 
-            $window
-                .request({
-                    type: 'put',
-                    url: '/api/v1/account',
-                    body: {
-                        lastGeo: _currentPosition
-                    }
-                })
-                .then(getFightersNearby)
-                .then(getGYMsNearby);
+            if(allowTracking) {
+                return $window
+                    .request({
+                        type: 'put',
+                        url: '/api/v1/account',
+                        body: {
+                            lastGeo: _currentPosition
+                        }
+                    })
+                    .then(loadNearby)
+            }
 
-            return
+            return loadNearby()
         }
 
         clearInterval(_interval)
     }
 
+    loadNearby() {
+        return this.getFightersNearby()
+            .then(this.getGYMsNearby)
+    }
+
     getFightersNearby() {
-        let $this = $dw(findDOMNode(this)),
+        let $this = $dw(window),
             $progress = this.getProgressBar(),
             setFightersNearby = this.setFightersNearby;
 
@@ -127,7 +136,7 @@ class Navigation extends React.Component {
     }
 
     getGYMsNearby(fighters) {
-        let $this = $dw(findDOMNode(this)),
+        let $this = $dw(window),
             $progress = this.getProgressBar(),
             updateNotification = this.updateNotification,
             setGYMsNearby = this.setGYMsNearby,
@@ -166,27 +175,55 @@ class Navigation extends React.Component {
         return gyms
     }
 
-    switchTrackLastGeo() {
+    switchTracking() {
 
-        let allowTrackLastGeo = !this.state.allowTrackLastGeo;
+        let $window = $dw(window),
+            props = this.props,
+            setUserTracking = props.setUserTracking,
+            allowTracking = !props.allowTracking;
 
-        this.setState({
-            allowTrackLastGeo
-        });
+        $window.localStorage('allowTracking', +allowTracking);
+        setUserTracking(allowTracking);
 
-        return allowTrackLastGeo
+        return allowTracking
+    }
+
+    getClientTracking() {
+        let allowTracking = $dw(window).localStorage('allowTracking');
+
+        if(typeof allowTracking == 'undefined' || allowTracking == null) {
+            return -1
+        }
+
+        return +allowTracking
+    }
+
+    initTracking() {
+        let props = this.props,
+            allowTracking = this.getClientTracking(),
+            setUserTracking = props.setUserTracking;
+
+        if(!!~allowTracking) {
+            setUserTracking(!!allowTracking)
+        }
+
+        return props.allowTracking
+    }
+
+    componentWillMount() {
+        this.initTracking()
     }
 
     render() {
 
         let props = {...this.props},
             ready = this.state.ready,
+            allowTracking = props.allowTracking,
             translations = props.translations,
             fighters = props.fighters.nearby,
             gyms = props.places.nearby,
             currentPosition = props.currentPosition,
-            trackLastGeo = this.state.allowTrackLastGeo,
-            switchTrackLastGeo = this.switchTrackLastGeo.bind(this);
+            switchTracking = this.switchTracking;
 
         return (
             <div
@@ -201,8 +238,8 @@ class Navigation extends React.Component {
                     currentPosition={currentPosition}
                     fighters={fighters}
                     gyms={gyms}
-                    switchTrackLastGeo={switchTrackLastGeo}
-                    trackLastGeo={trackLastGeo}
+                    switchTracking={switchTracking}
+                    allowTracking={allowTracking}
                 />
             </div>
         )
@@ -213,10 +250,12 @@ export default connect(state => {return {
     translations: state.locale.translations,
     places: state.places,
     fighters: state.fighters,
-    currentPosition: state.user.currentPosition
+    currentPosition: state.user.currentPosition,
+    allowTracking: state.user.allowTracking
 }}, dispatch => {return {
     placesActions: bindActionCreators(placesActions, dispatch),
     fightersActions: bindActionCreators(fightersActions, dispatch),
     setNotification: bindActionCreators(setAppNotification, dispatch),
-    updateCurrentPosition: bindActionCreators(updateCurrentPosition, dispatch)
+    updateCurrentPosition: bindActionCreators(updateCurrentPosition, dispatch),
+    setUserTracking: bindActionCreators(setUserTracking, dispatch)
 }})(Navigation);

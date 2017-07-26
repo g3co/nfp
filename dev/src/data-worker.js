@@ -251,7 +251,7 @@ function $dw(sel) {
 
                 name = 'NFP-'.concat(name);
 
-                if(!!value) {
+                if(typeof value != 'undefined') {
                     return localStorage.setItem(name, value)
                 }
 

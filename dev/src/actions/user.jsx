@@ -1,6 +1,7 @@
 import {
     SET_USER_ACCOUNT,
-    SET_USER_POSITION
+    SET_USER_POSITION,
+    SET_USER_TRACKING
 } from '../constants.jsx';
 
 export function setUserAccount(account) {
@@ -15,6 +16,13 @@ export function updateCurrentPosition(position) {
     return {
         type: SET_USER_POSITION,
         payload: position
+    }
+}
+
+export function setUserTracking(value) {
+    return {
+        type: SET_USER_TRACKING,
+        payload: value
     }
 }
 

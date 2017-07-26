@@ -55,9 +55,9 @@ class Map extends React.Component {
             fighters = props.fighters,
             gyms = props.gyms,
             currentPosition = props.currentPosition,
-            trackLastGeo = props.trackLastGeo,
+            allowTracking = props.allowTracking,
             instantActions = props.instantActions,
-            switchTrackLastGeo = props.switchTrackLastGeo;
+            switchTracking = props.switchTracking;
         
         return (
             <Mapbox
@@ -79,28 +79,9 @@ class Map extends React.Component {
                     coordinates={currentPosition}
                     className={[
                         gfClassName("geo--tracker"),
-                        (trackLastGeo ? "active" : "")
+                        (allowTracking ? "active" : "")
                     ].join(' ')}
-                    onClick={function() {
-                        let $this = $dw('.'+ gfClassName("geo--tracker")),
-                            classTrackGeo = "active";
-
-                            getMapboxGL().flyTo({
-                                center: currentPosition
-                            });
-
-                            if(switchTrackLastGeo()) {
-                                $this
-                                    .addClass(classTrackGeo);
-
-                                return false
-                            }
-
-                            $this
-                                .removeClass(classTrackGeo);
-
-                        return false
-                    }}
+                    onClick={switchTracking}
                 >
                     <div><i>&nbsp;</i></div>
                 </Marker>

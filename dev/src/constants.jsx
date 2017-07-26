@@ -14,6 +14,7 @@ export const HIDE_INSTANT = 'HIDE_INSTANT';
 //user
 export const SET_USER_ACCOUNT = 'SET_USER_ACCOUNT';
 export const SET_USER_POSITION = 'SET_USER_POSITION';
+export const SET_USER_TRACKING = 'SET_USER_TRACKING';
 
 //places
 export const SET_PLACES_NEARBY = 'SET_PLACES_NEARBY';

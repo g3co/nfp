@@ -50,7 +50,7 @@ export default class Gym extends React.Component {
         let gym = this.state;
 
         return (
-            <div>
+            <div style={{color: 'white'}}>
                 {gym.name}
             </div>
         )
