@@ -4,7 +4,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: white;
+  background: @color-dark-gray;
+  color: white;
   -webkit-transition-property: opacity;
   -moz-transition-property: opacity;
   -ms-transition-property: opacity;
@@ -32,6 +33,17 @@
     display: none;
   }
 
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+
   h2 {
     position: absolute;
     top: 50%;
@@ -42,6 +54,7 @@
     font-size: 6.4rem;
     font-weight: 900;
     font-style: normal;
+    color: inherit;
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
@@ -66,12 +79,12 @@
     left: 50%;
     margin: 0 0 0 -75px;
     width: 150px;
-    border-top: 3px @color-dark-gray solid;
+    border-top: 3px currentColor solid;
     font-family: @font-main;
     font-size: 1.8rem;
     font-weight: 300;
     text-align: center;
-    color: @color-gray;
+    color: inherit;
     list-style: none;
 
     li {

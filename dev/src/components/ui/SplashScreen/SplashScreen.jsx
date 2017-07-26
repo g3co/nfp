@@ -115,6 +115,8 @@ class SplashScreen extends React.Component {
 
         props = {...this.props};
 
+        $dw(window).lazy();
+
         let translations = props.translations,
             account = props.user.account,
             getUserAccount = this.getUserAccount,
@@ -151,6 +153,7 @@ class SplashScreen extends React.Component {
                     (open || !!account == false ? "active" : "inactive")
                 ].join(" ")}
             >
+                <img data-src="https://c1.staticflickr.com/2/1603/24911097385_e6d1ccb453_z.jpg" />
                 <h2>nfp
                     <small>net fight promotion</small>
                 </h2>

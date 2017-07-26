@@ -86,6 +86,19 @@ a, a:visited {
   color: @color-text-link;
 }
 
+img {
+  opacity: 1;
+  -webkit-transition: opacity .3s;
+  -moz-transition: opacity .3s;
+  -ms-transition: opacity .3s;
+  -o-transition: opacity .3s;
+  transition: opacity .3s;
+
+  &[data-src] {
+    opacity: 0;
+  }
+}
+
 //excludes
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
