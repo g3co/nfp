@@ -137,6 +137,7 @@ class Navigation extends React.Component {
 
     getGYMsNearby(fighters) {
         let $this = $dw(window),
+            lng = this.props.language,
             $progress = this.getProgressBar(),
             updateNotification = this.updateNotification,
             setGYMsNearby = this.setGYMsNearby,
@@ -145,7 +146,10 @@ class Navigation extends React.Component {
         $progress.attr('data-value', 70);
 
         return $this
-            .request('/api/v1/places')
+            .request([
+                '/api/v1/places',
+                'lng='+ lng
+            ].join('?'))
             .then(setGYMsNearby)
             .then(function(gyms) {
                 $progress.attr('data-value', 100);
@@ -247,6 +251,7 @@ class Navigation extends React.Component {
 }
 
 export default connect(state => {return {
+    language: state.locale.language,
     translations: state.locale.translations,
     places: state.places,
     fighters: state.fighters,

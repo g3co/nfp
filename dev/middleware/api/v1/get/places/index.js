@@ -20,79 +20,76 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
         limit = 10,
         page = !!query.page || 0;
 
-    if(!!Object.keys(query).length == false) {
-        return Fighters
-            .findOne({ _id: id })
-            .select({
-                lastGeo: 1
-            })
-            .exec(function (err, user) {
+    return Fighters
+        .findOne({ _id: id })
+        .select({
+            lastGeo: 1
+        })
+        .exec(function (err, user) {
 
-                var place = user.lastGeo,
-                    googlePlace = [user.lastGeo[1], user.lastGeo[0]];//reverse Array, google specified
+            var place = user.lastGeo,
+                googlePlace = [user.lastGeo[1], user.lastGeo[0]];//reverse Array, google specified
 
-                console.log('Places (GET) Error:', err);
+            console.log('Places (GET) Error:', err);
 
-                if (!!err) {
-                    return io.write(res, null, {result: 1})
-                }
+            if (!!err) {
+                return io.write(res, null, {result: 1})
+            }
 
-                if (!!user == false) {
-                    return io.write(res, null, {result: 1})
-                }
+            if (!!user == false) {
+                return io.write(res, null, {result: 1})
+            }
 
-                syncPlaces(
-                    lang,
-                    googlePlace
-                )
-                    .then(function(sync) {
+            syncPlaces(
+                lang,
+                googlePlace,
+                place
+            )
+                .then(function(sync) {
 
-                        if(sync) {
-                            MapSynchronization
-                                .create({
-                                    place: place,
-                                    expiredAt: new Date((new Date()).getTime() + 60*60*24*7*1000).toISOString()
-                                })
-                        }
-
-                        Places
-                            .find({
-                                place: {
-                                    $near: place,
-                                    $maxDistance: 0.6
-                                }
+                    if(sync) {
+                        MapSynchronization
+                            .create({
+                                place: place,
+                                expiredAt: new Date((new Date()).getTime() + 60*60*24*7*1000).toISOString()
                             })
-                            .exec(function(err, places) {
+                    }
 
-                                console.log('Error:', err);
+                    Places
+                        .find({
+                            place: {
+                                $near: place,
+                                $maxDistance: 0.6
+                            }
+                        })
+                        .exec(function(err, places) {
 
-                                if(!!err) {
-                                    return io.write(res, null, { result: 1 })
+                            console.log('Error:', err);
+
+                            if(!!err) {
+                                return io.write(res, null, { result: 1 })
+                            }
+
+                            if(!!places == false) {
+                                return io.write(res, null, { result: 1 })
+                            }
+
+                            return io.write(res, places.map(function(p, i) {
+                                return {
+                                    id: p._id,
+                                    location: p.place
                                 }
+                            }))
 
-                                if(!!places == false) {
-                                    return io.write(res, null, { result: 1 })
-                                }
+                        })
+                })
+                .catch(function(err) {
+                    console.log('Sync Error:', err);
+                    return io.write(res, new Error('Synchronization rejected'))
+                })
+        });
 
-                                return io.write(res, places.map(function(p, i) {
-                                    return {
-                                        id: p._id,
-                                        location: p.place
-                                    }
-                                }))
-
-                            })
-                    })
-                    .catch(function(err) {
-                        console.log('Sync Error:', err);
-                        return io.write(res, new Error('Synchronization rejected'))
-                    })
-            });
-    }
-
-    return io.write(res, []);
-
-    function syncPlaces(lang, place) {
+    function syncPlaces(lang, googlePlace, place) {
 
         var schoolTypes = {
             ru: {
@@ -107,15 +104,15 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                 muayThai: ['тайский', 'бокс']
             },
             en: {
-                armyDogFight: 'martial',
-                brazilianJiuJitsu: 'brazilian',
-                combatSambo: 'sambo',
-                boxing: 'boxing',
-                wrestling: 'wrestling',
-                grappling: 'grappling',
-                kickboxing: 'kickboxing',
-                mma: 'mixed',
-                muayThai: 'thai'
+                armyDogFight: ['army', 'fighting'],
+                brazilianJiuJitsu: ['brazilian', 'jiu-jitsu'],
+                combatSambo: ['sambo', 'combat'],
+                boxing: ['boxing', 'club'],
+                wrestling: ['wrestling', 'freestyle'],
+                grappling: ['grappling', 'takedown'],
+                kickboxing: ['kickboxing', 'martial'],
+                mma: ['mma', 'mixed'],
+                muayThai: ['thai', 'boxing']
             }
         };
 
@@ -138,7 +135,7 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                     }
 
                     if(!!syncKey == false) {
-                        return synchronizeFromGooglePlaces(Places, io, res, schoolTypes[lang], place)
+                        return synchronizeFromGooglePlaces(Places, io, res, schoolTypes[lang], googlePlace)
                             .then(function() {
                                 resolve(true)
                             })

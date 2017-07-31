@@ -7,7 +7,7 @@
   "author": "RGabaydullov rsht123g@gmail.com",
   "license": "No",
   "scripts": {
-    "start": "concurrently --kill-others \"webpack --ENV=dev\" \"webpack-dev-server --ENV=dev\" \"node ./dev/middleware/index\"",
+    "start": "concurrently --kill-others \"webpack --ENV=dev\" \"webpack-dev-server --ENV=dev --open\" \"node ./dev/middleware/index\"",
     "build:dev": "webpack --ENV=dev --progress --profile --colors",
     "build:dist": "webpack --ENV=prod --progress --profile --colors"
   },
