@@ -36,7 +36,7 @@ module.exports = function(mongoose) {
         boxing: {type: Boolean, required: true, default: false},
         wrestling: {type: Boolean, required: true, default: false},
         grappling: {type: Boolean, required: true, default: false},
-        kickboxing: {type: Boolean, required: true, default: false},
+        kickBoxing: {type: Boolean, required: true, default: false},
         mma: {type: Boolean, required: true, default: false},
         muayThai: {type: Boolean, required: true, default: false}
     };

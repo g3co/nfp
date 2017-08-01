@@ -47,11 +47,30 @@ export default class Gym extends React.Component {
 
         props = Object.assign({}, this.props);
 
-        let gym = this.state;
+        let gym = this.state,
+            translations = props.translations,
+            displayName = gym.name,
+            address = !!gym.address ? gym.address : translations.LABELS.NO_ADDRESS;
 
         return (
-            <div style={{color: 'white'}}>
-                {gym.name}
+            <div
+                className={[
+                    "gym-view",
+                    (!!displayName ? "visible" : "")
+                ].join(" ")}
+            >
+                <section
+                    className="gym-view__general"
+                >
+                    <h2>
+                        <small>{address}</small>
+                        {displayName}
+                    </h2>
+                </section>
+                <section
+                    className="gym-view__about"
+                >
+                </section>
             </div>
         )
     }

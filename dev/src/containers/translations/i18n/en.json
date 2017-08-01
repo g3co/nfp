@@ -40,16 +40,19 @@
     "MARTIALS": "Martial arts",
     "MARTIALS_PROMPT": "Choose interesting",
     "MARTIAL_ARTS": {
-      "ArmyDogFight": "ADF",
-      "BrazilianJiuJitsu": "BJJ",
-      "CombatSambo": "Combat Sambo",
-      "Boxing": "Boxing",
-      "Wrestling": "Freestyle wrestling",
-      "Grappling": "Grappling",
-      "KickBoxing": "Kick Boxing",
-      "MMA": "MMA",
-      "MuayThai": "Muay Thai"
-    }
+      "armyDogFight": "ADF",
+      "brazilianJiuJitsu": "BJJ",
+      "combatSambo": "Combat Sambo",
+      "boxing": "Boxing",
+      "wrestling": "Freestyle wrestling",
+      "grappling": "Grappling",
+      "kickBoxing": "Kick Boxing",
+      "mma": "MMA",
+      "muayThai": "Muay Thai"
+    },
+    "WINS_SHORT": "Wins.",
+    "LOSS_SHORT": "Loss.",
+    "NO_SKILLS": "Free running"
   },
   "INSTANT": {
     "FIGHTER": "Fighter",

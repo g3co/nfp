@@ -45,7 +45,7 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
                 'gym',
                 school[0],
                 school[1],
-                'ru'
+                'en'
             );
 
             console.log('Request to:\r\n\t'+ uri);

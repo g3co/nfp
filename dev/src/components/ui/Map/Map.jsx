@@ -102,6 +102,7 @@ class Map extends React.Component {
                                 <Fighter
                                     id={fighter.id}
                                     unload={instantActions.write}
+                                    translations={translations}
                                 />)
                             })
                         }}
@@ -128,6 +129,7 @@ class Map extends React.Component {
                                 <Gym
                                     id={gym.id}
                                     unload={instantActions.write}
+                                    translations={translations}
                                 />)
                             })
                         )}

@@ -3,19 +3,33 @@
   height: 100%;
   font-family: @font-main;
   font-size: 1.5rem;
+  opacity: 0;
+  -webkit-transition: opacity .3s;
+  -moz-transition: opacity .3s;
+  -ms-transition: opacity .3s;
+  -o-transition: opacity .3s;
+  transition: opacity .3s;
+
+  &.visible {
+    opacity: 1;
+  }
 }
 
 .fighter-view__bio {
-  height: calc(30% - 45px);
+  position: relative;
+  height: calc(~"30% - 45px");
 
   .fighter-avatar {
     margin: 0 auto .5em;
     height: 64px;
     width: 64px;
-    border: 3px white solid;
+    border: 0 transparent solid;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
+    -webkit-box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.27);
+    -moz-box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.27);
+    box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.27);
     overflow: hidden;
     display: block;
 
@@ -25,13 +39,126 @@
     }
   }
 
-  h2 {
-    margin: 0 auto;
-    width: 75%;
-    font-family: @font-logo;
-    font-size: 1.5em;
+  aside {
+    position: absolute;
+    top: 0;
+    width: calc(~"50% - 32px");
+    line-height: 1.25;
+    font-family: Georgia, serif;
+    font-size: 2.5em;
     color: white;
     text-align: center;
+
+    span {
+      position: relative;
+      margin: 1rem 0 0;
+      font-family: @font-main;
+      font-size: 1rem;
+      text-transform: uppercase;
+      display: block;
+
+      &:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        margin: -9px 0 0 -19px;
+        height: 6px;
+        width: 38px;
+        border: 0 transparent solid;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        display: block;
+      }
+    }
+
+    &.fighter-wins {
+      left: 0;
+
+      span:before {
+        .gradient(linear; #00bc00, #04ff00; 90deg);
+      }
+    }
+
+    &.fighter-loss {
+      right: 0;
+
+      span:before {
+        .gradient(linear; #ba0300, #ff0400; 90deg);
+      }
+    }
+  }
+
+  h2 {
+    margin: 0 auto;
+    padding: .5rem;
+    width: 100%;
+    font-family: @font-logo;
+    font-size: 1.35em;
+    color: white;
+    text-align: center;
+    letter-spacing: -.05rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     display: block;
+
+    small {
+      margin: .5rem auto;
+      width: 100%;
+      font-family: @font-main;
+      font-size: 0.675em;
+      letter-spacing: inherit;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: block;
+    }
+  }
+}
+
+.fighter-view__content {
+
+  position: relative;
+  height: calc(~"70% - 45px");
+
+  button {
+    margin: 0;
+    padding: .5rem 0;
+    height: auto;
+    line-height: 1.25;
+    background: transparent;
+    border: 0 transparent solid;
+    font-family: @font-main;
+    font-size: 1.35rem;
+    color: white;
+    text-align: center;
+    text-transform: none;
+    display: inline-block;
+  }
+
+  .content-action {
+    padding: 1rem 0;
+    font-family: @font-main;
+    font-size: 0;
+
+    span {
+      width: 33.333%;
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: @color-dark-gray;
+      text-align: center;
+      display: inline-block;
+
+      &:after {
+        content: attr(data-label);
+        margin: .5rem auto 0;
+        font-family: @font-main;
+        font-weight: normal;
+        font-size: 1.35rem;
+        color: @color-gray;
+        display: block;
+      }
+    }
   }
 }

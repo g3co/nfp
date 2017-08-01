@@ -1,7 +1,11 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 
-import { gfClassName } from '../../components/helper';
+import {
+    gfClassName,
+    declOf,
+    getAge
+} from '../../components/helper';
 
 export default class Fighter extends React.Component {
     
@@ -49,27 +53,59 @@ export default class Fighter extends React.Component {
         props = Object.assign({}, this.props);
 
         let fighter = this.state,
-            displayName = [fighter.firstName, fighter.lastName].join(' ');
+            translations = props.translations,
+            displayName = [fighter.firstName, fighter.lastName].join(' '),
+            age = getAge(new Date(fighter.dateBirth)),
+            weight = !!fighter.conditions ? fighter.conditions.weight : '&mdash;',
+            height = !!fighter.conditions ? fighter.conditions.height : '&mdash;',
+            wins = !!fighter.stats ? fighter.stats.wins.length : 0,
+            loss = !!fighter.stats ? fighter.stats.loses.length : 0,
+            skills = !!fighter.skills ? Object.keys(fighter.skills).filter(function(key) {
+                return !!fighter.skills[key]
+            }) : [],
+            _printAge = declOf(translations.DECLINES.AGE);
 
-        $dw(window).lazy();
+        skills = !!skills.length ? skills.map(function(key) {return translations.LABELS.MARTIAL_ARTS[key]}) : [translations.LABELS.NO_SKILLS];
 
         return (
             <div
-                className="fighter-view"
+                className={[
+                    "fighter-view",
+                    (!!fighter.firstName ? "visible" : "")
+                ].join(" ")}
             >
-                <section
-                    className="fighter-view__bio"
-                >
-                    <div
-                        className="fighter-avatar"
-                    >
-                        <img data-src={fighter.avatar} alt={displayName} />
-                    </div>
-                    <h2>{displayName}</h2>
+                <section className="fighter-view__bio">
+                    <aside className="fighter-wins">
+                        {wins}
+                        <span>{translations.LABELS.WINS_SHORT}</span>
+                    </aside>
+                    <aside className="fighter-loss">
+                        {loss}
+                        <span>{translations.LABELS.LOSS_SHORT}</span>
+                    </aside>
+                    <picture className="fighter-avatar">
+                        <img src={fighter.avatar} alt={displayName} />
+                    </picture>
+                    <h2>
+                        <small>{skills.join(' / ')}</small>
+                        {displayName}
+                    </h2>
                 </section>
-                <section
-                    className="fighter-view__content"
-                >
+                <section className="fighter-view__content">
+                    <div className="content-action">
+                        <span
+                            className="fighter__age"
+                            data-label={translations.LABELS.CONDITIONS.AGE}
+                        >{age} {_printAge(age)}</span>
+                        <span
+                            className="fighter__weight"
+                            data-label={translations.LABELS.CONDITIONS.WEIGHT}
+                        >{weight} {translations.LABELS.CONDITIONS.WEIGHT_UNIT}</span>
+                        <span
+                            className="fighter__height"
+                            data-label={translations.LABELS.CONDITIONS.HEIGHT}
+                        >{height} {translations.LABELS.CONDITIONS.HEIGHT_UNIT}</span>
+                    </div>
                 </section>
             </div>
         )

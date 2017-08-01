@@ -1,0 +1,49 @@
+.gym-view {
+  position: relative;
+  height: 100%;
+  font-family: @font-main;
+  font-size: 1.5rem;
+  opacity: 0;
+  -webkit-transition: opacity .3s;
+  -moz-transition: opacity .3s;
+  -ms-transition: opacity .3s;
+  -o-transition: opacity .3s;
+  transition: opacity .3s;
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.gym-view__general {
+  position: relative;
+  height: calc(~"30% - 45px");
+
+  aside {
+
+  }
+
+  h2 {
+    margin: 0 auto;
+    padding: .5rem;
+    width: 100%;
+    font-family: @font-logo;
+    font-size: 1.35em;
+    color: white;
+    text-align: center;
+    letter-spacing: -.05rem;
+    display: block;
+
+    small {
+      margin: .5rem auto;
+      width: 100%;
+      font-family: @font-main;
+      font-size: 0.675em;
+      letter-spacing: inherit;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: block;
+    }
+  }
+}

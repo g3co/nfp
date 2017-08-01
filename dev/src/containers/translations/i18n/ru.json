@@ -21,6 +21,7 @@
     "EDITBOX_HEADER": "Параметры",
     "EDITBOX_ACCEPT": "Найти",
     "CONDITIONS": {
+      "AGE": "Возраст",
       "WEIGHT": "Вес",
       "HEIGHT": "Рост",
       "WEIGHT_LIST": [
@@ -40,16 +41,22 @@
     "MARTIALS": "Виды спорта",
     "MARTIALS_PROMPT": "Выберите интересующие",
     "MARTIAL_ARTS": {
-      "ArmyDogFight": "АРБ",
-      "BrazilianJiuJitsu": "БЖЖ",
-      "CombatSambo": "Боевое Самбо",
-      "Boxing": "Бокс",
-      "Wrestling": "Вольная борьба",
-      "Grappling": "Грэпплинг",
-      "KickBoxing": "Кик Боксинг",
-      "MMA": "ММА",
-      "MuayThai": "Муай Тай"
-    }
+      "armyDogFight": "АРБ",
+      "brazilianJiuJitsu": "БЖЖ",
+      "combatSambo": "Боевое Самбо",
+      "boxing": "Бокс",
+      "wrestling": "Вольная борьба",
+      "grappling": "Грэпплинг",
+      "kickBoxing": "Кик Боксинг",
+      "mma": "ММА",
+      "muayThai": "Муай Тай"
+    },
+    "WINS_SHORT": "Побед.",
+    "LOSS_SHORT": "Пораж.",
+    "NO_SKILLS": "Ничем не занимается",
+    "MESSAGE_USER": "Написать",
+    "SPARRING_USER": "Спарринг",
+    "FIGHTER_CONDITIONS": "Кондиции"
   },
   "INSTANT": {
     "FIGHTER": "Боец",
@@ -63,5 +70,8 @@
   },
   "SPLASH_SCREEN": {
     "AUTH_TITLE": "Для продолжения авторизуйтесь"
+  },
+  "DECLINES": {
+    "AGE": ["год", "года", "лет"]
   }
 }

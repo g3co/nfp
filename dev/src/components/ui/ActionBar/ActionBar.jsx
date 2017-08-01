@@ -210,7 +210,7 @@ export default class ActionBar extends React.Component {
                         <span
                             className="material-icons right-act"
                             onClick={searchFilter}
-                        >settings</span>
+                        >tune</span>
                     </header>
                     <section className={gfClassName("toolbar__toggle")}>
                         <div>
@@ -266,10 +266,6 @@ export default class ActionBar extends React.Component {
                     )}
                 >
                     <header className={gfClassName("editbox__header")}>
-                        <span
-                            className="material-icons left-act"
-                            onClick={hideEditBox}
-                        >settings</span>
                         <h2>{translations.LABELS.EDITBOX_HEADER}</h2>
                         <span
                             className="material-icons right-act"
