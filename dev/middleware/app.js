@@ -58,7 +58,7 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
     });
 
     //Log OUT
-    router.get(API.concat('/logout'), function (req, res) {
+    router.get(API.concat('/logout'), checkAuth, function (req, res) {
         require(pathTo('get', 'logout'))(Fighters, io, req, res)
     });
 
@@ -82,16 +82,19 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
         require(pathTo('get', 'fighter'))(Fighters, io, req, res)
     });
 
-    router.get(API.concat('/sparrings'), function(req, res) {
+    router.get(API.concat('/sparrings'), checkAuth, function(req, res) {
         require(pathTo('get', 'sparrings'))(Sparrings, io, req, res)
     });
-    router.get(API.concat('/sparring/:id'), function (req, res) {
+    router.get(API.concat('/sparring/:id'), checkAuth, function (req, res) {
         require(pathTo('get', 'sparring'))(Sparrings, io, req, res)
     });
 
     //UPDATE
-    router.put(API.concat('/account'), function (req, res) {
+    router.put(API.concat('/account'), checkAuth, function (req, res) {
         require(pathTo('put', 'account'))(Fighters, io, req, res)
+    });
+    router.put(API.concat('/fighter/:id'), checkAuth, function (req, res) {
+        require(pathTo('put', 'fighter'))(Places, Fighters, io, req, res)
     });
 
     //DELETE

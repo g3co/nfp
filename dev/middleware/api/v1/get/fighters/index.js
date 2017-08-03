@@ -18,56 +18,45 @@ module.exports = function(Fighters, io, req, res) {
     }
 
     var limit = 10,
-        page = !!query.page || 0;
+        page = !!query.page || 0,
+        place = query.geo;
 
-    if(!!Object.keys(query).length == false) {
+    if(!!place) {
+
+        var findByQuery = {
+            lastGeo: {
+                $near: place,
+                $maxDistance: 0.6
+            },
+            _id: {
+                $ne: id
+            }
+        };
 
         return Fighters
-            .findOne({ _id: id })
-            .exec(function (err, user) {
-                if(!!err) {
-                    return io.write(res, null, { result: 4 })
-                }
+            .find(findByQuery)
+            .skip(limit*page)
+            .limit(limit)
+            .sort({
+                firstName: 1
+            })
+            .select({
+                _id: 1,
+                avatar: 1,
+                lastGeo: 1
+            })
+            .exec(function(err, fighters) {
+                console.error('Fighters/Nearby (GET) Error:', err);
 
-                if(!!user == false) {
+                if(!!err) {
                     return io.write(res, null, { result: 1 })
                 }
 
-                var findByQuery = {
-                    lastGeo: {
-                        $near: user.lastGeo,
-                        $maxDistance: 0.6
-                    },
-                    _id: {
-                        $ne: id
-                    }
-                };
+                if(!!fighters == false) {
+                    return io.write(res, null, { result: 1 })
+                }
 
-                Fighters
-                    .find(findByQuery)
-                    .skip(limit*page)
-                    .limit(limit)
-                    .sort({
-                        firstName: 1
-                    })
-                    .select({
-                        _id: 1,
-                        avatar: 1,
-                        lastGeo: 1
-                    })
-                    .exec(function(err, fighters) {
-                        console.error('Fighters/Nearby (GET) Error:', err);
-
-                        if(!!err) {
-                            return io.write(res, null, { result: 1 })
-                        }
-
-                        if(!!fighters == false) {
-                            return io.write(res, null, { result: 1 })
-                        }
-
-                        return io.write(res, fighters.map(mapFightersNearby))
-                    });
+                return io.write(res, fighters.map(mapFightersNearby))
             });
     }
 

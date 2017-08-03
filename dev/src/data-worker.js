@@ -299,40 +299,41 @@ function $dw(sel) {
                     //initializations
                     _xhr.responseType = o.responseType || 'json';
 
-                    //set URLEncoded body for POST
-                    if(o.type.match(/post/i)) {
-
-                        if(!!o.body && !!o.body.jsonRequest) {
-                            o.body = {
-                                jsonRequest: JSON.stringify(o.body.jsonRequest)
-                            }
-                        }
-
-                        var urlencoded = [],
-                            _len;
-
-                        if(!!o.body && !o.body.length) {
-                            var body = o.body;
-                            for(var key in body) {
-                                if(body.hasOwnProperty(key)) {
-                                    var value = body[key];
-
-                                    urlencoded.push(key +'='+ value);
+                    switch(o.type.toLowerCase()) {
+                        //set URLEncoded body for POST
+                        case 'post':
+                            if(!!o.body && !!o.body.jsonRequest) {
+                                o.body = {
+                                    jsonRequest: JSON.stringify(o.body.jsonRequest)
                                 }
                             }
-                        }
-                        _len = urlencoded.length;
 
-                        urlencoded = urlencoded.join('&');
+                            var urlencoded = [],
+                                _len;
 
-                        o.body = _len > 1 ? urlencoded.slice(0, -1) : urlencoded;
+                            if(!!o.body && !o.body.length) {
+                                var body = o.body;
+                                for(var key in body) {
+                                    if(body.hasOwnProperty(key)) {
+                                        var value = body[key];
 
-                        o.requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
-                    }
-                    //set JSON body for PUT
-                    if(o.type.match(/put/i)) {
-                        o.body = JSON.stringify(o.body);
-                        o.requestHeaders['Content-Type'] = 'application/json';
+                                        urlencoded.push(key +'='+ value);
+                                    }
+                                }
+                            }
+                            _len = urlencoded.length;
+
+                            urlencoded = urlencoded.join('&');
+
+                            o.body = _len > 1 ? urlencoded.slice(0, -1) : urlencoded;
+
+                            o.requestHeaders['Content-Type'] = 'application/x-www-form-urlencoded';
+                            break;
+                        //set JSON body for PUT
+                        case 'put':
+                            o.body = JSON.stringify(o.body);
+                            o.requestHeaders['Content-Type'] = 'application/json';
+                            break;
                     }
 
                     _xhr.open(
@@ -356,6 +357,7 @@ function $dw(sel) {
                             var res = this;
 
                             if(!!res.response && !!Object.prototype.toString.call(res.response).match(/HTMLDocument/i)) {
+
                                 var document = res.response,
                                     body = res.response.body,
                                     _div = document.createElement('div');

@@ -22,9 +22,7 @@ module.exports = function(Fighters, io, req, res) {
 
     if(!!lastGeo) {
         return Fighters
-            .update({ _id: id }, {$set: {
-                lastGeo: lastGeo
-            }}, function(err, user) {
+            .update({ _id: id }, { $set: { lastGeo: lastGeo, updatedAt: (new Date()).toISOString() } },function(err, user) {
 
                 if(!!err) {
                     return io.write(res, null, { result: 1 })

@@ -94,8 +94,8 @@ module.exports = function(mongoose) {
         //additional fields
         nickname: {type: String},
         conditions: {
-            height: {type: Number, required: true, min: 145, max: 220, default: 187},
-            weight: {type: Number, required: true, min: 0, max: 8, default: 0}
+            height: {type: Number, required: true, min: 145, max: 220, default: 178},
+            weight: {type: Number, required: true, min: 40, max: 130, default: 64}
         },
         skills: _MartialArts,
         stats: {
@@ -103,12 +103,24 @@ module.exports = function(mongoose) {
             loses: [(new Pointer('Pairs'))],
             draws: [(new Pointer('Pairs'))]
         },
+        trainingAt: (new Pointer('Places')),
+        friends: [(new Pointer('Fighters', true))],
         //service fields
         lastGeo: _Place,
         updatedAt: _updatedAt,
         createdAt: _createdAt,
         banned: {type: Boolean, required: true, default: false}
     });
+    /*Fighters.pre('save', function (next) {
+
+        var friends = this.friends;
+
+        this.friends = friends.filter(function(item, i, arr) {
+            return arr.indexOf(item) === i
+        });
+
+        next()
+    });*/
 
     Tournaments = new Schema({
         name: {type: String, required: true},
@@ -128,7 +140,7 @@ module.exports = function(mongoose) {
         pointsBlue: {type: Number, required: true, default: 0},
         pointsRed: {type: Number, required: true, default: 0},
         result: {type: Number, required: true, default: 1},
-        resultReason: {type: String, required: true, default: 'wait'},//TKO - 4, KO - 3, draw - 2, wait - 1, cancelled - 0
+        resultReason: {type: String, required: true, default: 1},//training - 5, TKO - 4, KO - 3, draw - 2, wait - 1, cancelled - 0
         rounds: {type: Number, required: true, default: 1},
         roundFinished: {type: Number, required: true, default: 0},
         timeEnd: {type: Number, required: true, default: 0.0},
@@ -139,8 +151,18 @@ module.exports = function(mongoose) {
     });
 
     //custom fields
-    function Pointer(model) {
-        return {type: Schema.Types.ObjectId, required: true, ref: model}
+    function Pointer(model, unique) {
+        var pointer = {
+            type: Schema.ObjectId,
+            required: true,
+            ref: model
+        };
+
+        if(unique) {
+            pointer.unique = true;
+        }
+
+        return pointer
     }
 
     return {

@@ -3,19 +3,30 @@ var mapFighter = require('./mapFighter');
 module.exports = function(Fighters, io, req, res) {
 
     var input = io.read(req),
-        id = input.query.id;
+        id = input.params.id;
 
     Fighters
-        .findById(id, function(err, fighter) {
+        .findOne({ _id: id })
+        .populate([
+            { path: 'trainingAt' },
+            { path: 'friends', model: 'Fighters' }
+        ])
+        .exec(function(err, fighter) {
 
-        console.error('Fighter (GET) Error:', err);
+            console.error('Fighter (GET) Error:', err);
 
-        if(!!err) {
-            return io.write(0, { result: 0 })
-        }
+            if(!!err) {
+                return io.write(res, null, { result: 0 })
+            }
 
-        return fighter.banned ? 
-            io.write(res, null, { result: 7 }) :
-            io.write(res, mapFighter(fighter));
-    });
+            if(!!fighter == false) {
+                return io.write(res, null, { result: 1 })
+            }
+
+            if(fighter.banned) {
+                return io.write(res, null, { result: 7 })
+            }
+
+            return io.write(res, mapFighter(fighter))
+        });
 };

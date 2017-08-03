@@ -18,17 +18,22 @@ module.exports = function io() {
             return
         }
 
-        var query,
-            session;
+        var query = !!Object.keys(req.query).length == false ? {} : req.query,
+            params = !!Object.keys(req.params).length == false ? {} : req.params,
+            session = !!req.session && !!req.session.passport ? req.session.passport : null;
 
-        query = !!Object.keys(req.params).length == false ?
-                !!Object.keys(req.query).length == false ?
-                !!Object.keys(req.body).length == false ?
-                {} : req.body : req.query : req.params;
-        session = !!req.session && !!req.session.passport ? req.session.passport : null;
+        switch(req.method.toLowerCase()) {
+            case 'post':
+                query = !!Object.keys(req.body).length == false ? {} : req.body;
+                break;
+            case 'put':
+                query = !!Object.keys(req.body).length == false ? {} : req.body;
+                break;
+        }
 
         return {
-            query: query,
+            query: filterData(query),
+            params: params,
             session: session
         }
     }
@@ -83,3 +88,20 @@ module.exports = function io() {
         res.send(data);
     }
 };
+
+function filterData(data) {
+
+    data = !!data == false ? {} : data;
+
+    Object.keys(data).forEach(function(i) {
+        var item = data[i];
+
+        try {
+            item = JSON.parse(item);
+        } catch(e){}
+
+        data[i] = item
+    });
+
+    return data
+}

@@ -37,12 +37,6 @@ class Navigation extends React.Component {
             ready: false,
             currentAdv: {}
         };
-
-        if('geolocation' in navigator) {
-            _interval = setInterval(this.updateCurrentPosition, 3000);
-        } else {
-            alert('To continue, please, get access to your geo location.');
-        }
     }
 
     getProgressBar() {
@@ -97,7 +91,7 @@ class Navigation extends React.Component {
             });
 
             if(allowTracking) {
-                return $window
+                $window
                     .request({
                         type: 'put',
                         url: '/api/v1/account',
@@ -105,21 +99,20 @@ class Navigation extends React.Component {
                             lastGeo: _currentPosition
                         }
                     })
-                    .then(loadNearby)
             }
 
-            return loadNearby()
+            return loadNearby(_currentPosition)
         }
 
         clearInterval(_interval)
     }
 
-    loadNearby() {
-        return this.getFightersNearby()
+    loadNearby(geo) {
+        return this.getFightersNearby(geo)
             .then(this.getGYMsNearby)
     }
 
-    getFightersNearby() {
+    getFightersNearby(geo) {
         let $this = $dw(window),
             $progress = this.getProgressBar(),
             setFightersNearby = this.setFightersNearby;
@@ -127,15 +120,18 @@ class Navigation extends React.Component {
         $progress.attr('data-value', 15);
 
         return $this
-            .request('/api/v1/fighters')
+            .request([
+                '/api/v1/fighters',
+                'geo=['+ geo +']'
+            ].join('?'))
             .then(setFightersNearby)
             .then(function(fighters) {
                 $progress.attr('data-value', 50);
-                return fighters
+                return geo
             })
     }
 
-    getGYMsNearby(fighters) {
+    getGYMsNearby(geo) {
         let $this = $dw(window),
             lng = this.props.language,
             $progress = this.getProgressBar(),
@@ -148,7 +144,7 @@ class Navigation extends React.Component {
         return $this
             .request([
                 '/api/v1/places',
-                'lng='+ lng
+                String.prototype.concat('lng='+ lng, '&geo=['+ geo +']')
             ].join('?'))
             .then(setGYMsNearby)
             .then(function(gyms) {
@@ -216,6 +212,14 @@ class Navigation extends React.Component {
 
     componentWillMount() {
         this.initTracking()
+    }
+
+    componentDidMount() {
+        if('geolocation' in navigator) {
+            _interval = setInterval(this.updateCurrentPosition, 3000);
+        } else {
+            alert('To continue, please, get access to your geo location.');
+        }
     }
 
     render() {
