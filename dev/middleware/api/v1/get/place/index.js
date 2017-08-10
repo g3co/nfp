@@ -3,7 +3,7 @@ var mapPlace = require('./mapPlace');
 module.exports = function(Places, io, req, res) {
 
     var input = io.read(req),
-        id = input.query.id;
+        id = input.params.id;
 
     Places
         .findById(id, function(err, place) {

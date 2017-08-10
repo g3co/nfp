@@ -53,17 +53,21 @@ export default class Fighter extends React.Component {
         props = Object.assign({}, this.props);
 
         let fighter = this.state,
+            unload = props.unload,
             translations = props.translations,
             displayName = [fighter.firstName, fighter.lastName].join(' '),
             age = getAge(new Date(fighter.dateBirth)),
-            weight = !!fighter.conditions ? fighter.conditions.weight : '&mdash;',
-            height = !!fighter.conditions ? fighter.conditions.height : '&mdash;',
+            weight = !!fighter.conditions ? fighter.conditions.weight : 0,
+            height = !!fighter.conditions ? fighter.conditions.height : 0,
             wins = !!fighter.stats ? fighter.stats.wins.length : 0,
             loss = !!fighter.stats ? fighter.stats.loses.length : 0,
             skills = !!fighter.skills ? Object.keys(fighter.skills).filter(function(key) {
                 return !!fighter.skills[key]
             }) : [],
-            _printAge = declOf(translations.DECLINES.AGE);
+            friends = !!fighter.friends ? fighter.friends.length : 0,
+            gymName = !!fighter.gym && !!fighter.gym.name ? fighter.gym.name : String.fromCharCode(8212),
+            _printAge = declOf(translations.DECLINES.AGE),
+            _printFriends = declOf(translations.DECLINES.FRIENDS);
 
         skills = !!skills.length ? skills.map(function(key) {return translations.LABELS.MARTIAL_ARTS[key]}) : [translations.LABELS.NO_SKILLS];
 
@@ -106,7 +110,22 @@ export default class Fighter extends React.Component {
                             data-label={translations.LABELS.CONDITIONS.HEIGHT}
                         >{height} {translations.LABELS.CONDITIONS.HEIGHT_UNIT}</span>
                     </div>
+                    <div className="content-action">
+                        <h6 className="friends">
+                            {friends} {_printFriends(friends)}
+                        </h6>
+                        <h6 className="gym">
+                            {translations.LABELS.TRAINING_AT}
+                            <small>{gymName}</small>
+                        </h6>
+                    </div>
+                    <div className="content-feed">
+                        
+                    </div>
                 </section>
+                <button className="fighter-view__cta" onClick={unload}>
+                    {translations.LABELS.OOO}
+                </button>
             </div>
         )
     }

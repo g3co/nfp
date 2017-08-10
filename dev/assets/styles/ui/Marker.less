@@ -128,8 +128,10 @@
     left: -1400%;
     height: 2800%;
     width: 2800%;
-    background: @color-yellow;
-    border: 0 transparent solid;
+    //background: @color-yellow;
+    //border: 0 transparent solid;
+    background: fade(@color-yellow, 18);
+    border: 1px fade(@color-yellow, 18) solid;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -145,14 +147,12 @@
       margin: -30% 0 0 -30%;
       height: 60%;
       width: 60%;
-      background: white;
+      //background: white;
+      background: rgba(255, 255, 0, .9);
       border: 0 transparent solid;
       -webkit-border-radius: 50%;
       -moz-border-radius: 50%;
       border-radius: 50%;
-      -webkit-box-shadow: 0 0 10px @color-gray;
-      -moz-box-shadow: 0 0 10px @color-gray;
-      box-shadow: 0 0 10px @color-gray;
     }
 
     /*&:before {

@@ -12,7 +12,7 @@
   "LABELS": {
     "LOG_IN": "Войти",
     "LOG_OUT": "Выйти",
-    "USER_PROFILE": "Профиль бойца",
+    "USER_PROFILE": "Профиль",
     "USER_SCHEDULE": "События",
     "USER_SETTINGS": "Настройки",
     "SEARCH_BY_FIGHTER": "Боец",
@@ -20,6 +20,9 @@
     "SEARCH_PLACEHOLDER": "Что Ищете?",
     "EDITBOX_HEADER": "Параметры",
     "EDITBOX_ACCEPT": "Найти",
+    "SEARCH_RESULTS": {
+      "LOAD_NEARBY": "Рядом с вами"
+    },
     "CONDITIONS": {
       "AGE": "Возраст",
       "WEIGHT": "Вес",
@@ -55,7 +58,10 @@
     "LOSS_SHORT": "Пораж.",
     "NO_SKILLS": "Ничем не занимается",
     "MESSAGE_USER": "Написать",
-    "SPARRING_USER": "Спарринг"
+    "SPARRING_USER": "Спарринг",
+    "TRAINING_AT": "Тренируется в",
+    "FREE_RUNNING": "Нигде не занимается",
+    "OOO": "Раз-на-раз"
   },
   "INSTANT": {
     "FIGHTER": "Боец",
@@ -71,6 +77,8 @@
     "AUTH_TITLE": "Для продолжения авторизуйтесь"
   },
   "DECLINES": {
-    "AGE": ["год", "года", "лет"]
+    "AGE": ["год", "года", "лет"],
+    "GYM": ["спортзал", "спортзала", "спортзалов"],
+    "FRIENDS": ["друг", "друга", "друзей"]
   }
 }

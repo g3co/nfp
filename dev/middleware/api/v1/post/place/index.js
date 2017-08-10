@@ -29,7 +29,7 @@ module.exports = function(Places, io, req, res) {
 
     Places
         .findOneAndUpdate(
-            { serviceID: query.serviceID },
+            { place: { $near: query.place, $maxDistance: 0.001 } },
             query,
             { upsert: true },
             function(err, place) {

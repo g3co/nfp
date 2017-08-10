@@ -27,9 +27,6 @@
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
-    -webkit-box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.27);
-    -moz-box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.27);
-    box-shadow: 0 0 20px 6px rgba(255, 255, 255, 0.27);
     overflow: hidden;
     display: block;
 
@@ -76,7 +73,7 @@
       left: 0;
 
       span:before {
-        .gradient(linear; #00bc00, #04ff00; 90deg);
+        .gradient(linear; #00bc00, #04ff00; 0deg);
       }
     }
 
@@ -84,7 +81,7 @@
       right: 0;
 
       span:before {
-        .gradient(linear; #ba0300, #ff0400; 90deg);
+        .gradient(linear; #ba0300, #ff0400; 0deg);
       }
     }
   }
@@ -120,7 +117,8 @@
 .fighter-view__content {
 
   position: relative;
-  height: calc(~"70% - 45px");
+  height: calc(~"100% - 45px");
+  overflow: auto;
 
   button {
     margin: 0;
@@ -141,6 +139,7 @@
     padding: 1rem 0;
     font-family: @font-main;
     font-size: 0;
+    text-align: center;
 
     span {
       width: 33.333%;
@@ -160,5 +159,119 @@
         display: block;
       }
     }
+
+    h6 {
+      margin: .5rem .5rem .5rem 1rem;
+      padding: 0 0 0 1rem;
+      vertical-align: top;
+      width: 50%;
+      font-family: @font-main;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: @color-dark-gray;
+      text-align: left;
+      display: block;
+
+      &:before {
+        font-family: @font-micons;
+        font-size: 1.4em;
+        font-weight: normal;
+        vertical-align: middle;
+      }
+
+      small {
+        padding: 0 0 0 2.2rem;
+        font-family: inherit;
+        font-size: 1.35rem;
+        font-weight: normal;
+        display: block;
+      }
+
+      &.friends:before {
+        content: 'person_outline';
+      }
+      &.gym:before {
+        content: 'fitness_center';
+      }
+    }
+
+    button {
+      position: relative;
+      margin: 0 10px 1rem;
+      padding: 0 1.5rem 0 1rem;
+      height: 35px;
+      width: auto;
+      line-height: 35px;
+      vertical-align: middle;
+      background: @color-dark-gray;
+      font-family: @font-main;
+      font-size: 1.35rem;
+      color: white;
+      display: inline-block;
+
+      span {
+        width: auto;
+        vertical-align: middle;
+        font-size: 1.5em;
+        font-weight: normal;
+        color: inherit;
+      }
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -17px;
+        height: 0;
+        width: 0;
+        border-color: transparent transparent @color-dark-gray transparent;
+        border-style: solid;
+        border-width: 0 0 35px 17px;
+        display: inline-block;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -17px;
+        height: 0;
+        width: 0;
+        border-color: @color-dark-gray transparent transparent transparent;
+        border-style: solid;
+        border-width: 35px 17px 0 0;
+        display: inline-block;
+      }
+    }
   }
+
+  .content-feed {
+    padding: 1rem .25rem;
+    font-family: @font-main;
+    font-size: 0;
+
+    div {
+      margin: 0;
+      padding: .25rem;
+      height: auto;
+      width: 50%;
+      display: inline-block;
+
+      img {
+        height: auto;
+        width: 100%;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.fighter-view__cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52px;
+  width: 100%;
+  line-height: 50px;
+  .gradient(linear; #1e5799, #ed212b; 90deg);
 }

@@ -4,16 +4,17 @@ var querystring  = require('querystring'),
     createPlace = require('../../post/place'),
     mapPlaceGoogle2NFP = require('./mapPlaceGoogle2NFP');
 
-function getPlacesPath(position, radius, type, schoolType, schoolName, lang) {
+function getPlacesPath(position, distance, type, schoolType, schoolName) {
     return [
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
         querystring.stringify({
             location: position.toString(),
-            radius: radius,
+            rankby: distance,
+            //radius: radius,
             type: type,
             keyword: schoolType,
             name: schoolName,
-            language: lang,
+            //language: lang,
             key: Credentials.google.APIKey
         })
     ].join('?')
@@ -41,11 +42,10 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
             var uri = getPlacesPath(
                 place,
-                20000,//catch whole City
+                'distance',//catch whole City
                 'gym',
-                school[0],
                 school[1],
-                'en'
+                school[0]
             );
 
             console.log('Request to:\r\n\t'+ uri);
@@ -63,7 +63,7 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
                         console.log('Status: '+ res.status);
 
-                        console.log('Res count:\r\n\tfor '+school[0] +'\r\n\tis:'+ res.results.length);
+                        console.log('Res count: for '+school[0] +' is:'+ res.results.length);
 
                         if(!!res == false) {
                             return {}
@@ -78,6 +78,8 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
                                 schoolType = [];
 
                             //console.log('GYM: for'+school +' name:'+ o.name);
+
+                            console.log('ID: '+ place_id);
 
                             var place = placesToSync.find(function(place) {
                                 return place.place_id == place_id
@@ -123,6 +125,8 @@ function synchronizeFromGooglePlaces(Places, io, res, schoolTypes, place) {
 
                         place = !!place.length ? JSON.parse(place) : place;
                         place = !!place.result ? place.result : {};
+
+                        console.log('Place: '+ place.name +', for: ['+ place.schoolType +']');
 
                         place = mapPlaceGoogle2NFP(place, $place_id, $schoolType);
 

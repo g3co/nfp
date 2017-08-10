@@ -2,7 +2,8 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import Map from '../Map';
 import {
-    gfClassName
+    gfClassName,
+    declOf
 } from '../../helper';
 
 import { connect } from 'react-redux'
@@ -133,7 +134,9 @@ class Navigation extends React.Component {
 
     getGYMsNearby(geo) {
         let $this = $dw(window),
-            lng = this.props.language,
+            props = {...this.props},
+            translations = props.translations,
+            lng = props.language,
             $progress = this.getProgressBar(),
             updateNotification = this.updateNotification,
             setGYMsNearby = this.setGYMsNearby,
@@ -154,9 +157,12 @@ class Navigation extends React.Component {
 
                 setState({ready: true});
 
+                let gymsCount = gyms.length,
+                    printGyms = declOf(translations.DECLINES.GYM);
+
                 updateNotification({
                     type: 'success',
-                    text: `Рядом с Вами ${gyms.length} залов`
+                    text: `${translations.LABELS.SEARCH_RESULTS.LOAD_NEARBY} ${gymsCount} ${printGyms(gymsCount)}`
                 });
 
                 return gyms

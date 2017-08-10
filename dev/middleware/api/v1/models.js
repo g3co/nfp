@@ -124,7 +124,7 @@ module.exports = function(mongoose) {
 
     Tournaments = new Schema({
         name: {type: String, required: true},
-        card: [(new Pointer('Pairs'))],
+        card: (new Pointer('Pairs')),//if (exists) %sparring% else %training%
         kind: _MartialArts,
         place: _Place,
         placeName: {type: String, required: true},
@@ -139,15 +139,18 @@ module.exports = function(mongoose) {
         blue: (new Pointer('Fighters')),
         pointsBlue: {type: Number, required: true, default: 0},
         pointsRed: {type: Number, required: true, default: 0},
-        result: {type: Number, required: true, default: 1},
-        resultReason: {type: String, required: true, default: 1},//training - 5, TKO - 4, KO - 3, draw - 2, wait - 1, cancelled - 0
+        result: {type: Number, required: true, default: 0},//Ended - 1, Not happened - 0
+        resultReason: {type: Number, required: true, default: 1},//TKO - 4, KO - 3, draw - 2, wait - 1, cancelled - 0
         rounds: {type: Number, required: true, default: 1},
-        roundFinished: {type: Number, required: true, default: 0},
-        timeEnd: {type: Number, required: true, default: 0.0},
+        roundsFinished: {type: Number, required: true, default: 0},
+        roundTime: {type: Number, required: true, default: 1.0},
+        roundRest: {type: Number, required: true, default: 0.5},
+        //flag fields
+        isSparring: {type: Boolean, required: true, default: true},
+        startedAt: {type: Date},//check Event is ended by: $result = 1
         //service fields
         updatedAt: _updatedAt,
-        createdAt: _createdAt,
-        finishedAt: _finishedAt
+        createdAt: _createdAt
     });
 
     //custom fields
