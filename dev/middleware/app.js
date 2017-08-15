@@ -1,19 +1,35 @@
 //RESTful Application
-var path = require('path'),
-    expressSession = require('express-session');
+var path = require('path');
 
-module.exports = function(passport, mongoose, app, router, Strategy) {
+module.exports = function(data, passport, mongoose, app, router, Strategy) {
 
-    var API = '/api/v1';
+    var API = '/api/v1',
+        secret = 'test_string';
 
     var models = require('.'.concat(API).concat('/models'))(mongoose),
-        io = new (require('./io.js'))();
+        session = data.session,
+        store = new data.store({
+            mongooseConnection: mongoose.connection
+        });
 
     var MapSynchronization = models.MapSynchronization,
         Places = models.Places,
         Fighters = models.Fighters,
         Tournaments = models.Tournaments,
         Pairs = models.Pairs;
+
+    var io = new (require('./io.js'))(
+        {
+            cookie: {
+                split: data.split,
+                cookieParser: data.cookieParser
+            },
+            store: store,
+            sessionParser: session,
+            secret: secret
+        },
+        Fighters
+    );
 
     var Credentials = require('./Credentials');
 
@@ -40,7 +56,6 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
             failureRedirect: '/auth'
         })
     );
-
 
     passport.use(new Strategy.VK({
         clientID: Credentials.vk.appId,
@@ -99,11 +114,18 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
 
     //DELETE
 
+    //WebSocket CRUD
+    //READ
+    app.ws(API.concat('/event'), function (ws, req) {
+        require(pathTo('ws', 'event'))(ws, io, req)
+    });
+
     //settings
-    app.use(expressSession({
-        secret: 'test_string',
+    app.use(session({
+        secret: secret,
         resave: true,
-        saveUninitialized: true
+        saveUninitialized: true,
+        store: store
     }));
     app.use(passport.initialize());
     app.use(passport.session());
@@ -135,6 +157,6 @@ module.exports = function(passport, mongoose, app, router, Strategy) {
             return next()
         }
 
-        return res.redirect('/')
+        return io.write(res, null, { result: 0 })
     }
 };

@@ -91,6 +91,8 @@ module.exports = function(mongoose) {
         //sign fields
         vkID: {type: Number, index: true, unique: true},
         instagramID: {type: Number, index: true, unique: true},
+        facebookID: {type: Number, index: true, unique: true},
+        sessionIdentificationNumber: {type: String, index: true, unique: true},
         //additional fields
         nickname: {type: String},
         conditions: {
@@ -124,7 +126,7 @@ module.exports = function(mongoose) {
 
     Tournaments = new Schema({
         name: {type: String, required: true},
-        card: (new Pointer('Pairs')),//if (exists) %sparring% else %training%
+        card: (new Pointer('Pairs', false)),//if (exists) %sparring% else %training%
         kind: _MartialArts,
         place: _Place,
         placeName: {type: String, required: true},
@@ -154,18 +156,12 @@ module.exports = function(mongoose) {
     });
 
     //custom fields
-    function Pointer(model, unique) {
-        var pointer = {
+    function Pointer(model, required) {
+        return {
             type: Schema.ObjectId,
-            required: true,
+            required: !!required,
             ref: model
-        };
-
-        if(unique) {
-            pointer.unique = true;
         }
-
-        return pointer
     }
 
     return {

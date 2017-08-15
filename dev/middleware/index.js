@@ -5,10 +5,15 @@ var express = require('express'),
     path = require('path'),
     url = require('url'),
     util = require('util'),
+    cookie = require('cookie'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     serveStatic = require('serve-static'),
+    expressSession = require('express-session'),
+    mongoStore = require('connect-mongo')(expressSession),
+    ws = require('ws'),
     app = express(),
+    expressWebSocket = require('express-ws')(app),
     router = express.Router(),
     Schema = mongoose.Schema;
 
@@ -31,9 +36,20 @@ net_fight_promotion
     .once('open', function () {
         console.log('Connected to mLab');
 
-        require('./app')(passport, mongoose, app, router, {
-            VK: AuthVKStrategy
-        });
+        require('./app')(
+            {
+                store: mongoStore,
+                split: cookie,
+                cookieParser: cookieParser,
+                session: expressSession
+            },
+            passport,
+            mongoose,
+            app,
+            router,
+            {
+                VK: AuthVKStrategy
+            });
 
         //defaults
         app.use(bodyParser.urlencoded({
@@ -72,10 +88,9 @@ net_fight_promotion
         //Routing
         app.use('/', router);
 
-
         app.listen(3000, function() {
             console.log('Listening on port:3000');
-        })
+        });
     });
 
 
