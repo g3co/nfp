@@ -30,7 +30,7 @@ function $dw(sel) {
             this[0] = collection;
         }
 
-        this.middleware = '//localhost:3000';
+        this.middleware = 'localhost:3000';
         //this.middleware = 'http://172.20.10.2:3000';
         this.selector = !!s ? !!s.length ? s : this[0].tagName && this[0].tagName.toLowerCase() : '';
         this.length = this.length || 1;

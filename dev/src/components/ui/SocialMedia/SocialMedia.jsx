@@ -10,7 +10,7 @@ function Authorize(service, callback) {
 
     switch(service) {
         case 'vk':
-            OAuthWindow = window.open(middleware +'/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
+            OAuthWindow = window.open('http://'+ middleware +'/api/v1/auth/vk/', 'OAuth &mdash; VK', 'width=400,height=600');
             break;
         case 'instagram':
 
