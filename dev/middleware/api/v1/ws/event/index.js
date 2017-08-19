@@ -1,27 +1,29 @@
-module.exports = function(socket, io, req) {
+module.exports = function(wss, socket, io, req) {
 
     var input = io.read(req);
 
-    io.getSession('connect.sid')
-        .then(function() {
-            socket.on('message', function (message) {
-                console.log('WS: '+ message);
-
-                var _to = setTimeout(function(){
-
-                    var data = 'Date: ' +(new Date()).toISOString();
-
-                    console.log(data);
-
-                    io.write(socket, data);
-
-                    clearTimeout(_to);
-                }, 250);
+    wss.clients.forEach(function(client) {
+        io.getSession('connect.sid', client.upgradeReq)
+            .then(function(user) {
+                console.log('User: ', user);
             })
-        })
-        .catch(function() {
-            console.log('Non Authorized');
+            .catch(function() {
+                console.log('Failed clients checking')
+            })
 
-            return io.write(socket, null, { result: 0 })
-        });
+    });
+
+    socket.on('message', function (message) {
+        console.log('WS: '+ message);
+
+        var _to = setInterval(function(){
+
+            var data = 'Date: ' +(new Date()).toISOString();
+
+            console.log(data);
+            
+
+            io.write(socket, data);
+        }, 1000);
+    })
 };

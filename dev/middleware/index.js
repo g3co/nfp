@@ -1,4 +1,8 @@
-var express = require('express'),
+var App = require('./app'),
+    Credentials = require('./Credentials'),
+    _io = require('./io'),
+    wsConfig = require('./wsConfig'),
+    express = require('express'),
     passport = require('passport'),
     mongoose = require('mongoose'),
     connect = require('connect'),
@@ -11,9 +15,8 @@ var express = require('express'),
     serveStatic = require('serve-static'),
     expressSession = require('express-session'),
     mongoStore = require('connect-mongo')(expressSession),
-    ws = require('ws'),
+    ws = require('express-ws'),
     app = express(),
-    expressWebSocket = require('express-ws')(app),
     router = express.Router(),
     Schema = mongoose.Schema;
 
@@ -25,7 +28,10 @@ var uri = require('./config');
 mongoose
     .connect(uri);
 
-var net_fight_promotion = mongoose.connection;
+var net_fight_promotion = mongoose.connection,
+    Store = new mongoStore({
+        mongooseConnection: net_fight_promotion
+    });
 
 net_fight_promotion
     .on('error', function(err) {
@@ -36,13 +42,22 @@ net_fight_promotion
     .once('open', function () {
         console.log('Connected to mLab');
 
-        require('./app')(
-            {
-                store: mongoStore,
-                split: cookie,
-                cookieParser: cookieParser,
-                session: expressSession
-            },
+        var io = new _io(
+                cookie,
+                cookieParser,
+                expressSession,
+                Credentials.secret,
+                Store
+            ),
+            expressWebSocket = ws(app, null, {
+                wsOptions: wsConfig(io)
+            });
+
+        App(
+            io,
+            expressSession,
+            Store,
+            expressWebSocket,
             passport,
             mongoose,
             app,

@@ -1,37 +1,36 @@
 //RESTful Application
-var path = require('path');
+var path = require('path'),
+    Credentials = require('./Credentials');
 
-module.exports = function(data, passport, mongoose, app, router, Strategy) {
+module.exports = function(io, session, store, expressWebSocket, passport, mongoose, app, router, Strategy) {
 
+    console.log("CREDENTIALS: ", Credentials);
+
+    /*
+    * @base:
+    * API version, secret key
+    * */
     var API = '/api/v1',
-        secret = 'test_string';
+        secret = Credentials.secret;
 
-    var models = require('.'.concat(API).concat('/models'))(mongoose),
-        session = data.session,
-        store = new data.store({
-            mongooseConnection: mongoose.connection
-        });
+    var models = require('.'.concat(API).concat('/models'))(mongoose);
 
+    /*
+    * @models:
+    * MapSynchronization
+    * Places
+    * Fighter
+    * Tournaments
+    * Pairs
+    * */
     var MapSynchronization = models.MapSynchronization,
         Places = models.Places,
         Fighters = models.Fighters,
         Tournaments = models.Tournaments,
         Pairs = models.Pairs;
 
-    var io = new (require('./io.js'))(
-        {
-            cookie: {
-                split: data.split,
-                cookieParser: data.cookieParser
-            },
-            store: store,
-            sessionParser: session,
-            secret: secret
-        },
-        Fighters
-    );
-
-    var Credentials = require('./Credentials');
+    //IO bindings
+    io.bindModel('Fighters', Fighters);
 
     router.use(function(req, res, next) {
         console.log(req.method+req.url);
@@ -117,7 +116,7 @@ module.exports = function(data, passport, mongoose, app, router, Strategy) {
     //WebSocket CRUD
     //READ
     app.ws(API.concat('/event'), function (ws, req) {
-        require(pathTo('ws', 'event'))(ws, io, req)
+        require(pathTo('ws', 'event'))(expressWebSocket.getWss('/event'), ws, io, req)
     });
 
     //settings

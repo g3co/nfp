@@ -123,7 +123,7 @@ module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
                     if(!!syncKey == false) {
                         return synchronizeFromGooglePlaces(Places, io, res, schoolTypes[lang], googlePlace)
                             .then(function() {
-                                resolve(true)
+                                return resolve(true)
                             })
                     }
 

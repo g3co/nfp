@@ -92,7 +92,6 @@ module.exports = function(mongoose) {
         vkID: {type: Number, index: true, unique: true},
         instagramID: {type: Number, index: true, unique: true},
         facebookID: {type: Number, index: true, unique: true},
-        sessionIdentificationNumber: {type: String, index: true, unique: true},
         //additional fields
         nickname: {type: String},
         conditions: {
@@ -145,8 +144,8 @@ module.exports = function(mongoose) {
         resultReason: {type: Number, required: true, default: 1},//TKO - 4, KO - 3, draw - 2, wait - 1, cancelled - 0
         rounds: {type: Number, required: true, default: 1},
         roundsFinished: {type: Number, required: true, default: 0},
-        roundTime: {type: Number, required: true, default: 1.0},
-        roundRest: {type: Number, required: true, default: 0.5},
+        roundTime: {type: Number, required: true, default: 60},
+        roundRest: {type: Number, required: true, default: 30},
         //flag fields
         isSparring: {type: Boolean, required: true, default: true},
         startedAt: {type: Date},//check Event is ended by: $result = 1

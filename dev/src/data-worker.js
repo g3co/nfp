@@ -30,7 +30,7 @@ function $dw(sel) {
             this[0] = collection;
         }
 
-        this.middleware = 'http://localhost:3000';
+        this.middleware = '//localhost:3000';
         //this.middleware = 'http://172.20.10.2:3000';
         this.selector = !!s ? !!s.length ? s : this[0].tagName && this[0].tagName.toLowerCase() : '';
         this.length = this.length || 1;
@@ -294,7 +294,9 @@ function $dw(sel) {
 
                     var _xhr = new window.XMLHttpRequest();//XHR
 
-                    o.url = !!o.url.match(/:*\/\/+/i) ? o.url : (base + o.url);
+                    o.url = !!o.url.match(/:*\/\/+/i) ?
+                        o.url :
+                        ['http://', base, o.url].join('');
 
                     //initializations
                     _xhr.responseType = o.responseType || 'json';
@@ -413,7 +415,59 @@ function $dw(sel) {
                         }
                     }
                 })
+            },
+
+            webSocket: function(instance) {
+
+                var base = this.middleware;
+
+                return new Promise(function(resolve, reject) {
+
+                    var ws = new WebSocket([
+                            'ws://',
+                            base,
+                            instance
+                        ].join('')),
+                        wsClient = new socket(ws);
+
+                    ws.onopen = function () {
+                        return resolve(wsClient)
+                    };
+                    ws.onmessage = function(event) {
+                        return wsClient.on('message')(JSON.parse(event.data))
+                    };
+                    ws.onerror = function(err) {
+                        wsClient.on('error');
+                        return reject(err)
+                    };
+                    ws.onclose = wsClient.on('abort');
+
+                });
+
+                function socket(ws) {
+
+                    var _events = {};
+
+                    this.on = function(type, method){
+                        if(!!type == false) {
+                            return
+                        }
+
+                        if(!!method == false) {
+                            return _events[type]
+                        }
+
+                        return _events[type] = method
+                    };
+
+                    this.emit = function(data) {
+                        return ws.send.call(ws, data)
+                    };
+
+                }
+
             }
+
         };
 
         function getInstance(collection) {

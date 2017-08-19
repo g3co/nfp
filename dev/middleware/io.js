@@ -1,4 +1,4 @@
-module.exports = function io(dep, Fighters) {
+module.exports = function io(cookie, _cookieParser, session, secret, store) {
 
     var messages = {
         0: 'Not authorized',
@@ -11,33 +11,32 @@ module.exports = function io(dep, Fighters) {
         7: 'Object is unavailable'
     };
 
+    var models = {};
+
     this.read = read;
     this.write = write;
+    this.bindModel = bindModel;
+    this.getModel = getModel;
     this.getSession = getSession;
 
-    var request = null,
-        cookieSplitter = dep.cookie.split.parse,
-        cookieParser = dep.cookie.cookieParser.signedCookie,
-        secret = dep.secret,
-        store = dep.store;
+    var cookieSplitter = cookie.parse,
+        cookieParser = _cookieParser.signedCookie;
 
     function read(req) {
         if(!!req == false) {
             return
         }
 
-        request = req;
-
-        var query = !!Object.keys(req.query).length == false ? {} : req.query,
-            params = !!Object.keys(req.params).length == false ? {} : req.params,
+        var query = !!req.query && !!Object.keys(req.query).length == false ? {} : req.query,
+            params = !!req.params && !!Object.keys(req.params).length == false ? {} : req.params,
             session = !!req.session && !!req.session.passport ? req.session.passport : null;
 
         switch(req.method.toLowerCase()) {
             case 'post':
-                query = !!Object.keys(req.body).length == false ? {} : req.body;
+                query = !!req.body && !!Object.keys(req.body).length == false ? {} : req.body;
                 break;
             case 'put':
-                query = !!Object.keys(req.body).length == false ? {} : req.body;
+                query = !!req.body && !!Object.keys(req.body).length == false ? {} : req.body;
                 break;
         }
 
@@ -97,8 +96,23 @@ module.exports = function io(dep, Fighters) {
         return res.send(data)
     }
 
-    function getSession(id) {
+    function bindModel(name, model) {
+        if(!!model) {
+            models[name] = model
+        }
+    }
+
+    function getModel(name) {
+        if(!!name == false) {
+            return false
+        }
+
+        return models[name]
+    }
+
+    function getSession(id, request) {
         return new Promise(function(resolve, reject) {
+
             if(!!request == false || !!id == false) {
                 return reject(false)
             }
@@ -110,10 +124,16 @@ module.exports = function io(dep, Fighters) {
                 return reject(false)
             }
 
+            var Fighters = getModel('Fighters');
+
+            if(!!Fighters == false) {
+                return reject(false)
+            }
+
             store.get(sid, function (err, ss) {
 
                 var session = store.createSession(request, ss);
-                
+
                 if(!!session.passport == false || !!session.passport.user == false) {
                     return reject(false)
                 }

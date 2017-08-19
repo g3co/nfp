@@ -9,5 +9,6 @@ module.exports = {
     },
     google: {
         APIKey: 'AIzaSyDpHpeuh-5IezBSx56BJXyvFTE-Ky4gyIo'
-    }
+    },
+    secret: 'test_string'
 };
