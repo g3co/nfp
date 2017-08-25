@@ -11,13 +11,17 @@ module.exports = function io(cookie, _cookieParser, session, secret, store) {
         7: 'Object is unavailable'
     };
 
-    var models = {};
+    var models = {},
+        clients = {};
 
     this.read = read;
     this.write = write;
     this.bindModel = bindModel;
     this.getModel = getModel;
     this.getSession = getSession;
+    this.getClient = getClient;
+    this.addClient = addClient;
+    this.removeClient = removeClient;
 
     var cookieSplitter = cookie.parse,
         cookieParser = _cookieParser.signedCookie;
@@ -114,6 +118,7 @@ module.exports = function io(cookie, _cookieParser, session, secret, store) {
         return new Promise(function(resolve, reject) {
 
             if(!!request == false || !!id == false) {
+                console.log('Rejected by request');
                 return reject(false)
             }
 
@@ -121,12 +126,14 @@ module.exports = function io(cookie, _cookieParser, session, secret, store) {
                 sid = cookieParser(cookies[id], secret);
 
             if(!!sid == false) {
+                console.log('Rejected by sid');
                 return reject(false)
             }
 
             var Fighters = getModel('Fighters');
 
             if(!!Fighters == false) {
+                console.log('Rejected by Model');
                 return reject(false)
             }
 
@@ -135,6 +142,7 @@ module.exports = function io(cookie, _cookieParser, session, secret, store) {
                 var session = store.createSession(request, ss);
 
                 if(!!session.passport == false || !!session.passport.user == false) {
+                    console.log('Rejected by session');
                     return reject(false)
                 }
 
@@ -143,10 +151,12 @@ module.exports = function io(cookie, _cookieParser, session, secret, store) {
                 Fighters.findOne({ _id: user_id }, function(err, user) {
 
                     if(!!err) {
+                        console.log('Rejected by Execute model');
                         return reject(false)
                     }
 
                     if(!!user == false) {
+                        console.log('Rejected by user');
                         return reject(false)
                     }
 
@@ -155,6 +165,51 @@ module.exports = function io(cookie, _cookieParser, session, secret, store) {
                 })
             });
         })
+    }
+
+    function addClient(id, data) {
+        if(!!id == false || !!data == false) {
+            return false
+        }
+
+        var client = getClient(id),
+            streams = !!client ? client : [];
+
+        streams.push(data);
+
+        clients[id] = streams;
+
+        return clients[id]
+    }
+
+    function getClient(id) {
+        if(!!id == false) {
+            return false
+        }
+
+        return clients[id] || []
+    }
+
+    function removeClient(id, data) {
+        if(!!id == false || !!data == false) {
+            return false
+        }
+
+        var client = getClient(id);
+
+        if(!!client == false) {
+            delete clients[id];
+            return false
+        }
+
+        client.forEach(function(o, i) {
+            if(o == data) {
+                client.splice(i, 1)
+            }
+        });
+
+        return client
+
     }
 };
 

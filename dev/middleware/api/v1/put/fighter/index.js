@@ -1,4 +1,4 @@
-module.exports = function(Places, Fighters, io, req, res) {
+module.exports = function(io, req, res, Places, Fighters) {
 
     var input = io.read(req),
         id = input.params.id,

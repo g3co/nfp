@@ -1,29 +1,22 @@
-module.exports = function(wss, socket, io, req) {
+var ClientSocket = require('../ClientSocket');
 
-    var input = io.read(req);
+module.exports = function(io, socket, instance) {
+    
+    var clientSocket = new ClientSocket(socket, io, instance);
 
-    wss.clients.forEach(function(client) {
-        io.getSession('connect.sid', client.upgradeReq)
-            .then(function(user) {
-                console.log('User: ', user);
-            })
-            .catch(function() {
-                console.log('Failed clients checking')
-            })
-
-    });
-
-    socket.on('message', function (message) {
-        console.log('WS: '+ message);
-
-        var _to = setInterval(function(){
-
-            var data = 'Date: ' +(new Date()).toISOString();
-
-            console.log(data);
-            
-
-            io.write(socket, data);
-        }, 1000);
-    })
+    clientSocket
+        .addEventListener('test', testMethod)
+        .addEventListener('client', clientTest);
 };
+
+function testMethod(io, msg) {
+    console.log('SocketId: ', this.id);
+    //console.log('Socket: ', this.socket.sessionId);
+    console.log('Messsage: ', msg);
+}
+
+function clientTest(io, msg, userId) {
+    console.log('Clients: ', io.getClient(userId));
+    //console.log('Socket: ', this.socket.sessionId);
+    console.log('Messsage: ', msg);
+}

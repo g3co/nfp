@@ -5,6 +5,9 @@ import { Provider } from 'react-redux';
 import rootReducer from './reducers';
 import App from './app.jsx';
 import { $dw } from './data-worker';
+import io from 'socket.io-client';
+
+window.io = io;
 
 const store = initStore();
 

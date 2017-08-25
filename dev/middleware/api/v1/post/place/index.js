@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 
-module.exports = function(Places, io, req, res) {
+module.exports = function(io, req, res, Places) {
 
     if(!!req.env == false) {
         var input = io.read(req),

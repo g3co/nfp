@@ -1,7 +1,6 @@
 var App = require('./app'),
     Credentials = require('./Credentials'),
     _io = require('./io'),
-    wsConfig = require('./wsConfig'),
     express = require('express'),
     passport = require('passport'),
     mongoose = require('mongoose'),
@@ -15,8 +14,9 @@ var App = require('./app'),
     serveStatic = require('serve-static'),
     expressSession = require('express-session'),
     mongoStore = require('connect-mongo')(expressSession),
-    ws = require('express-ws'),
     app = express(),
+    server = require('http').Server(app),
+    socketIO = require('socket.io')(server),
     router = express.Router(),
     Schema = mongoose.Schema;
 
@@ -48,16 +48,14 @@ net_fight_promotion
                 expressSession,
                 Credentials.secret,
                 Store
-            ),
-            expressWebSocket = ws(app, null, {
-                wsOptions: wsConfig(io)
-            });
+            );
+
 
         App(
             io,
             expressSession,
             Store,
-            expressWebSocket,
+            socketIO,
             passport,
             mongoose,
             app,
@@ -103,7 +101,7 @@ net_fight_promotion
         //Routing
         app.use('/', router);
 
-        app.listen(3000, function() {
+        server.listen(3000, function() {
             console.log('Listening on port:3000');
         });
     });

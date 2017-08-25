@@ -2,7 +2,7 @@
 var path = require('path'),
     Credentials = require('./Credentials');
 
-module.exports = function(io, session, store, expressWebSocket, passport, mongoose, app, router, Strategy) {
+module.exports = function(io, session, store, socketIO, passport, mongoose, app, router, Strategy) {
 
     console.log("CREDENTIALS: ", Credentials);
 
@@ -63,60 +63,87 @@ module.exports = function(io, session, store, expressWebSocket, passport, mongoo
         scope: ['email'],
         profileFields: ['email', 'city', 'bdate']
     }, function(accessToken, refreshToken, params, profile, done) {
-        require(pathTo('auth', 'vk'))(Fighters, io, profile, done)
+        include('auth', 'vk')(Fighters, io, profile, done)
     }));
 
     //Account
     router.get(API.concat('/account'), function (req, res) {
-        require(pathTo('get', 'account'))(Fighters, io, req, res)
+        include('get', 'account')(io, req, res, Fighters)
     });
 
     //Log OUT
     router.get(API.concat('/logout'), checkAuth, function (req, res) {
-        require(pathTo('get', 'logout'))(Fighters, io, req, res)
+        include('get', 'logout')(io, req, res, Fighters)
     });
 
     //CREATE
     router.post(API.concat('/place'), function (req, res) {
-        require(pathTo('post', 'place'))(Places, io, req, res)
+        include('post', 'place')(io, req, res, Places)
+    });
+    router.post(API.concat('/event/:id'),/* checkAuth, */function (req, res) {
+        include('post', 'event')(io, req, res, Tournaments, Fighters)
     });
 
     //READ
     router.get(API.concat('/places'), function (req, res) {
-        require(pathTo('get', 'places'))(MapSynchronization, Fighters, Places, io, req, res)
+        include('get', 'places')(io, req, res, MapSynchronization, Fighters, Places)
     });
     router.get(API.concat('/place/:id'), function (req, res) {
-        require(pathTo('get', 'place'))(Places, io, req, res)
+        include('get', 'place')(io, req, res, Places)
     });
 
     router.get(API.concat('/fighters'), checkAuth, function (req, res) {
-        require(pathTo('get', 'fighters'))(Fighters, io, req, res)
+        include('get', 'fighters')(io, req, res, Fighters)
     });
     router.get(API.concat('/fighter/:id'), checkAuth, function (req, res) {
-        require(pathTo('get', 'fighter'))(Fighters, io, req, res)
+        include('get', 'fighter')(io, req, res, Fighters)
     });
 
-    router.get(API.concat('/sparrings'), checkAuth, function(req, res) {
-        require(pathTo('get', 'sparrings'))(Sparrings, io, req, res)
+    router.get(API.concat('/events'), checkAuth, function(req, res) {
+        include('get', 'events')(Tournaments, io, req, res)
     });
-    router.get(API.concat('/sparring/:id'), checkAuth, function (req, res) {
-        require(pathTo('get', 'sparring'))(Sparrings, io, req, res)
+    router.get(API.concat('/event/:id'), checkAuth, function (req, res) {
+        include('get', 'event')(Tournaments, io, req, res)
     });
 
     //UPDATE
     router.put(API.concat('/account'), checkAuth, function (req, res) {
-        require(pathTo('put', 'account'))(Fighters, io, req, res)
+        include('put', 'account')(io, req, res, Fighters)
     });
     router.put(API.concat('/fighter/:id'), checkAuth, function (req, res) {
-        require(pathTo('put', 'fighter'))(Places, Fighters, io, req, res)
+        include('put', 'fighter')(io, req, res, Places, Fighters)
     });
 
     //DELETE
 
-    //WebSocket CRUD
-    //READ
-    app.ws(API.concat('/event'), function (ws, req) {
-        require(pathTo('ws', 'event'))(expressWebSocket.getWss('/event'), ws, io, req)
+    //WebSocket
+    socketIO.on('connection', function (socket) {
+
+        io.getSession('connect.sid', socket.request)
+            .then(function(user) {
+
+                console.log('WS: Auth Successful!');
+
+                var userId =  user._id;
+
+                //place current connection for User
+                io.addClient(userId, socket);
+
+                socket.on('disconnect', function() {
+                    //remove current connection or destroy all for stored User
+                    io.removeClient(userId, socket)
+                });
+
+                include('ws', 'event')(io, socket, {
+                    name: 'event',
+                    userId: userId
+                });
+            })
+            .catch(function(e) {
+                console.log('WS: Auth Failed!');
+                socket.disconnect();
+            })
+
     });
 
     //settings
@@ -145,8 +172,8 @@ module.exports = function(io, session, store, expressWebSocket, passport, mongoo
     });
 
     //helpers
-    function pathTo(type, entity) {
-        return path.join(__dirname, API, type, entity)
+    function include(type, entity) {
+        return require(path.join(__dirname, API, type, entity))
     }
 
     function checkAuth(req, res, next) {

@@ -1,6 +1,6 @@
 var synchronizeFromGooglePlaces = require('./synchronizeFromGooglePlaces');
 
-module.exports = function(MapSynchronization, Fighters, Places, io, req, res) {
+module.exports = function(io, req, res, MapSynchronization, Fighters, Places) {
 
     var input = io.read(req),
         session = input.session,

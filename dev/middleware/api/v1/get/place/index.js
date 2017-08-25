@@ -1,6 +1,6 @@
 var mapPlace = require('./mapPlace');
 
-module.exports = function(Places, io, req, res) {
+module.exports = function(io, req, res, Places) {
 
     var input = io.read(req),
         id = input.params.id;

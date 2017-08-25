@@ -1,6 +1,6 @@
 var mapFighter = require('./mapFighter');
 
-module.exports = function(Fighters, io, req, res) {
+module.exports = function(io, req, res, Fighters) {
 
     var input = io.read(req),
         id = input.params.id;
