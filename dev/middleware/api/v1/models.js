@@ -86,12 +86,12 @@ module.exports = function(mongoose) {
         lastName: {type: String, required: true},
         avatar: {type: String, required: true},
         sex: {type: Boolean, required: true},
-        email: {type: String, required: true, index: true, unique: true},
+        email: {type: String, required: true, index: true},
         dateBirth: {type: Date, required: true},
         //sign fields
-        vkID: {type: Number, index: true, unique: true},
-        instagramID: {type: Number, index: true, unique: true},
-        facebookID: {type: Number, index: true, unique: true},
+        vkID: {type: Number, index: true},
+        instagramID: {type: Number, index: true},
+        facebookID: {type: Number, index: true},
         //additional fields
         nickname: {type: String},
         conditions: {

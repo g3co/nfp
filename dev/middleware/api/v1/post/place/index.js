@@ -29,11 +29,15 @@ module.exports = function(io, req, res, Places) {
 
     Places
         .findOneAndUpdate(
-            { place: { $near: query.place, $maxDistance: 0.001 } },
+            {place: {
+                $near: query.place,
+                $maxDistance: 0.001
+            }},
             query,
             { upsert: true },
             function(err, place) {
                 if(!!err) {
+                    //prevent Output for the client if requested by env
                     return !!req.env ? err : io.write(res, null, { result: 1 })
                 }
 

@@ -1,6 +1,8 @@
 import {
     SET_APP_PROGRESS,
-    SET_APP_NOTIFICATION
+    SET_APP_NOTIFICATION,
+    SET_APP_MAPMODE,
+    SET_APP_TRAININGMODE
 } from '../constants.jsx';
 
 const initialState = {
@@ -8,7 +10,9 @@ const initialState = {
     notification: {
         type: '',
         text: ''
-    }
+    },
+    mapMode: false,
+    trainingMode: false
 };
 
 export default function app(state = initialState, action) {
@@ -34,6 +38,22 @@ export default function app(state = initialState, action) {
                     text: notification.text
                 }
             };
+            break;
+        case SET_APP_MAPMODE:
+
+            return {...state,
+                mapMode: action.payload,
+                trainingMode: false
+            };
+
+            break;
+        case SET_APP_TRAININGMODE:
+
+            return {...state,
+                mapMode: false,
+                trainingMode: action.payload
+            };
+
             break;
         default:
             return state;

@@ -30,19 +30,17 @@ class ProgressBar extends React.Component {
     }
 
     componentDidMount() {
-
         let props = Object.assign({}, this.props),
             $progress = $dw(findDOMNode(this)),
             checkProgress = this.checkProgress,
             progress = props.progress;
 
         setInterval(checkProgress, 250);
-
     }
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
 
         let progress = props.progress;
 

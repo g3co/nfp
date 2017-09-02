@@ -94,7 +94,8 @@ class App extends React.Component {
 function mapState2Props(state) {
     return {
         locale: state.locale,
-        user: state.user
+        user: state.user,
+        app: state.app
     }
 }
 

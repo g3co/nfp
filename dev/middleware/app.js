@@ -4,8 +4,6 @@ var path = require('path'),
 
 module.exports = function(io, session, store, socketIO, passport, mongoose, app, router, Strategy) {
 
-    console.log("CREDENTIALS: ", Credentials);
-
     /*
     * @base:
     * API version, secret key

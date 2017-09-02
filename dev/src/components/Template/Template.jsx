@@ -17,7 +17,7 @@ import {
 
 const {
     ActionBar,
-    GetFight,
+    NetFight,
     Navigation,
     ModalBox,
     SplashScreen,
@@ -25,7 +25,8 @@ const {
     LoginButton,
     Instant,
     ProgressBar,
-    Notification
+    Notification,
+    TrainingBox
 } = ui;
 
 export default class Template extends React.Component {
@@ -65,7 +66,10 @@ export default class Template extends React.Component {
         let translations = props.locale.translations,
             lang = props.locale.language,
             user = props.user,
+            app = props.app,
             account = user.account,
+            trainingMode = app.trainingMode,
+            mapMode = app.mapMode,
             setTranslation = props.localeActions.setTranslation;
 
         return (
@@ -75,18 +79,19 @@ export default class Template extends React.Component {
                 />
                 <ProgressBar />
                 <Notification />
+                <TrainingBox />
                 <AppBar
                     className={gfClassName("appbar")}
                     style={{
-                        position: 'fixed',
-                        padding: '0 16px'
-                    }}
-                    title={<GetFight
-                        translations={translations}
-                        setTranslation={setTranslation}
-                    />}
+                    position: 'fixed',
+                    padding: '0 16px'
+                }}
+                    title={<NetFight
+                    translations={translations}
+                    setTranslation={setTranslation}
+                />}
                     iconElementRight={
-                    !!account ?
+                        !!account ?
                         <AccountButton
                             translations={translations}
                             user={user}
@@ -94,35 +99,25 @@ export default class Template extends React.Component {
                         <LoginButton
                             translations={translations}
                             user={user}
-                        />
-                    }
+                        />}
                     showMenuIconButton={false}
                     titleStyle={{
                         fontSize: 'inherit'
                     }}
                 />
-                <ActionBar
-                    translations={translations}
-                />
-                {(function() {
-                    if(!!account) {
-                        return (<Navigation
-                                translations={translations}
-                            />)
-                    }
-                })()}
+                {!!mapMode == false &&
+                    <ActionBar
+                        translations={translations}
+                    />
+                }
+                {!!account &&
+                    <Navigation />
+                }
                 <Instant />
                 <ModalBox
                     id={gfClassName("modalbox")}
                     lang={lang}
                 />
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <filter id="svgBlur" x="-5%" y="-5%" width="110%" height="110%">
-                        <feGaussianBlur in="SourceGraphic" stdDeviation="10">&nbsp;</feGaussianBlur>
-                    </filter>
-                </svg>
             </div>
         )
     }

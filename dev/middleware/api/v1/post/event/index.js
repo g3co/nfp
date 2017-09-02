@@ -8,5 +8,4 @@ module.exports = function(io, req, res) {
             o.emit('fuck', 'suck!')
         })
     }
-
 };

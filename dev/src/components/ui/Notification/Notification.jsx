@@ -59,7 +59,7 @@ class Notification extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
 
         let selector = gfClassName("notification"),
             hide = this.hide,

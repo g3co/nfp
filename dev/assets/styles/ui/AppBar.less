@@ -26,7 +26,6 @@
     }
 
     ul.gf-menu {
-
       position: absolute;
       top: 64px;
       left: 0;
@@ -67,9 +66,24 @@
         position: relative;
         margin: 0;
         padding: 0 15px;
-        width: auto;
+        height: auto;
+        width: inherit;
+        max-height: 0;
+        background: fade(@color-black, 55%);
         text-align: center;
-        display: none;
+        display: block;
+        overflow: hidden;
+        opacity: 0;
+        -webkit-transition-property: max-height, opacity;
+        -moz-transition-property: max-height, opacity;
+        -ms-transition-property: max-height, opacity;
+        -o-transition-property: max-height, opacity;
+        transition-property: max-height, opacity;
+        -webkit-transition-duration: .25s;
+        -moz-transition-duration: .25s;
+        -ms-transition-duration: .25s;
+        -o-transition-duration: .25s;
+        transition-duration: .25s;
 
         a {
           color: inherit;
@@ -115,9 +129,8 @@
         }
 
         li {
-          width: inherit;
-          background: fade(@color-black, 55%);
-          display: block;
+          max-height: 64px;
+          opacity: 1;
         }
 
       }

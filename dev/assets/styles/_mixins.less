@@ -1,4 +1,3 @@
-
 .gradient(@type; @colors; @dir: 0deg; @prefixes: webkit, moz, ms, o; @index: length(@prefixes)) when (@index > 0) {
   .gradient(@type; @colors; @dir; @prefixes; (@index - 1));
 
@@ -9,6 +8,27 @@
   & when ( @index = length(@prefixes) ) {
     background-image: ~"@{type}-gradient(@{dir}, @{colors})";
   }
+}
+
+.progress-radial-gradient(@backColor, @barColor, @i: 0, @step: 1, @loops: round(100 / @step), @inc: 360 / @loops, @half: round(@loops / 2)) when (@i <= @loops) {
+
+  @percent: @i * @step;
+
+  .progress-@{percent} when (@i < @half){
+    @angle: 90deg + ( @inc * @i );
+    background-image:
+            linear-gradient(90deg, @backColor 50%, transparent 50%, transparent),
+            linear-gradient(@angle, @barColor 50%, @backColor 50%, @backColor);
+  }
+
+  .progress-@{percent} when (@i >= @half){
+    @angle: -90deg + ( @inc * ( @i - @half ) );
+    background-image:
+            linear-gradient(@angle, @barColor 50%, transparent 50%, transparent),
+            linear-gradient(270deg, @barColor 50%, @backColor 50%, @backColor);
+  }
+
+  .progress-radial-gradient(@backColor, @barColor, @i + 1)
 }
 
 //mobile first!

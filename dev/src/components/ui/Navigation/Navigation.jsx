@@ -35,6 +35,7 @@ class Navigation extends React.Component {
         this.getClientTracking = this.getClientTracking.bind(this);
 
         this.state = {
+            isGeoLocated: ('geolocation' in navigator),
             ready: false,
             currentAdv: {}
         };
@@ -52,13 +53,6 @@ class Navigation extends React.Component {
 
         let getCurrentPosition = this.getCurrentPosition;
 
-        /*getCurrentPosition({
-            coords: {
-                longitude: 49.263929,
-                latitude: 53.509613
-            }
-        })*/
-
         navigator.geolocation.getCurrentPosition(getCurrentPosition);
     }
 
@@ -69,8 +63,9 @@ class Navigation extends React.Component {
             props = this.props,
             setState = this.setState,
             allowTracking = props.allowTracking,
-            updateCurrentPosition = props.updateCurrentPosition,
+            storeUpdateCurrentPosition = props.updateCurrentPosition,
             currentPosition = props.currentPosition,
+            getFightersNearby = this.getFightersNearby,
             loadNearby = this.loadNearby;
 
         if(!!position && !!position.coords) {
@@ -82,10 +77,11 @@ class Navigation extends React.Component {
             currentAdv = position.coords;
 
             if((isNaN(lngDiff) || isNaN(latDiff)) || (lngDiff < 5 && latDiff < 5)) {
-                return
+                //if user not move just load fighters
+                return;//getFightersNearby(_currentPosition)
             }
 
-            updateCurrentPosition(_currentPosition);
+            storeUpdateCurrentPosition(_currentPosition);
 
             setState({
                 currentAdv
@@ -147,7 +143,7 @@ class Navigation extends React.Component {
         return $this
             .request([
                 '/api/v1/places',
-                String.prototype.concat('lng='+ lng, '&geo=['+ geo +']')
+                ['lng='+ lng, 'geo=['+ geo +']'].join('&')
             ].join('?'))
             .then(setGYMsNearby)
             .then(function(gyms) {
@@ -182,7 +178,6 @@ class Navigation extends React.Component {
     }
 
     switchTracking() {
-
         let $window = $dw(window),
             props = this.props,
             setUserTracking = props.setUserTracking,
@@ -221,7 +216,11 @@ class Navigation extends React.Component {
     }
 
     componentDidMount() {
-        if('geolocation' in navigator) {
+        var isGeoLocated = this.state.isGeoLocated;
+
+        clearInterval(_interval);
+
+        if(isGeoLocated) {
             _interval = setInterval(this.updateCurrentPosition, 3000);
         } else {
             alert('To continue, please, get access to your geo location.');
@@ -231,6 +230,8 @@ class Navigation extends React.Component {
     render() {
 
         let props = {...this.props},
+            mapMode = props.mapMode,
+            trainingMode = props.trainingMode,
             ready = this.state.ready,
             allowTracking = props.allowTracking,
             translations = props.translations,
@@ -244,7 +245,8 @@ class Navigation extends React.Component {
                 id={gfClassName("navigation")}
                 className={[
                     gfClassName("navigation"),
-                    (ready ? "ready" : "")
+                    (ready ? "ready" : ""),
+                    (mapMode || trainingMode ? "hidden" : "")
                 ].join(' ')}
             >
                 <Map
@@ -261,6 +263,8 @@ class Navigation extends React.Component {
 }
 
 export default connect(state => {return {
+    mapMode: state.app.mapMode,
+    trainingMode: state.app.trainingMode,
     language: state.locale.language,
     translations: state.locale.translations,
     places: state.places,

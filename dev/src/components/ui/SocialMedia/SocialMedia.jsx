@@ -96,7 +96,7 @@ export default class SocialMedia extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
 
         let getIcon = this.getIcon,
             getUserAccount = props.getUserAccount,

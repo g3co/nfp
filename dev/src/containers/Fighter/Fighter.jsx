@@ -17,7 +17,7 @@ export default class Fighter extends React.Component {
     }
 
     componentWillMount() {
-        let props = Object.assign({}, this.props),
+        let props = {...this.props},
             setState = this.setState.bind(this),
             id = props.id;
 
@@ -50,7 +50,7 @@ export default class Fighter extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
 
         let fighter = this.state,
             unload = props.unload,

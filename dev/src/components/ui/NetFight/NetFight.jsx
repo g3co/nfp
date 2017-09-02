@@ -7,10 +7,12 @@ import {
 
 import ChooseLanguage from '../ChooseLanguage';
 
-class GetFight extends React.Component {
+class NetFight extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.handleDropdown = this.handleDropdown.bind(this);
 
         this.state = {
             active: false
@@ -29,23 +31,38 @@ class GetFight extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
 
-        let currentPosition = props.currentPosition;
+        let translations = props.translations,
+            currentPosition = props.currentPosition,
+            setTranslation = props.setTranslation,
+            mapMode = props.mapMode,
+            handleDropdown = this.handleDropdown,
+            active = this.state.active;
 
         return (
             <div
-                className={gfClassName("logo")}
+                className={[
+                    gfClassName("logo"),
+                    (mapMode ? "map-mode" : "")
+                ].join(" ")}
             >
                 <span>nfp</span>
                 <ul
-                    className={gfClassName("menu"+ (this.state.active ? " active": ""))}
-                    onClick={this.handleDropdown.bind(this)}
+                    className={gfClassName([
+                        "menu",
+                        (active ? "active": "")
+                    ].join(" "))}
+                    onClick={handleDropdown}
                     role="navigation"
                 >
-                    {this.props.translations.HEADER.map((item, i) =>
-                        <li key={i}>
-                            <a role="link" href={item.route} tabIndex={i} key={i}>
+                    {translations.HEADER.map(item =>
+                        <li key={item.id}>
+                            <a
+                                role="link"
+                                href={item.route}
+                                key={item.id}
+                                tabIndex={item.id}>
                                 {item.label}
                             </a>
                         </li>
@@ -62,7 +79,7 @@ class GetFight extends React.Component {
                     <span className="material-icons">my_location</span>
                 </div>
                 <ChooseLanguage
-                    setTranslation={props.setTranslation}
+                    setTranslation={setTranslation}
                 />
             </div>
         )
@@ -70,5 +87,6 @@ class GetFight extends React.Component {
 }
 
 export default connect(state => {return {
-    currentPosition: state.user.currentPosition
-}})(GetFight);
+    currentPosition: state.user.currentPosition,
+    mapMode: state.app.mapMode
+}})(NetFight);

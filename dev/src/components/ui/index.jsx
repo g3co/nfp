@@ -1,4 +1,4 @@
-import GetFight from './GetFight';
+import NetFight from './NetFight';
 import Navigation from './Navigation';
 import ActionBar from './ActionBar';
 import ModalBox from './ModalBox';
@@ -10,9 +10,10 @@ import LoginButton from './LoginButton';
 import ProgressBar from './ProgressBar';
 import Instant from './Instant';
 import Notification from './Notification';
+import TrainingBox from './TrainingBox';
 
 export default {
-    GetFight,
+    NetFight,
     Navigation,
     ActionBar,
     ModalBox,
@@ -23,5 +24,6 @@ export default {
     LoginButton,
     ProgressBar,
     Instant,
-    Notification
+    Notification,
+    TrainingBox
 }

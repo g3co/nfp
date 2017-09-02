@@ -45,7 +45,7 @@ export default class Gym extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
 
         let gym = this.state,
             translations = props.translations,

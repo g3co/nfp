@@ -147,7 +147,10 @@ export default class ModalBox extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
+
+        let asPopup = props.asPopup,
+            visible = this.state.visible;
 
         delete props.asPopup;
         delete props.className;
@@ -157,8 +160,8 @@ export default class ModalBox extends React.Component {
                 {...props}
                 className={[
                     gfClassName("modalbox"),
-                    (this.props.asPopup ? "as-popup" : ""),
-                    (this.state.visible ? "in active" : "")
+                    (asPopup ? "as-popup" : ""),
+                    (visible ? "in active" : "")
                 ].join(' ')}
             >
                 <div className="modalbox__container">

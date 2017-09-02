@@ -72,7 +72,7 @@ class Instant extends React.Component {
 
     render(props) {
 
-        props = Object.assign({}, this.props);
+        props = {...this.props};
         
         let jid = gfClassName("instant"),
             setState = this.setState.bind(this),

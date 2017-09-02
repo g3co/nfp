@@ -1,0 +1,6 @@
+{
+  "name": "TrainingBox",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./TrainingBox.jsx"
+}

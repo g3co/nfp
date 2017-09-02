@@ -55,13 +55,18 @@ class AccountButton extends React.Component {
 
         let translations = props.translations,
             account = props.user.account || {},
-            schedule = props.user.schedule || [];
+            schedule = props.user.schedule || [],
+            handleOpenPopover = this.handleOpenPopover,
+            handleClosePopover = this.handleClosePopover,
+            userLogout = this.userLogout,
+            open = this.state.open,
+            anchorEl = this.state.anchorEl;
 
         return (
             <button
                 className={gfClassName("action__account")}
                 type="button"
-                onClick={this.handleOpenPopover}
+                onClick={handleOpenPopover}
             >
                 <span><img
                     src={account.avatar}
@@ -70,16 +75,16 @@ class AccountButton extends React.Component {
                     className={schedule.length ? "active" : ""}
                 >{schedule.length}</i>
                 <Popover
-                    open={this.state.open}
-                    anchorEl={this.state.anchorEl}
+                    open={open}
+                    anchorEl={anchorEl}
                     anchorOrigin={{horizontal: "left", vertical: "bottom"}}
                     targetOrigin={{horizontal: "left", vertical: "top"}}
                     animation={PopoverAnimationVertical}
-                    onRequestClose={this.handleClosePopover}
+                    onRequestClose={handleClosePopover}
                     useLayerForClickAway={true}
                 >
                     <Menu
-                        onChange={this.handleClosePopover}
+                        onChange={handleClosePopover}
                     >
                         <MenuItem
                             value="user_profile"
@@ -96,7 +101,7 @@ class AccountButton extends React.Component {
                         <MenuItem
                             value="log_out"
                             primaryText={translations.LABELS.LOG_OUT}
-                            onClick={this.userLogout}
+                            onClick={userLogout}
                         />
                     </Menu>
                 </Popover>

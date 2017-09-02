@@ -1,0 +1,28 @@
+.gf-training-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #333;
+  z-index: 9999;
+
+  .progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -60px 0 0 -60px;
+    height: 120px;
+    width: 120px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .progress-radial-gradient(#333, #0068ab);
+
+  &.hidden {
+    display: none;
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "NetFight",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./NetFight.jsx"
+}
